@@ -1,14 +1,15 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 
 import CardList from "../components/CardList";
 
 const FeedScreen = (props) => {
   return (
-    <View style={styles.screen}>
-      <Text>Feed Screen</Text>
+    <SafeAreaView style={styles.screen}>
+      <StatusBar barStyle="dark-content" animated={true} />
+      {/* <Text>Feed Screen</Text> */}
       <CardList />
-    </View>
+    </SafeAreaView>
   );
 };
 

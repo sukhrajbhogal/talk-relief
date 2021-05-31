@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import FeedScreen from "./FeedScreen";
-import CreatePostScreen from "./CreatePostScreen";
+import AddPostScreen from "./AddPostScreen";
 import InboxScreen from "./InboxScreen";
 
 const Tab = createBottomTabNavigator();
@@ -12,16 +12,20 @@ export class Main extends Component {
   render() {
     return (
       <Tab.Navigator
-        initialRouteName="Feed"
+        //initialRouteName="Feed"
         tabBarOptions={{
           activeTintColor: "#FF005C",
           inactiveTintColor: "#202020",
           showLabel: false,
-          style: { backgroundColor: "#FFF1E4" },
+          style: {
+            backgroundColor: "#FFF1E4",
+            paddingLeft: 40,
+            paddingRight: 40,
+          },
         }}
       >
         <Tab.Screen
-          name="FeedScreen"
+          name="Home"
           component={FeedScreen}
           options={{
             tabBarLabel: "Home",
@@ -36,16 +40,10 @@ export class Main extends Component {
           }}
         />
         <Tab.Screen
-          name="CreatePostScreen"
-          component={CreatePostScreen}
-          listeners={({ navigation }) => ({
-            tabPress: (event) => {
-              event.preventDefault();
-              navigation.navigate("CreatePostScreen");
-            },
-          })}
+          name="Add Post"
+          component={AddPostScreen}
           options={{
-            tabBarLabel: "Create Post",
+            tabBarLabel: "Add Post",
             tabBarIcon: ({ color, size, style }) => (
               <MaterialCommunityIcons
                 name="plus-circle"
@@ -57,7 +55,7 @@ export class Main extends Component {
           }}
         />
         <Tab.Screen
-          name="InboxScreen"
+          name="Inbox"
           component={InboxScreen}
           options={{
             tabBarLabel: "Letters",
