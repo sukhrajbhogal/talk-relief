@@ -50,8 +50,6 @@ const AppNavigation = () => {
           component={TabNavigation}
           options={({ route }) => ({
             title: getHeaderTitle(route),
-          })}
-          options={{
             headerRight: () => (
               <MaterialCommunityIcons
                 name="account-circle"
@@ -61,7 +59,7 @@ const AppNavigation = () => {
                 onPress={() => alert("Click this to logout.")}
               />
             ),
-          }}
+          })}
         />
         <Stack.Screen
           name="Add Post"
