@@ -17,7 +17,7 @@ import { useRoute } from "@react-navigation/native";
 const { height } = Dimensions.get("window");
 export const fullHeight = (height * 1564) / 974;
 
-export default function CardSectionScreen() {
+export default function ViewCardScreen() {
   const navigation = useNavigation();
   const route = useRoute();
 

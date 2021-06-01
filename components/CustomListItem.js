@@ -1,28 +1,40 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
 
-const CustomListItem = ({ id, username, Title, Content }) => {
+const dummyData = {
+  Title: "Everything will be ok",
+  Content:
+    "No worries man. I hope you’re having a better day! It’s totally normal to feel that way dude. Sometimes we just need a helping hand every now and then. For me, basketball helps me feel better. I’m here for you man!",
+  username: "Saibi",
+};
+
+const CustomListItem = () => {
+  const navigation = useNavigation();
+
   return (
-    <ListItem containerStyle={styles.container}>
+    <ListItem
+      containerStyle={styles.container}
+      onPress={() => navigation.push("View Letter", { dummyData })}
+    >
       <ListItem.Content>
-        <ListItem.Title style={styles.username}>@Saibi</ListItem.Title>
+        <ListItem.Title style={styles.username}>
+          @{dummyData.username}
+        </ListItem.Title>
         <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode="tail"
           style={styles.title}
         >
-          Everything will be ok
+          {dummyData.Title}
         </ListItem.Subtitle>
         <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode="tail"
           style={styles.textPreview}
         >
-          No worries man. I hope you’re having a better day! It’s totally normal
-          to feel that way dude. Sometimes we just need a helping hand every now
-          and then. For me, basketball helps me feel better. I’m here for you
-          man!
+          {dummyData.Content}
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>

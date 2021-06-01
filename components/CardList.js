@@ -137,7 +137,7 @@ export default function CardList() {
         activeOpacity={1}
         // Send card info to CardSectionScreen which displays the card full screen
         onPress={() =>
-          navigation.push("CardSection", {
+          navigation.push("View Card", {
             Card: { Title, Content, username, selectedBG, selectedColor },
           })
         }
