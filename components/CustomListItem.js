@@ -34,7 +34,7 @@ export default CustomListItem;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFF1E4",
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 0.75,
     borderBottomColor: "#E8D7CC",
   },
   username: {

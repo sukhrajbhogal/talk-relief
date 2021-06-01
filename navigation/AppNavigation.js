@@ -13,6 +13,7 @@ import CardSectionScreen from "../screens/CardSectionScreen";
 
 const Stack = createStackNavigator();
 
+// Changes header title when users navigation between tabs
 function getHeaderTitle(route) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
 
@@ -66,6 +67,7 @@ const AppNavigation = () => {
           component={AddPostScreen}
           options={({ route }) => ({
             title: getHeaderTitle(route),
+            headerShown: false,
           })}
         />
         <Stack.Screen
