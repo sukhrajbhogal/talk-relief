@@ -12,6 +12,8 @@ import AddPostScreen from "../screens/AddPostScreen";
 import InboxScreen from "../screens/InboxScreen";
 import ViewCardScreen from "../screens/ViewCardScreen";
 import ViewLetterScreen from "../screens/ViewLetterScreen";
+import LoginScreen from "../screens/LoginScreen";
+import SignupScreen from "../screens/SignupScreen";
 
 const Stack = createStackNavigator();
 
@@ -51,6 +53,22 @@ const AppNavigation = () => {
         <Stack.Screen
           name="Splash"
           component={SplashScreen}
+          options={({ route }) => ({
+            title: getHeaderTitle(route),
+            headerShown: false,
+          })}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={({ route }) => ({
+            title: getHeaderTitle(route),
+            headerShown: false,
+          })}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
           options={({ route }) => ({
             title: getHeaderTitle(route),
             headerShown: false,

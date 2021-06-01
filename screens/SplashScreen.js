@@ -6,15 +6,22 @@ import {
   Text,
   Button,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const SplashScreen = (props) => {
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={styles.screen}>
       <StatusBar barStyle="dark-content" animated={true} />
       <Text style={styles.Title}>TalkRelief</Text>
       <Text style={styles.Subtitle}>Lift others and get lifted in return</Text>
-      <Button title="Sign in">Sign in</Button>
-      <Button title="Register">Register</Button>
+      <Button title="Log In" onPress={() => navigation.navigate("Login")}>
+        Log In
+      </Button>
+      <Button title="Sign Up" onPress={() => navigation.navigate("Signup")}>
+        Sign Up
+      </Button>
     </SafeAreaView>
   );
 };
