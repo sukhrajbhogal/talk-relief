@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import FeedScreen from "./FeedScreen";
-import AddPostScreen from "./AddPostScreen";
-import InboxScreen from "./InboxScreen";
+import FeedScreen from "../screens/FeedScreen";
+import AddPostScreen from "../screens/AddPostScreen";
+import InboxScreen from "../screens/InboxScreen";
 
 const Tab = createBottomTabNavigator();
 
-export class Main extends Component {
+export class TabNavigation extends Component {
   render() {
     return (
       <Tab.Navigator
@@ -74,4 +74,4 @@ export class Main extends Component {
   }
 }
 
-export default Main;
+export default TabNavigation;
