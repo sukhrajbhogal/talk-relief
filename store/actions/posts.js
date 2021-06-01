@@ -10,7 +10,7 @@ export const createPost = (title, content) => {
     const response = await fetch(
       "https://talkrelief-c20b8-default-rtdb.firebaseio.com/posts.json",
       {
-        method: POST,
+        method: "POST",
         headers: {
           "Content-Type": "application-json",
         },
@@ -26,8 +26,7 @@ export const createPost = (title, content) => {
 
     dispatch({
       type: CREATE_POST,
-      productData: {
-        id: resData.name,
+      postData: {
         title,
         content,
       },

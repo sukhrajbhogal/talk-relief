@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, TextInput, Text, Button, StyleSheet } from "react-native";
+import * as postAction from "../store/actions/posts";
+import { useDispatch } from "react-redux";
 
 const PostForm = () => {
   const [postTitleText, setPostTitle] = useState("");
   const [titleIsValid, setTitleIsValid] = useState(false);
   const [postContentText, setPostContent] = useState("");
   const [contentIsValid, setContentIsValid] = useState(false);
+  const dispatch = useDispatch();
 
   const titleChangeHandler = (text) => {
     if (text.length === 0) {
@@ -24,6 +27,10 @@ const PostForm = () => {
     }
     setPostContent(text);
   };
+
+  const submitHandler = useCallback(() => {
+    dispatch(postAction.createPost(postTitleText, postContentText));
+  }, []);
 
   return (
     <View>
@@ -47,9 +54,9 @@ const PostForm = () => {
           <TextInput
             style={styles.postContent}
             id="content"
-            multiline
             name="content"
-            numberOfLines={5}
+            multiline
+            numberOfLines={10}
             keyboardType="default"
             placeholder="share your story"
             value={postContentText}
@@ -58,7 +65,7 @@ const PostForm = () => {
           {!contentIsValid && <Text>Enter Valid Content</Text>}
         </View>
         <View style={styles.button}>
-          <Button title="Post" />
+          <Button title="Post" onPress={submitHandler} />
         </View>
       </View>
     </View>
@@ -71,7 +78,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     textAlign: "center",
-    width: "90%",
+    width: "100%",
     shadowOpacity: 0.3,
     shadowRadius: 10,
     shadowColor: "black",
@@ -104,6 +111,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   postContent: {
+    height: "50%",
     borderWidth: 1,
     padding: 10,
     margin: 5,
@@ -111,6 +119,9 @@ const styles = StyleSheet.create({
   button: {
     margin: 10,
     alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: "black",
   },
 });
 

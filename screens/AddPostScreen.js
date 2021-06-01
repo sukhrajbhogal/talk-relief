@@ -6,7 +6,6 @@ const AddPostScreen = (props) => {
   return (
     <SafeAreaView style={styles.screen}>
       <StatusBar barStyle="dark-content" />
-      <Text>Add Post Screen</Text>
       <PostForm />
     </SafeAreaView>
   );
@@ -14,9 +13,9 @@ const AddPostScreen = (props) => {
 
 const styles = StyleSheet.create({
   screen: {
-    // flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
+    flex: 1,
+    //justifyContent: "center",
+    alignItems: "stretch",
     backgroundColor: "#FFF1E4",
   },
 });

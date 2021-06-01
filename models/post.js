@@ -1,9 +1,9 @@
 class Post {
-  constructor(title, content, uid, timestamp) {
+  constructor(title, content) {
     this.title = title;
     this.content = content;
-    this.uid = uid;
-    this.timestamp = timestamp;
+    //this.uid = uid;
+    //this.timestamp = timestamp;
   }
 }
 

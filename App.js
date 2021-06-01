@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import ReduxThunk from "redux-thunk";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import {
@@ -11,12 +14,19 @@ import MainScreen from "./screens/MainScreen";
 import AddPostScreen from "./screens/AddPostScreen";
 import InboxScreen from "./screens/InboxScreen";
 import CardSectionScreen from "./screens/CardSectionScreen";
+import posts from "./store/reducers/posts";
+import { Provider } from "react-redux";
 
+const rootReducer = combineReducers({
+  posts: posts,
+});
 const fetchFonts = () => {
   return Font.loadAsync({
     Cocogoose: require("./assets/fonts/Cocogoose-Regular.ttf"),
   });
 };
+
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const Stack = createStackNavigator();
 
@@ -47,53 +57,55 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        //initialRouteName="Main"
-        mode="modal"
-        screenOptions={{
-          headerTitleAlign: "left",
-          headerStyle: {
-            backgroundColor: "#FFF1E4",
-          },
-          headerTintColor: "#202020",
-          headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: 20,
-            fontFamily: "Cocogoose",
-          },
-        }}
-      >
-        <Stack.Screen
-          name="Home"
-          component={MainScreen}
-          options={({ route }) => ({
-            title: getHeaderTitle(route),
-          })}
-        />
-        <Stack.Screen
-          name="Add Post"
-          component={AddPostScreen}
-          options={({ route }) => ({
-            title: getHeaderTitle(route),
-          })}
-        />
-        <Stack.Screen
-          name="Inbox"
-          component={InboxScreen}
-          options={({ route }) => ({
-            title: getHeaderTitle(route),
-          })}
-        />
-        <Stack.Screen
-          name="CardSection"
-          component={CardSectionScreen}
-          options={({ route }) => ({
-            title: getHeaderTitle(route),
-            headerShown: false,
-          })}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator
+          //initialRouteName="Main"
+          mode="modal"
+          screenOptions={{
+            headerTitleAlign: "left",
+            headerStyle: {
+              backgroundColor: "#FFF1E4",
+            },
+            headerTintColor: "#202020",
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 20,
+              fontFamily: "Cocogoose",
+            },
+          }}
+        >
+          <Stack.Screen
+            name="Home"
+            component={MainScreen}
+            options={({ route }) => ({
+              title: getHeaderTitle(route),
+            })}
+          />
+          <Stack.Screen
+            name="Add Post"
+            component={AddPostScreen}
+            options={({ route }) => ({
+              title: getHeaderTitle(route),
+            })}
+          />
+          <Stack.Screen
+            name="Inbox"
+            component={InboxScreen}
+            options={({ route }) => ({
+              title: getHeaderTitle(route),
+            })}
+          />
+          <Stack.Screen
+            name="CardSection"
+            component={CardSectionScreen}
+            options={({ route }) => ({
+              title: getHeaderTitle(route),
+              headerShown: false,
+            })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
