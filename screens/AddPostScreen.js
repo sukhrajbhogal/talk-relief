@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, StatusBar, Text, StyleSheet } from "react-native";
+import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import PostForm from "../components/PostForm";
 
 const AddPostScreen = (props) => {

@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import FeedScreen from "./FeedScreen";
-import AddPostScreen from "./AddPostScreen";
-import InboxScreen from "./InboxScreen";
+import FeedScreen from "../screens/FeedScreen";
+import InboxScreen from "../screens/InboxScreen";
 
 const Tab = createBottomTabNavigator();
+const EmptyScreen = () => {
+  return null;
+};
 
-export class Main extends Component {
+export class TabNavigation extends Component {
   render() {
     return (
       <Tab.Navigator
@@ -40,8 +42,15 @@ export class Main extends Component {
           }}
         />
         <Tab.Screen
-          name="Add Post"
-          component={AddPostScreen}
+          name="Add New Post"
+          // Override default tab navigation with a pop-up form for Add Post
+          component={EmptyScreen}
+          listeners={({ navigation }) => ({
+            tabPress: (event) => {
+              event.preventDefault();
+              navigation.navigate("Add Post");
+            },
+          })}
           options={{
             tabBarLabel: "Add Post",
             tabBarIcon: ({ color, size, style }) => (
@@ -74,4 +83,4 @@ export class Main extends Component {
   }
 }
 
-export default Main;
+export default TabNavigation;

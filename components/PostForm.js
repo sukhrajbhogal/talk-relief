@@ -1,7 +1,16 @@
 import React, { useState, useCallback } from "react";
-import { View, TextInput, Text, Button, StyleSheet } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import * as postAction from "../store/actions/posts";
 import { useDispatch } from "react-redux";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 
 const PostForm = () => {
   const [postTitleText, setPostTitle] = useState("");
@@ -9,6 +18,8 @@ const PostForm = () => {
   const [postContentText, setPostContent] = useState("");
   const [contentIsValid, setContentIsValid] = useState(false);
   const dispatch = useDispatch();
+
+  const navigation = useNavigation();
 
   const titleChangeHandler = (text) => {
     if (text.length === 0) {
@@ -34,38 +45,55 @@ const PostForm = () => {
 
   return (
     <View>
-      <View style={styles.cardContainer}>
-        <Text style={styles.postScreenTitle}>Create a Post</Text>
-        <View style={styles.titleBox}>
-          <Text>Title</Text>
+      <View style={styles.Header}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => navigation.goBack()}
+        >
+          <MaterialCommunityIcons
+            name="window-close"
+            size={35}
+            color={"#202020"}
+            style={styles.closeIcon}
+          />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Create Post</Text>
+
+        <Pressable onPress={submitHandler}>
+          <TouchableOpacity>
+            <Text style={styles.Submit}>POST</Text>
+          </TouchableOpacity>
+        </Pressable>
+      </View>
+      <View style={styles.Container}>
+        <View style={styles.titleContainer}>
           <TextInput
-            style={styles.postTitle}
+            style={(styles.placeholder, { fontWeight: "600", fontSize: 20 })}
             id="title"
             name="title"
             keyboardType="default"
-            placeholder="title"
+            placeholder="Post title (required)"
+            placeholderTextColor="#7B7670"
             value={postTitleText}
             onChangeText={titleChangeHandler}
           />
-          {!titleIsValid && <Text>Enter a Valid Title</Text>}
+          {/* {!titleIsValid && <Text>Enter a Valid Title</Text>} */}
+          {!titleIsValid}
         </View>
-        <View style={styles.contentBox}>
-          <Text>Content</Text>
+        <View style={styles.contentContainer}>
           <TextInput
-            style={styles.postContent}
+            style={(styles.postContent, styles.placeholder)}
             id="content"
             name="content"
             multiline
             numberOfLines={10}
             keyboardType="default"
-            placeholder="share your story"
+            placeholder="What's on your mind? (required)"
+            placeholderTextColor="#7B7670"
             value={postContentText}
             onChangeText={contentChangeHandler}
           />
-          {!contentIsValid && <Text>Enter Valid Content</Text>}
-        </View>
-        <View style={styles.button}>
-          <Button title="Post" onPress={submitHandler} />
+          {!contentIsValid}
         </View>
       </View>
     </View>
@@ -73,55 +101,53 @@ const PostForm = () => {
 };
 
 const styles = StyleSheet.create({
-  card: {
-    height: "100%",
+  Header: {
+    display: "flex",
+    flexDirection: "row",
+    padding: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    alignItems: "center",
+    //backgroundColor: "grey",
+    justifyContent: "space-between",
+    borderBottomWidth: 0.75,
+    borderBottomColor: "#E8D7CC",
   },
-  cardContainer: {
-    textAlign: "center",
-    width: "100%",
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    shadowColor: "black",
-    shadowOffset: { height: 5, width: 0 },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "700",
   },
-  postScreenTitle: {
-    textAlign: "center",
+  Submit: {
+    fontSize: 14,
+    color: "#FF005C",
     fontWeight: "bold",
+  },
+  Container: {
+    padding: 15,
+    // paddingLeft: 15,
+    // paddingRight: 15,
+  },
+  titleContainer: {
+    borderBottomWidth: 0.75,
+    borderBottomColor: "#E8D7CC",
+    paddingTop: 5,
+    paddingBottom: 20,
+  },
+  contentContainer: {
+    paddingTop: 15,
+  },
+  placeholder: {
     fontSize: 20,
-    marginTop: 10,
-  },
-  titleBox: {
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    margin: 10,
-  },
-  contentBox: {
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    margin: 10,
-    textAlign: "left",
   },
   postTitle: {
-    borderWidth: 1,
-    padding: 10,
-    margin: 5,
+    fontSize: 60,
+    //fontWeight: ,
   },
   postContent: {
     height: "50%",
     borderWidth: 1,
     padding: 10,
     margin: 5,
-  },
-  button: {
-    margin: 10,
-    alignItems: "center",
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: "black",
   },
 });
 
