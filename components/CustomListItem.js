@@ -16,7 +16,7 @@ const CustomListItem = () => {
   return (
     <ListItem
       containerStyle={styles.container}
-      onPress={() => navigation.push("View Letter", { dummyData })}
+      onPress={() => navigation.push("View Letter", dummyData)}
     >
       <ListItem.Content>
         <ListItem.Title style={styles.username}>
