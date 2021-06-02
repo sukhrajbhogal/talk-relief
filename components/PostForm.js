@@ -13,13 +13,13 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useNavigation } from "@react-navigation/native";
 
 const PostForm = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const [postTitleText, setPostTitle] = useState("");
   const [titleIsValid, setTitleIsValid] = useState(false);
   const [postContentText, setPostContent] = useState("");
   const [contentIsValid, setContentIsValid] = useState(false);
-  const dispatch = useDispatch();
-
-  const navigation = useNavigation();
 
   const titleChangeHandler = (text) => {
     if (text.length === 0) {
@@ -40,7 +40,11 @@ const PostForm = () => {
   };
 
   const submitHandler = useCallback(() => {
-    dispatch(postAction.createPost(postTitleText, postContentText));
+    const currentTime = Date.now();
+    console.log(currentTime);
+    dispatch(
+      postAction.createPost(postTitleText, postContentText, currentTime)
+    );
   }, []);
 
   return (
@@ -59,10 +63,11 @@ const PostForm = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Create Post</Text>
 
-        <Pressable onPress={submitHandler}>
-          <TouchableOpacity>
+        <Pressable onPressOut={submitHandler}>
+          <Button title="POST" onPress={submitHandler} />
+          {/* <TouchableOpacity>
             <Text style={styles.Submit}>POST</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </Pressable>
       </View>
       <View style={styles.Container}>
@@ -72,7 +77,7 @@ const PostForm = () => {
             id="title"
             name="title"
             keyboardType="default"
-            placeholder="Post title (required)"
+            placeholder="Post title"
             placeholderTextColor="#7B7670"
             value={postTitleText}
             onChangeText={titleChangeHandler}
@@ -88,7 +93,7 @@ const PostForm = () => {
             multiline
             numberOfLines={10}
             keyboardType="default"
-            placeholder="What's on your mind? (required)"
+            placeholder="What's on your mind?"
             placeholderTextColor="#7B7670"
             value={postContentText}
             onChangeText={contentChangeHandler}

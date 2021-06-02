@@ -17,6 +17,7 @@ export const createPost = (title, content) => {
         body: JSON.stringify({
           title,
           content,
+          timestamp,
         }),
       }
     );
@@ -29,6 +30,7 @@ export const createPost = (title, content) => {
       postData: {
         title,
         content,
+        timestamp,
       },
     });
   };

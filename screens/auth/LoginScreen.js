@@ -8,41 +8,29 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import * as postAction from "../store/actions/posts";
 import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+import * as authActions from "../../store/actions/auth";
 
 const LoginScreen = () => {
-  const [postTitleText, setPostTitle] = useState("");
-  const [titleIsValid, setTitleIsValid] = useState(false);
-  const [postContentText, setPostContent] = useState("");
-  const [contentIsValid, setContentIsValid] = useState(false);
+  const [emailText, setEmailText] = useState("");
+  const [passwordText, setPasswordText] = useState("");
   const dispatch = useDispatch();
 
   const navigation = useNavigation();
 
-  const titleChangeHandler = (text) => {
-    if (text.length === 0) {
-      setTitleIsValid(false);
-    } else {
-      setTitleIsValid(true);
-    }
-    setPostTitle(text);
+  const emailChangeHandler = (text) => {
+    setEmailText(text);
   };
 
-  const contentChangeHandler = (text) => {
-    if (text.length === 0) {
-      setContentIsValid(false);
-    } else {
-      setContentIsValid(true);
-    }
-    setPostContent(text);
+  const passwordChangeHandler = (text) => {
+    setPasswordText(text);
   };
 
-  const submitHandler = useCallback(() => {
-    dispatch(postAction.createPost(postTitleText, postContentText));
-  }, []);
+  const logInHandler = () => {
+    dispatch(authActions.login(emailText, passwordText));
+  };
 
   return (
     <SafeAreaView style={styles.Container}>
@@ -60,39 +48,42 @@ const LoginScreen = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Log In</Text>
 
-        <Button title="Log In" onPress={submitHandler}></Button>
+        <Button title="Log In" onPress={logInHandler}></Button>
       </View>
       <View style={styles.Message}>
         <View style={styles.titleContainer}>
           <Text>Email</Text>
           <TextInput
             style={styles.placeholder}
-            id="title"
-            name="title"
-            keyboardType="default"
+            id="email"
+            name="email"
+            value={emailText}
+            required
+            keyboardType="email-address"
+            autoCapitalize="none"
+            errorText="Please enter a valid email address"
             placeholder="Abc@xyz.com"
             placeholderTextColor="#7B7670"
-            value={postTitleText}
-            onChangeText={titleChangeHandler}
+            onChangeText={emailChangeHandler}
           />
-          {/* {!titleIsValid && <Text>Enter a Valid Title</Text>} */}
-          {!titleIsValid}
         </View>
         <View style={styles.contentContainer}>
           <Text>Password</Text>
           <TextInput
             style={(styles.postContent, styles.placeholder)}
-            id="content"
-            name="content"
-            multiline
+            id="password"
+            name="password"
+            value={passwordText}
+            secureTextEntry={true}
+            required
             numberOfLines={10}
+            errorText="Please enter a valid password"
+            autoCapitalize="none"
             keyboardType="default"
             placeholder="********"
             placeholderTextColor="#7B7670"
-            value={postContentText}
-            onChangeText={contentChangeHandler}
+            onChangeText={passwordChangeHandler}
           />
-          {!contentIsValid}
         </View>
       </View>
     </SafeAreaView>

@@ -12,8 +12,8 @@ import AddPostScreen from "../screens/AddPostScreen";
 import InboxScreen from "../screens/InboxScreen";
 import ViewCardScreen from "../screens/ViewCardScreen";
 import ViewLetterScreen from "../screens/ViewLetterScreen";
-import LoginScreen from "../screens/LoginScreen";
-import SignupScreen from "../screens/SignupScreen";
+import LoginScreen from "../screens/auth/LoginScreen";
+import SignupScreen from "../screens/auth/SignUpScreen";
 
 const Stack = createStackNavigator();
 
