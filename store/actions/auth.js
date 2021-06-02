@@ -1,7 +1,7 @@
 export const SIGNUP = "SIGNUP";
 export const LOGIN = "LOGIN";
 
-export const signup = (email, password) => {
+export const signup = (username, email, password) => {
   return async (dispatch) => {
     const response = await fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAc-FyoaMXEDn_FyK1Anwt39DDB4U4ToKQ",
@@ -11,6 +11,7 @@ export const signup = (email, password) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          displayName: username,
           email: email,
           password: password,
           retrunSecureToken: true,

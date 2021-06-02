@@ -18,9 +18,13 @@ const SignUpScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const [userNameText, setUserNameText] = useState("");
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
 
+  const userNameChangeHandler = (text) => {
+    setUserNameText(text);
+  };
   const emailChangeHandler = (text) => {
     setEmailText(text);
   };
@@ -30,7 +34,7 @@ const SignUpScreen = () => {
   };
 
   const signUpHandler = () => {
-    dispatch(authActions.signup(emailText, passwordText));
+    dispatch(authActions.signup(userNameText, emailText, passwordText));
   };
 
   return (
@@ -52,6 +56,23 @@ const SignUpScreen = () => {
         <Button title="Sign Up" onPress={signUpHandler}></Button>
       </View>
       <View style={styles.Message}>
+        <View style={styles.titleContainer}>
+          <Text>Username</Text>
+          <TextInput
+            style={styles.placeholder}
+            id="username"
+            name="username"
+            value={userNameText}
+            required
+            keyboardType="default"
+            autoCapitalize="none"
+            errorText="Please enter a valid username"
+            placeholder="username"
+            placeholderTextColor="#7B7670"
+            onChangeText={userNameChangeHandler}
+          />
+          {/* {!titleIsValid && <Text>Enter a Valid Title</Text>} */}
+        </View>
         <View style={styles.titleContainer}>
           <Text>Email</Text>
           <TextInput
