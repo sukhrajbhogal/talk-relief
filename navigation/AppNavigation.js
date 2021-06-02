@@ -14,8 +14,10 @@ import ViewCardScreen from "../screens/ViewCardScreen";
 import ViewLetterScreen from "../screens/ViewLetterScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
+import horizontalAnimation from "../components/horizontalAnimation";
 
 const Stack = createStackNavigator();
+const InboxStack = createStackNavigator();
 
 // Changes header title when users navigation between tabs
 function getHeaderTitle(route) {
@@ -35,7 +37,7 @@ const AppNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        //initialRouteName="Splash"
+        initialRouteName="Home"
         mode="modal"
         screenOptions={{
           headerTitleAlign: "left",
@@ -103,19 +105,20 @@ const AppNavigation = () => {
           component={InboxScreen}
           options={({ route }) => ({
             title: getHeaderTitle(route),
+            headerShown: false,
           })}
+        />
+        <InboxStack.Screen
+          name="View Letter"
+          component={ViewLetterScreen}
+          options={({ route }) => ({
+            title: getHeaderTitle(route),
+          })}
+          options={horizontalAnimation}
         />
         <Stack.Screen
           name="View Card"
           component={ViewCardScreen}
-          options={({ route }) => ({
-            title: getHeaderTitle(route),
-            headerShown: false,
-          })}
-        />
-        <Stack.Screen
-          name="View Letter"
-          component={ViewLetterScreen}
           options={({ route }) => ({
             title: getHeaderTitle(route),
             headerShown: false,
