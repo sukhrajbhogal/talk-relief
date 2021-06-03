@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -9,10 +9,13 @@ import {
   TouchableOpacity,
   Dimensions,
   StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  Button,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const { height } = Dimensions.get("window");
 export const fullHeight = (height * 1564) / 974;
@@ -20,74 +23,112 @@ export const fullHeight = (height * 1564) / 974;
 export default function ViewCardScreen() {
   const navigation = useNavigation();
   const route = useRoute();
+  const [input, setInput] = useState("");
+
+  const sendMessage = () => {};
 
   return (
-    //Show card full screen
+    // Show card full screen as background
     <ImageBackground
       source={route.params.Card.selectedBG}
       style={[
-        styles.bgImage,
+        styles.screen,
         { backgroundColor: route.params.Card.selectedColor },
       ]}
     >
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="dark-content" animated={false} />
-        <ScrollView style={styles.content}>
-          <View style={styles.cardStyle}>
-            <Text style={[styles.fontStyle, styles.cardTitle]}>
-              {route.params.Card.Title}
-            </Text>
-            <Text
-              numberOfLines={6}
-              style={[styles.fontStyle, styles.cardContent]}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.container}
+          //keyboardVerticalOffset={90}
+        >
+          <>
+            {/* Card goes here */}
+            <ScrollView style={styles.cardContainer}>
+              <View>
+                <Text style={[styles.fontStyle, styles.cardTitle]}>
+                  {route.params.Card.Title}
+                </Text>
+                <Text
+                  numberOfLines={6}
+                  style={[styles.fontStyle, styles.cardContent]}
+                >
+                  {route.params.Card.Content}
+                </Text>
+                <Text style={styles.fontStyle}>
+                  @{route.params.Card.username}
+                </Text>
+              </View>
+            </ScrollView>
+
+            {/* Write a reply */}
+            <View style={styles.replyContainer}>
+              <TextInput
+                value={input}
+                onChangeText={(text) => setInput(text)}
+                placeholder="Write kind words"
+                placeholderTextColor="#7B7670"
+                style={styles.textInput}
+              />
+              <TouchableOpacity onPress={sendMessage} activeOpacity={0.5}>
+                <Button title="SEND"></Button>
+              </TouchableOpacity>
+            </View>
+          </>
+
+          {/* Close Button */}
+          <View style={styles.closeButtonBG}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => navigation.goBack()}
             >
-              {route.params.Card.Content}
-            </Text>
-            <Text style={styles.fontStyle}>@{route.params.Card.username}</Text>
+              <MaterialCommunityIcons
+                name="window-close"
+                size={24}
+                color={"#202020"}
+                style={styles.closeButtonIcon}
+              />
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-        <View style={styles.closeBG}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => navigation.goBack()}
-          >
-            <MaterialCommunityIcons
-              name="window-close"
-              size={24}
-              color={"#202020"}
-              style={styles.closeIcon}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.replyBG}>
-          <TouchableOpacity activeOpacity={0.5}>
-            <MaterialCommunityIcons
-              name="lead-pencil"
-              size={35}
-              color={"#202020"}
-              style={styles.replyIcon}
-            />
-          </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  replyContainer: {
+    flexDirection: "row",
+    width: "100%",
+    padding: 15,
+    alignItems: "center",
+    backgroundColor: "#D7D9DD",
+  },
+  textInput: {
+    bottom: 0,
+    height: 40,
+    flex: 1,
+    marginRight: 15,
+    borderColor: "transparent",
+    backgroundColor: "#ECECEC",
+    padding: 10,
+    color: "#202020",
+    borderRadius: 30,
+  },
+  screen: {
     flex: 1,
   },
-  bgImage: {
-    height: "100%",
-    overflow: "hidden",
-  },
-  cardStyle: {
-    padding: 20,
+  container: {
+    flex: 1,
+    //backgroundColor: "#D7D9DD",
   },
   fontStyle: {
     color: "#fff",
     fontSize: 20,
+  },
+  cardContainer: {
+    padding: 20,
   },
   cardTitle: {
     paddingTop: "12%",
@@ -99,28 +140,7 @@ const styles = StyleSheet.create({
     marginBottom: "7%",
     lineHeight: 30,
   },
-  replyBG: {
-    alignItems: "flex-start",
-    flexDirection: "row",
-    backgroundColor: "white",
-    position: "absolute",
-    width: 60,
-    height: 60,
-    bottom: 40,
-    right: 20,
-    borderRadius: 50,
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowColor: "black",
-    shadowOffset: { height: 5, width: 0 },
-  },
-  replyIcon: {
-    top: 12,
-    right: 12,
-    bottom: 12,
-    left: 12,
-  },
-  closeBG: {
+  closeButtonBG: {
     alignItems: "flex-start",
     flexDirection: "row",
     backgroundColor: "white",
@@ -135,7 +155,7 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOffset: { height: 5, width: 0 },
   },
-  closeIcon: {
+  closeButtonIcon: {
     top: 3,
     right: 3,
     bottom: 3,
