@@ -37,7 +37,7 @@ const AppNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Splash"
+        initialRouteName="Home"
         mode="modal"
         screenOptions={{
           headerTitleAlign: "left",
