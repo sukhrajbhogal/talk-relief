@@ -7,11 +7,17 @@ import { createStackNavigator } from "@react-navigation/stack";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import TabNavigation from "./TabNavigation";
+import SplashScreen from "../screens/SplashScreen";
 import AddPostScreen from "../screens/AddPostScreen";
 import InboxScreen from "../screens/InboxScreen";
-import CardSectionScreen from "../screens/CardSectionScreen";
+import ViewCardScreen from "../screens/ViewCardScreen";
+import ViewLetterScreen from "../screens/ViewLetterScreen";
+import LoginScreen from "../screens/auth/LoginScreen";
+import SignupScreen from "../screens/auth/SignUpScreen";
+import horizontalAnimation from "../components/horizontalAnimation";
 
 const Stack = createStackNavigator();
+const InboxStack = createStackNavigator();
 
 // Changes header title when users navigation between tabs
 function getHeaderTitle(route) {
@@ -31,7 +37,7 @@ const AppNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        //initialRouteName=""
+        initialRouteName="Splash"
         mode="modal"
         screenOptions={{
           headerTitleAlign: "left",
@@ -46,6 +52,30 @@ const AppNavigation = () => {
           },
         }}
       >
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={({ route }) => ({
+            title: getHeaderTitle(route),
+            headerShown: false,
+          })}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={({ route }) => ({
+            title: getHeaderTitle(route),
+            headerShown: false,
+          })}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
+          options={({ route }) => ({
+            title: getHeaderTitle(route),
+            headerShown: false,
+          })}
+        />
         <Stack.Screen
           name="Home"
           component={TabNavigation}
@@ -75,11 +105,20 @@ const AppNavigation = () => {
           component={InboxScreen}
           options={({ route }) => ({
             title: getHeaderTitle(route),
+            headerShown: false,
           })}
         />
+        <InboxStack.Screen
+          name="View Letter"
+          component={ViewLetterScreen}
+          options={({ route }) => ({
+            title: getHeaderTitle(route),
+          })}
+          options={horizontalAnimation}
+        />
         <Stack.Screen
-          name="CardSection"
-          component={CardSectionScreen}
+          name="View Card"
+          component={ViewCardScreen}
           options={({ route }) => ({
             title: getHeaderTitle(route),
             headerShown: false,

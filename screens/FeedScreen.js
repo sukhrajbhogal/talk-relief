@@ -7,7 +7,6 @@ const FeedScreen = (props) => {
   return (
     <SafeAreaView style={styles.screen}>
       <StatusBar barStyle="dark-content" animated={true} />
-      {/* <Text>Feed Screen</Text> */}
       <CardList />
     </SafeAreaView>
   );

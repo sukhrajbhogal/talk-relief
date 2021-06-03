@@ -11,7 +11,13 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case CREATE_POST:
-      const newPost = new Post(action.postData.title, action.postData.content);
+      const newPost = new Post(
+        //action.postData.postid,
+        action.postData.uid,
+        action.postData.title,
+        action.postData.content,
+        action.postData.timestamp
+      );
       return {
         ...state,
         posts: state.posts.concat(newPost),
