@@ -1,5 +1,12 @@
 import React, { useLayoutEffect } from "react";
-import { SafeAreaView, ScrollView, View, Text, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
 
 function ViewLetterScreen({ navigation }) {
@@ -20,6 +27,7 @@ function ViewLetterScreen({ navigation }) {
       <ScrollView style={styles.Container}>
         <Text style={styles.Title}>{route.params.Title}</Text>
         <Text style={styles.Content}>{route.params.Content}</Text>
+        {/* <Image source={require("../assets/charm.png")} style={styles.charm} /> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -43,6 +51,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingBottom: 20,
     lineHeight: 40,
+  },
+  charm: {
+    marginTop: 10,
+    marginBottom: 15,
+    alignSelf: "flex-end",
   },
 });
 
