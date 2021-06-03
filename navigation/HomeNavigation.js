@@ -86,7 +86,7 @@ const HomeNavigation = () => {
               size={35}
               color="#202020"
               style={{ right: 15 }}
-              onPress={() => alert("Click this to logout.")}
+              onPress={() => navigation.navigate("Login")}
             />
           ),
         })}

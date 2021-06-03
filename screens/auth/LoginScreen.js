@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useReducer } from "react";
 import {
   SafeAreaView,
   View,
@@ -13,12 +13,39 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useNavigation } from "@react-navigation/native";
 import * as authActions from "../../store/actions/auth";
 
-const LoginScreen = () => {
-  const [emailText, setEmailText] = useState("");
-  const [passwordText, setPasswordText] = useState("");
+// const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
+
+// const formReducer = (state, action) => {
+//   if (action.type === FORM_INPUT_UPDATE) {
+//     const updatedValues = {
+//       ...state.inputValues,
+//       [action.input]: action.value,
+//     };
+//     const updatedValidities = {
+//       ...state.inputValidities,
+//       [action.input]: action.isValid,
+//     };
+//     let updatedFormIsValid = true;
+//     for (const key in updatedValidities) {
+//       updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+//     }
+//     return {
+//       formIsValid: updatedFormIsValid,
+//       inputValidities: updatedValidities,
+//       inputValues: updatedValues,
+//     };
+//   }
+//   return state;
+// };
+
+const LoginScreen = (props) => {
+  const [error, setError] = useState();
   const dispatch = useDispatch();
 
-  const navigation = useNavigation();
+  const [emailText, setEmailText] = useState("");
+  const [passwordText, setPasswordText] = useState("");
+  //const [error, setError] = useState();
+  //const dispatch = useDispatch();
 
   const emailChangeHandler = (text) => {
     setEmailText(text);
@@ -28,9 +55,41 @@ const LoginScreen = () => {
     setPasswordText(text);
   };
 
+  const navigation = useNavigation();
+  // const [formState, dispatchFormState] = useReducer(formReducer, {
+  //   inputValues: {
+  //     email: "",
+  //     password: "",
+  //   },
+  //   inputValidities: {
+  //     email: false,
+  //     password: false,
+  //   },
+  //   formIsValid: false,
+  // });
+
   const logInHandler = () => {
-    dispatch(authActions.login(emailText, passwordText));
+    let action;
+    action = authActions.login(emailText, passwordText);
+    try {
+      dispatch(action);
+      props.navigation.navigate("Home");
+    } catch (err) {
+      setError(err.message);
+    }
   };
+
+  // const inputChangeHandler = useCallback(
+  //   (inputIdentifier, inputValue, inputValidity) => {
+  //     dispatchFormState({
+  //       type: FORM_INPUT_UPDATE,
+  //       value: inputValue,
+  //       isValid: inputValidity,
+  //       input: inputIdentifier,
+  //     });
+  //   },
+  //   [dispatchFormState]
+  // );
 
   return (
     <SafeAreaView style={styles.Container}>
@@ -56,15 +115,16 @@ const LoginScreen = () => {
           <TextInput
             style={styles.placeholder}
             id="email"
-            name="email"
-            value={emailText}
+            name="E-Mail"
             required
+            value={emailText}
             keyboardType="email-address"
             autoCapitalize="none"
             errorText="Please enter a valid email address"
             placeholder="Abc@xyz.com"
             placeholderTextColor="#7B7670"
             onChangeText={emailChangeHandler}
+            //onChangeText={inputChangeHandler}
           />
         </View>
         <View style={styles.contentContainer}>
@@ -72,17 +132,18 @@ const LoginScreen = () => {
           <TextInput
             style={(styles.postContent, styles.placeholder)}
             id="password"
-            name="password"
-            value={passwordText}
+            name="Password"
             secureTextEntry={true}
             required
-            numberOfLines={10}
+            value={passwordText}
+            minLength={6}
             errorText="Please enter a valid password"
             autoCapitalize="none"
             keyboardType="default"
             placeholder="********"
             placeholderTextColor="#7B7670"
             onChangeText={passwordChangeHandler}
+            //onChangeText={inputChangeHandler}
           />
         </View>
       </View>
