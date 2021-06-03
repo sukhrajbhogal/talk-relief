@@ -13,7 +13,7 @@ import InboxScreen from "../screens/InboxScreen";
 import ViewCardScreen from "../screens/ViewCardScreen";
 import ViewLetterScreen from "../screens/ViewLetterScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
-import SignupScreen from "../screens/auth/SignupScreen";
+import SignupScreen from "../screens/auth/SignUpScreen";
 import horizontalAnimation from "../components/horizontalAnimation";
 
 const Stack = createStackNavigator();
@@ -37,7 +37,7 @@ const AppNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="Splash"
         mode="modal"
         screenOptions={{
           headerTitleAlign: "left",

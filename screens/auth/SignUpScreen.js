@@ -7,6 +7,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -15,6 +16,7 @@ import * as authActions from "../../store/actions/auth";
 import { useAnimatedScrollHandler } from "react-native-reanimated";
 
 const SignUpScreen = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -33,8 +35,10 @@ const SignUpScreen = () => {
     setPasswordText(text);
   };
 
-  const signUpHandler = () => {
-    dispatch(authActions.signup(userNameText, emailText, passwordText));
+  const signUpHandler = async () => {
+    setIsLoading(true);
+    await dispatch(authActions.signup(userNameText, emailText, passwordText));
+    setIsLoading(false);
   };
 
   return (
@@ -108,6 +112,7 @@ const SignUpScreen = () => {
             onChangeText={passwordChangeHandler}
           />
         </View>
+        {isLoading ? <ActivityIndicator size="large" /> : <View />}
       </View>
     </SafeAreaView>
   );

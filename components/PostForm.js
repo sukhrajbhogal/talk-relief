@@ -6,6 +6,7 @@ import {
   Pressable,
   StyleSheet,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import * as postAction from "../store/actions/posts";
 import { useDispatch } from "react-redux";
