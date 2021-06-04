@@ -14,7 +14,9 @@ import ViewCardScreen from "../screens/ViewCardScreen";
 import ViewLetterScreen from "../screens/ViewLetterScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignUpScreen";
+import ProfileScreen from "../screens/auth/ProfileScreen";
 import horizontalAnimation from "../components/horizontalAnimation";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 const InboxStack = createStackNavigator();
@@ -34,6 +36,8 @@ function getHeaderTitle(route) {
 }
 
 const HomeNavigation = () => {
+  //const navigation = useNavigation();
+
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -78,7 +82,7 @@ const HomeNavigation = () => {
       <Stack.Screen
         name="Home"
         component={TabNavigation}
-        options={({ route }) => ({
+        options={({ navigation, route }) => ({
           title: getHeaderTitle(route),
           headerRight: () => (
             <MaterialCommunityIcons
@@ -86,7 +90,7 @@ const HomeNavigation = () => {
               size={35}
               color="#202020"
               style={{ right: 15 }}
-              onPress={() => navigation.navigate("Login")}
+              onPress={() => navigation.navigate("Profile")}
             />
           ),
         })}
@@ -122,6 +126,15 @@ const HomeNavigation = () => {
           title: getHeaderTitle(route),
           headerShown: false,
         })}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          headerShown: false,
+        })}
+        options={horizontalAnimation}
       />
     </Stack.Navigator>
   );

@@ -1,4 +1,4 @@
-import React, { createElement } from "react";
+import React from "react";
 import { TextInput, StyleSheet } from "react-native";
 
 class AutoExpandingTextInput extends React.Component {
@@ -21,7 +21,7 @@ class AutoExpandingTextInput extends React.Component {
         onContentSizeChange={(event) => {
           this.setState({ height: event.nativeEvent.contentSize.height });
         }}
-        style={(styles.container, { height: Math.max(35, this.state.height) })}
+        style={{ height: Math.max(35, this.state.height) }}
         value={this.state.text}
         placeholderTextColor="rgba(255,255,255,0.7)"
       />
