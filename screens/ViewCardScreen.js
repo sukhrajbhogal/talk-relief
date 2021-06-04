@@ -11,11 +11,12 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  TextInput,
   Button,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import AutoExpandingTextInput from "../components/AutoExpandingTextInput";
+import { TextInput } from "react-native";
 
 const { height } = Dimensions.get("window");
 export const fullHeight = (height * 1564) / 974;
@@ -26,6 +27,7 @@ export default function ViewCardScreen() {
   const [input, setInput] = useState("");
 
   const sendMessage = () => {};
+  let numOfLines = 0;
 
   return (
     // Show card full screen as background
@@ -43,39 +45,39 @@ export default function ViewCardScreen() {
           style={styles.container}
           //keyboardVerticalOffset={90}
         >
-          <>
-            {/* Card goes here */}
-            <ScrollView style={styles.cardContainer}>
-              <View>
-                <Text style={[styles.fontStyle, styles.cardTitle]}>
-                  {route.params.Card.Title}
-                </Text>
-                <Text
-                  numberOfLines={6}
-                  style={[styles.fontStyle, styles.cardContent]}
-                >
-                  {route.params.Card.Content}
-                </Text>
-                <Text style={styles.fontStyle}>
-                  @{route.params.Card.username}
-                </Text>
-              </View>
-            </ScrollView>
-
-            {/* Write a reply */}
-            <View style={styles.replyContainer}>
-              <TextInput
-                value={input}
-                onChangeText={(text) => setInput(text)}
-                placeholder="Write kind words"
-                placeholderTextColor="#7B7670"
-                style={styles.textInput}
-              />
-              <TouchableOpacity onPress={sendMessage} activeOpacity={0.5}>
-                <Button title="SEND"></Button>
-              </TouchableOpacity>
+          {/* Card goes here */}
+          <ScrollView style={styles.cardContainer}>
+            <View>
+              <Text style={[styles.fontStyle, styles.cardTitle]}>
+                {route.params.Card.Title}
+              </Text>
+              <Text
+                numberOfLines={6}
+                style={[styles.fontStyle, styles.cardContent]}
+              >
+                {route.params.Card.Content}
+              </Text>
+              <Text style={styles.fontStyle}>
+                @{route.params.Card.username}
+              </Text>
             </View>
-          </>
+          </ScrollView>
+
+          {/* Write a reply */}
+          <View style={styles.replyContainer}>
+            <TextInput
+              style={styles.textInput}
+              value={input}
+              multiline={true}
+              numberOfLines={numOfLines}
+              onChangeText={(text) => setInput(text)}
+              placeholder="Write kind words"
+              placeholderTextColor="rgba(55,55,55,0.7)"
+            />
+            <TouchableOpacity onPress={sendMessage} activeOpacity={0.7}>
+              <Button title="SEND"></Button>
+            </TouchableOpacity>
+          </View>
 
           {/* Close Button */}
           <View style={styles.closeButtonBG}>
@@ -93,6 +95,8 @@ export default function ViewCardScreen() {
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      {/* Bottom Safe Area */}
+      <SafeAreaView style={{ flex: 0, backgroundColor: "#fff" }} />
     </ImageBackground>
   );
 }
@@ -103,25 +107,37 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 15,
     alignItems: "center",
-    backgroundColor: "#D7D9DD",
+    backgroundColor: "#fff",
+    // backgroundColor: "rgba(52, 52, 52, 0.8)",
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
   },
-  textInput: {
-    bottom: 0,
-    height: 40,
-    flex: 1,
-    marginRight: 15,
-    borderColor: "transparent",
-    backgroundColor: "#ECECEC",
-    padding: 10,
-    color: "#202020",
-    borderRadius: 30,
-  },
+  // textInput: {
+  //   bottom: 0,
+  //   height: 40,
+  //   flex: 1,
+  //   marginRight: 15,
+  //   padding: 10,
+  //   color: "#fff",
+  //   fontSize: 16,
+  // },
   screen: {
     flex: 1,
   },
   container: {
     flex: 1,
-    //backgroundColor: "#D7D9DD",
+  },
+  textInput: {
+    bottom: 0,
+    height: 40,
+    flex: 1,
+    marginRight: 5,
+    padding: 10,
+    paddingTop: 10,
+    backgroundColor: "#D7D9DD",
+    borderRadius: 20,
+    color: "#202020",
+    fontSize: 16,
   },
   fontStyle: {
     color: "#fff",

@@ -27,7 +27,7 @@ function ViewLetterScreen({ navigation }) {
       <ScrollView style={styles.Container}>
         <Text style={styles.Title}>{route.params.Title}</Text>
         <Text style={styles.Content}>{route.params.Content}</Text>
-        {/* <Image source={require("../assets/charm.png")} style={styles.charm} /> */}
+        <Image source={require("../assets/charm.png")} style={styles.charm} />
       </ScrollView>
     </SafeAreaView>
   );

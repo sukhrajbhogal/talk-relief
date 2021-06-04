@@ -36,7 +36,7 @@ function getHeaderTitle(route) {
 const HomeNavigation = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Splash"
+      initialRouteName="Home"
       mode="modal"
       screenOptions={{
         headerTitleAlign: "left",
