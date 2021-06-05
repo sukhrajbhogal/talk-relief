@@ -40,12 +40,9 @@ const colorArray = [
   "#7A78DF",
   "#F08EEC",
   "#194350",
-  "#FE1818",
-  "#BA6B5A",
   "#1FAB4F",
   "#1F46AB",
   "#AB1F1F",
-  "#8D7A7A",
   "#51C4D3",
 ];
 

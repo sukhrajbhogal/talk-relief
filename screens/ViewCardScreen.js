@@ -11,7 +11,8 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  Button,
+  Pressable,
+  Keyboard,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -25,8 +26,19 @@ export default function ViewCardScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const [input, setInput] = useState("");
+  const [isActive, setActive] = useState(false);
 
-  const sendMessage = () => {};
+  const sendMessage = () => {
+    Keyboard.dismiss();
+    setInput("");
+    // Code saves message to the database
+  };
+
+  const cancelMessage = () => {
+    Keyboard.dismiss();
+    setInput("");
+  };
+
   let numOfLines = 0;
 
   return (
@@ -65,18 +77,50 @@ export default function ViewCardScreen() {
 
           {/* Write a reply */}
           <View style={styles.replyContainer}>
+            <View style={styles.replyHeader}>
+              {/* Close reply */}
+              <TouchableOpacity activeOpacity={0.5} onPress={cancelMessage}>
+                <MaterialCommunityIcons
+                  name="window-close"
+                  size={30}
+                  color={"#fff"}
+                />
+              </TouchableOpacity>
+              <Text style={styles.posterName}>
+                Replying to @{route.params.Card.username}
+              </Text>
+
+              {/* Send button */}
+              <Pressable style={styles.submit}>
+                <TouchableOpacity onPress={sendMessage} activeOpacity={0.3}>
+                  <Text>Send</Text>
+                </TouchableOpacity>
+              </Pressable>
+            </View>
+
+            {/* Input */}
             <TextInput
-              style={styles.textInput}
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                marginLeft: 15,
+                marginRight: 15,
+                minHeight: isActive ? 120 : 40,
+                maxHeight: isActive ? 140 : 120,
+                marginBottom: isActive ? 10 : 0,
+              }}
               value={input}
               multiline={true}
               numberOfLines={numOfLines}
+              onContentSizeChange={(e) => {
+                numOfLines = e.nativeEvent.contentSize.height / 16;
+              }}
+              onFocus={() => setActive(true)}
+              onBlur={() => setActive(false)}
               onChangeText={(text) => setInput(text)}
               placeholder="Write kind words"
-              placeholderTextColor="rgba(55,55,55,0.7)"
+              placeholderTextColor="rgba(255,255,255,0.5)"
             />
-            <TouchableOpacity onPress={sendMessage} activeOpacity={0.7}>
-              <Button title="SEND"></Button>
-            </TouchableOpacity>
           </View>
 
           {/* Close Button */}
@@ -96,48 +140,19 @@ export default function ViewCardScreen() {
         </KeyboardAvoidingView>
       </SafeAreaView>
       {/* Bottom Safe Area */}
-      <SafeAreaView style={{ flex: 0, backgroundColor: "#fff" }} />
+      <SafeAreaView
+        style={{ flex: 0, backgroundColor: "rgba(0, 0, 0, 0.7)" }}
+      />
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  replyContainer: {
-    flexDirection: "row",
-    width: "100%",
-    padding: 15,
-    alignItems: "center",
-    backgroundColor: "#fff",
-    // backgroundColor: "rgba(52, 52, 52, 0.8)",
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-  },
-  // textInput: {
-  //   bottom: 0,
-  //   height: 40,
-  //   flex: 1,
-  //   marginRight: 15,
-  //   padding: 10,
-  //   color: "#fff",
-  //   fontSize: 16,
-  // },
   screen: {
     flex: 1,
   },
   container: {
     flex: 1,
-  },
-  textInput: {
-    bottom: 0,
-    height: 40,
-    flex: 1,
-    marginRight: 5,
-    padding: 10,
-    paddingTop: 10,
-    backgroundColor: "#D7D9DD",
-    borderRadius: 20,
-    color: "#202020",
-    fontSize: 16,
   },
   fontStyle: {
     color: "#fff",
@@ -176,5 +191,32 @@ const styles = StyleSheet.create({
     right: 3,
     bottom: 3,
     left: 3,
+  },
+  replyContainer: {
+    width: "100%",
+    padding: 5,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  replyHeader: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  posterName: {
+    color: "#fff",
+    marginLeft: 10,
+    marginRight: "auto",
+  },
+  submit: {
+    marginRight: 5,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });
