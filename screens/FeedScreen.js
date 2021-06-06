@@ -2,7 +2,6 @@ import React from "react";
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 
 import CardList from "../components/CardList";
-
 const FeedScreen = (props) => {
   return (
     <SafeAreaView style={styles.screen}>

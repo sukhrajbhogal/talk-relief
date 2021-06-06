@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -7,10 +7,10 @@ import {
   Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const SplashScreen = (props) => {
+const AuthScreen = (props) => {
   const navigation = useNavigation();
-
   return (
     <SafeAreaView style={styles.screen}>
       <StatusBar barStyle="dark-content" animated={true} />
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SplashScreen;
+export default AuthScreen;

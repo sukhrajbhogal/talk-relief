@@ -1,13 +1,23 @@
 import React from "react";
 import firebase from "firebase/auth";
+import { useDispatch } from "react-redux";
+import * as authActions from "../../store/actions/auth";
 import { Text, View, SafeAreaView, StyleSheet, Button } from "react-native";
 
-const ProfileScreen = () => {
+const ProfileScreen = (props) => {
+  const dispatch = useDispatch();
+
   return (
     <SafeAreaView style={styles.screen}>
       <View>
         <Text> Profile </Text>
-        <Button title="logout" onPress={() => {}} />
+        <Button
+          title="logout"
+          onPress={() => {
+            dispatch(authActions.logout());
+            props.navigation.navigate("Auth");
+          }}
+        />
       </View>
     </SafeAreaView>
   );

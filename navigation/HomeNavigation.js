@@ -7,7 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import TabNavigation from "./TabNavigation";
-import SplashScreen from "../screens/SplashScreen";
+import AuthScreen from "../screens/auth/AuthScreen";
 import AddPostScreen from "../screens/AddPostScreen";
 import InboxScreen from "../screens/InboxScreen";
 import ViewCardScreen from "../screens/ViewCardScreen";
@@ -15,7 +15,10 @@ import ViewLetterScreen from "../screens/ViewLetterScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignUpScreen";
 import ProfileScreen from "../screens/auth/ProfileScreen";
+import StartUpScreen from "../screens/auth/StartUpScreen";
+
 import horizontalAnimation from "../components/horizontalAnimation";
+
 import { useNavigation } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
@@ -40,7 +43,7 @@ const HomeNavigation = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="StartUp"
       mode="modal"
       screenOptions={{
         headerTitleAlign: "left",
@@ -56,8 +59,16 @@ const HomeNavigation = () => {
       }}
     >
       <Stack.Screen
-        name="Splash"
-        component={SplashScreen}
+        name="StartUp"
+        component={StartUpScreen}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          headerShown: false,
+        })}
+      />
+      <Stack.Screen
+        name="Auth"
+        component={AuthScreen}
         options={({ route }) => ({
           title: getHeaderTitle(route),
           headerShown: false,

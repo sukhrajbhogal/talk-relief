@@ -1,21 +1,27 @@
-export const SIGNUP = "SIGNUP";
-export const LOGIN = "LOGIN";
-//export const AUTHENTICATE = "AUTHENTICATE";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const LOGOUT = "LOGOUT";
-export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
+//export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
+export const AUTHENTICATE = "AUTHENTICATE";
 
-let timer;
-
-export const setDidTryAL = () => {
-  return { type: SET_DID_TRY_AL };
-};
-
-export const authenticate = (userId, token, expiryTime) => {
+export const authenticate = (userId, token) => {
   return (dispatch) => {
-    dispatch(setLogoutTimer(expiryTime));
     dispatch({ type: AUTHENTICATE, userId: userId, token: token });
   };
 };
+
+// let timer;
+
+// export const setDidTryAL = () => {
+//   return { type: SET_DID_TRY_AL };
+// };
+
+// export const authenticate = (userId, token, expiryTime) => {
+//   return (dispatch) => {
+//     dispatch(setLogoutTimer(expiryTime));
+//     dispatch({ type: AUTHENTICATE, userId: userId, token: token });
+//   };
+// };
 
 export const signup = (username, email, password) => {
   return async (dispatch) => {
@@ -48,7 +54,11 @@ export const signup = (username, email, password) => {
 
     const resData = await response.json();
     console.log(resData);
-    dispatch({ type: SIGNUP, token: resData.idToken, userId: resData.localId });
+    dispatch(authenticate(resData.localId, resData.idToken));
+    const expirationDate = new Date(
+      new Date().getTime() + parseInt(resData.expiresIn) * 1000
+    );
+    saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   };
 };
 
@@ -78,33 +88,59 @@ export const login = (email, password) => {
         message = "This email could not be found!";
       } else if (errorId === "INVALID_PASSWORD") {
         message = "This password is not valid!";
-      }
+      } else if (errorId === "INVALID_EMAIL") {
+        message = "This email is invalid!";
+      } else if (errorId === "MISSING_PASSWORD") {
+        message = "This password is missing!";
       throw new Error(message);
     }
 
     const resData = await response.json();
-    console.log("logged in");
+    console.log("LOGGED IN");
     console.log(resData);
-    dispatch({ type: LOGIN, token: resData.idToken, userId: resData.localId });
+    dispatch(
+      authenticate(
+        resData.localId,
+        resData.idToken
+        //parseInt(resData.expiresIn) * 1000
+      )
+    );
+    console.log("HEREEEEEEE");
+    console.log(resData.expiresIn);
+    // const expirationDate = new Date(
+    //   new Date().getTime() + parseInt(resData.expiresIn) * 1000
+    // );
+    // saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   };
 };
 
 export const logout = () => {
-  clearLogoutTimer();
   AsyncStorage.removeItem("userData");
   return { type: LOGOUT };
 };
 
-const clearLogoutTimer = () => {
-  if (timer) {
-    clearTimeout(timer);
-  }
-};
+// const clearLogoutTimer = () => {
+//   if (timer) {
+//     clearTimeout(timer);
+//   }
+// };
 
-const setLogoutTimer = (expirationTime) => {
-  return (dispatch) => {
-    timer = setTimeout(() => {
-      dispatch(logout());
-    }, expirationTime);
-  };
+// const setLogoutTimer = (expirationTime) => {
+//   return (dispatch) => {
+//     timer = setTimeout(() => {
+//       dispatch(logout());
+//     }, expirationTime);
+//   };
+// };
+
+const saveDataToStorage = (token, userId, expirationDate) => {
+  console.log("EXPIRATON = " + expirationDate);
+  AsyncStorage.setItem(
+    "userData",
+    JSON.stringify({
+      token: token,
+      userId: userId,
+      expiryDate: expirationDate.toISOString(),
+    })
+  );
 };

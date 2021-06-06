@@ -7,6 +7,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -68,14 +69,22 @@ const LoginScreen = (props) => {
   //   formIsValid: false,
   // });
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
+
   const logInHandler = () => {
     let action;
     action = authActions.login(emailText, passwordText);
+    setError(null);
     try {
       dispatch(action);
-      props.navigation.navigate("Home");
+      //props.navigation.navigate("Home");
     } catch (err) {
       setError(err.message);
+      console.log(err.message);
     }
   };
 
