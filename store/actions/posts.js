@@ -32,7 +32,6 @@ export const createPost = (title, content) => {
     dispatch({
       type: CREATE_POST,
       postData: {
-        //id: resData.name,
         title,
         content,
         timestamp,

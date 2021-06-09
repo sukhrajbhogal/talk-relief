@@ -13,7 +13,6 @@ const StartUpScreen = (props) => {
       if (userData === null) {
         console.log("User data is null");
       }
-      console.log(userData);
       console.log("auto Login");
       if (!userData) {
         props.navigation.navigate("Auth");
@@ -25,6 +24,7 @@ const StartUpScreen = (props) => {
       const expirationDate = new Date(expiryDate);
 
       if (expirationDate <= new Date() || !token || !userId) {
+        console.log("Redirecting to Auth Screen");
         props.navigation.navigate("Auth");
         return;
       }
