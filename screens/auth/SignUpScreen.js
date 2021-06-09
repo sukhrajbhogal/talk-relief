@@ -37,7 +37,7 @@ const SignUpScreen = () => {
 
   const signUpHandler = async () => {
     setIsLoading(true);
-    await dispatch(authActions.signup(userNameText, emailText, passwordText));
+    dispatch(authActions.signup(userNameText, emailText, passwordText));
     setIsLoading(false);
   };
 

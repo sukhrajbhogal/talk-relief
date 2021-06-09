@@ -14,6 +14,7 @@ const StartUpScreen = (props) => {
         console.log("User data is null");
       }
       console.log(userData);
+      console.log("auto Login");
       if (!userData) {
         props.navigation.navigate("Auth");
         return;

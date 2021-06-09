@@ -6,10 +6,12 @@ import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import AppNavigation from "./navigation/AppNavigation";
 import posts from "./store/reducers/posts";
+import auth from "./store/reducers/auth";
 import { Provider } from "react-redux";
 
 const rootReducer = combineReducers({
   posts: posts,
+  auth: auth,
 });
 
 const fetchFonts = () => {

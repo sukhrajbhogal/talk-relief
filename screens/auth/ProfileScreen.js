@@ -14,7 +14,7 @@ const ProfileScreen = (props) => {
         <Button
           title="logout"
           onPress={() => {
-            dispatch(authActions.logout());
+            dispatch(authActions.signout());
             props.navigation.navigate("Auth");
           }}
         />

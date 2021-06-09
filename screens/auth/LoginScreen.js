@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -41,12 +42,12 @@ import * as authActions from "../../store/actions/auth";
 
 const LoginScreen = (props) => {
   const [error, setError] = useState();
-  const dispatch = useDispatch();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
-  //const [error, setError] = useState();
-  //const dispatch = useDispatch();
+
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const emailChangeHandler = (text) => {
     setEmailText(text);
@@ -56,7 +57,6 @@ const LoginScreen = (props) => {
     setPasswordText(text);
   };
 
-  const navigation = useNavigation();
   // const [formState, dispatchFormState] = useReducer(formReducer, {
   //   inputValues: {
   //     email: "",
@@ -75,17 +75,19 @@ const LoginScreen = (props) => {
     }
   }, [error]);
 
-  const logInHandler = () => {
+  const logInHandler = async () => {
     let action;
     action = authActions.login(emailText, passwordText);
     setError(null);
+    setIsLoading(true);
     try {
-      dispatch(action);
-      //props.navigation.navigate("Home");
+      await dispatch(action);
+      props.navigation.navigate("Home");
     } catch (err) {
       setError(err.message);
       console.log(err.message);
     }
+    setIsLoading(false);
   };
 
   // const inputChangeHandler = useCallback(

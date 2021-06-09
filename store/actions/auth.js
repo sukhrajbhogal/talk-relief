@@ -36,21 +36,22 @@ export const signup = (username, email, password) => {
           displayName: username,
           email: email,
           password: password,
-          retrunSecureToken: true,
+          returnSecureToken: true,
         }),
       }
     );
 
     if (!response.ok) {
       const errorResData = await response.json();
+      console.log(errorResData);
       const errorId = errorResData.error.message;
+      console.log(errorId);
       let message = errorId;
       if (errorId === "EMAIL_EXISTS") {
         message = "This email already exists!";
       }
       throw new Error(message);
     }
-    console.log(errorResData);
 
     const resData = await response.json();
     console.log(resData);
@@ -74,7 +75,7 @@ export const login = (email, password) => {
         body: JSON.stringify({
           email: email,
           password: password,
-          retrunSecureToken: true,
+          returnSecureToken: true,
         }),
       }
     );
@@ -92,25 +93,22 @@ export const login = (email, password) => {
         message = "This email is invalid!";
       } else if (errorId === "MISSING_PASSWORD") {
         message = "This password is missing!";
+      }
       throw new Error(message);
     }
-
     const resData = await response.json();
-    console.log("LOGGED IN");
     console.log(resData);
     dispatch(
       authenticate(
         resData.localId,
-        resData.idToken
-        //parseInt(resData.expiresIn) * 1000
+        resData.idToken,
+        parseInt(resData.expiresIn) * 1000
       )
     );
-    console.log("HEREEEEEEE");
-    console.log(resData.expiresIn);
-    // const expirationDate = new Date(
-    //   new Date().getTime() + parseInt(resData.expiresIn) * 1000
-    // );
-    // saveDataToStorage(resData.idToken, resData.localId, expirationDate);
+    const expirationDate = new Date(
+      new Date().getTime() + parseInt(resData.expiresIn) * 1000
+    );
+    saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   };
 };
 
@@ -119,19 +117,19 @@ export const logout = () => {
   return { type: LOGOUT };
 };
 
-// const clearLogoutTimer = () => {
-//   if (timer) {
-//     clearTimeout(timer);
-//   }
-// };
+const clearLogoutTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
+};
 
-// const setLogoutTimer = (expirationTime) => {
-//   return (dispatch) => {
-//     timer = setTimeout(() => {
-//       dispatch(logout());
-//     }, expirationTime);
-//   };
-// };
+const setLogoutTimer = (expirationTime) => {
+  return (dispatch) => {
+    timer = setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime);
+  };
+};
 
 const saveDataToStorage = (token, userId, expirationDate) => {
   console.log("EXPIRATON = " + expirationDate);

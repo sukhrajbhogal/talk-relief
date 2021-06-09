@@ -12,6 +12,7 @@ import * as postAction from "../store/actions/posts";
 import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+import firebase from "firebase";
 
 const PostForm = () => {
   const navigation = useNavigation();
@@ -41,11 +42,7 @@ const PostForm = () => {
   };
 
   const submitHandler = useCallback(() => {
-    const currentTime = Date.now();
-    console.log(currentTime);
-    dispatch(
-      postAction.createPost(postTitleText, postContentText, currentTime)
-    );
+    dispatch(postAction.createPost(postTitleText, postContentText));
   }, []);
 
   return (
