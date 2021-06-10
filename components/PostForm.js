@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
-import * as postAction from "../store/actions/posts";
+import * as postActions from "../store/actions/posts";
 import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -42,7 +42,7 @@ const PostForm = () => {
   };
 
   const submitHandler = useCallback(() => {
-    dispatch(postAction.createPost(postTitleText, postContentText));
+    dispatch(postActions.createPost(postTitleText, postContentText));
   }, []);
 
   return (

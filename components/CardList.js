@@ -191,7 +191,7 @@ export default function CardList() {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={cards}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.timestamp.toString()}
         renderItem={({ item }) => renderList(item)}
         ListFooterComponent={renderFooter}
         refreshControl={
