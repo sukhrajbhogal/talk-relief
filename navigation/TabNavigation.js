@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import FeedScreen from "../screens/FeedScreen";
-import InboxScreen from "../screens/InboxScreen";
+import FeedScreen from "../screens/main/FeedScreen";
+import InboxScreen from "../screens/main/InboxScreen";
 
 const Tab = createBottomTabNavigator();
 const EmptyScreen = () => {

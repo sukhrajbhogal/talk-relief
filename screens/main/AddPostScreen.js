@@ -1,12 +1,12 @@
 import React from "react";
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import PostForm from "../../components/PostForm";
 
-import CardList from "../components/CardList";
-const FeedScreen = (props) => {
+const AddPostScreen = (props) => {
   return (
     <SafeAreaView style={styles.screen}>
-      <StatusBar barStyle="dark-content" animated={true} />
-      <CardList />
+      <StatusBar barStyle="dark-content" />
+      <PostForm />
     </SafeAreaView>
   );
 };
@@ -14,10 +14,10 @@ const FeedScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    //justifyContent: "center",
+    alignItems: "stretch",
     backgroundColor: "#FFF1E4",
   },
 });
 
-export default FeedScreen;
+export default AddPostScreen;

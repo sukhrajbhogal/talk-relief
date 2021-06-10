@@ -10,11 +10,9 @@ const StartUpScreen = (props) => {
   useEffect(() => {
     const tryLogin = async () => {
       const userData = await AsyncStorage.getItem("userData");
-      if (userData === null) {
-        console.log("User data is null");
-      }
       console.log("auto Login");
       if (!userData) {
+        dispatch(authActions.setDidTryAL());
         props.navigation.navigate("Auth");
         return;
       }
@@ -25,6 +23,7 @@ const StartUpScreen = (props) => {
 
       if (expirationDate <= new Date() || !token || !userId) {
         console.log("Redirecting to Auth Screen");
+        dispatch(authActions.setDidTryAL());
         props.navigation.navigate("Auth");
         return;
       }
