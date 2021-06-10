@@ -1,27 +1,21 @@
-import React, { useEffect, navRef } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import {
-  NavigationContainer,
-  NavigationActions,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 
-import HomeNavigation from "./HomeNavigation";
-//import { HomeNavigation, AuthNavigation } from "./HomeNavigation";
-//import StartupScreen from '../screens/StartupScreen';
+import HomeNavigation, { AuthNavigation } from "./HomeNavigation";
+import StartUpScreen from "../screens/auth/StartUpScreen";
 
 const AppNavigation = (props) => {
   const isAuth = useSelector((state) => !!state.auth.token);
-  const navRef = useRef();
+  const didTryAutoLogin = useSelector((state) => state.auth.didTryAutoLogin);
 
-  useEffect(() => {
-    if (!isAuth) {
-      navRef.current.dispatch(
-        NavigationsActons.navigate({ routeName: "Auth" })
-      );
-    }
-  }, [isAuth]);
-
-  return <HomeNavigation ref={navRef} />;
+  return (
+    <NavigationContainer>
+      {isAuth && <HomeNavigation />}
+      {!isAuth && didTryAutoLogin && <AuthNavigation />}
+      {!isAuth && !didTryAutoLogin && <StartUpScreen />}
+    </NavigationContainer>
+  );
 };
 
 export default AppNavigation;

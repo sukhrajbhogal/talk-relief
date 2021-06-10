@@ -2,12 +2,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const LOGOUT = "LOGOUT";
 export const AUTHENTICATE = "AUTHENTICATE";
-//export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
+export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
 
 export const authenticate = (userId, token) => {
   return (dispatch) => {
     dispatch({ type: AUTHENTICATE, userId: userId, token: token });
   };
+};
+
+export const setDidTryAL = () => {
+  return { type: SET_DID_TRY_AL };
 };
 
 export const signup = (username, email, password) => {

@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-import CustomListItem from "../components/CustomListItem";
+import CustomListItem from "../../components/CustomListItem";
 
 // Dummy Data
 const Messages = [

@@ -8,10 +8,10 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import TabNavigation from "./TabNavigation";
 import AuthScreen from "../screens/auth/AuthScreen";
-import AddPostScreen from "../screens/AddPostScreen";
-import InboxScreen from "../screens/InboxScreen";
-import ViewCardScreen from "../screens/ViewCardScreen";
-import ViewLetterScreen from "../screens/ViewLetterScreen";
+import AddPostScreen from "../screens/main/AddPostScreen";
+import InboxScreen from "../screens/main/InboxScreen";
+import ViewCardScreen from "../screens/main/ViewCardScreen";
+import ViewLetterScreen from "../screens/main/ViewLetterScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignUpScreen";
 import ProfileScreen from "../screens/auth/ProfileScreen";
@@ -23,6 +23,9 @@ import { useNavigation } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 const InboxStack = createStackNavigator();
+const PostStack = createStackNavigator();
+const FeedStack = createStackNavigator();
+const AuthStackNavigation = createStackNavigator();
 
 // Changes header title when users navigation between tabs
 function getHeaderTitle(route) {
@@ -38,9 +41,20 @@ function getHeaderTitle(route) {
   }
 }
 
+export const AuthNavigation = () => {
+  return (
+    <AuthStackNavigation.Navigator screenOptions={defaultNavOptions}>
+      <AuthStackNavigation.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={authScreenOptions}
+      />
+    </AuthStackNavigation.Navigator>
+  );
+};
+
 const HomeNavigation = () => {
   //const navigation = useNavigation();
-
   return (
     <Stack.Navigator
       initialRouteName="StartUp"
@@ -152,17 +166,3 @@ const HomeNavigation = () => {
 };
 
 export default HomeNavigation;
-
-// const AuthStackNavigation = createStackNavigator();
-
-// export const AuthNavigation = () => {
-//   return (
-//     <AuthStachNavigation.Navigator screenOptions={defaultNavOptions}>
-//       <AuthStachNavigation.Screen
-//         name="Auth"
-//         component={AuthScreen}
-//         options={authScreenOptions}
-//       />
-//     </AuthStachNavigation.Navigator>
-//   );
-// };

@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import AutoExpandingTextInput from "../components/AutoExpandingTextInput";
+import AutoExpandingTextInput from "../../components/AutoExpandingTextInput";
 import { TextInput } from "react-native";
 
 const { height } = Dimensions.get("window");
