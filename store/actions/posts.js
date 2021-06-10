@@ -24,12 +24,17 @@ export const createPost = (postTitle, postContent) => {
     //   creatorId: userId,
     // });
 
-    const response = await db.collection("cards").add({
-      title: postTitle,
-      content: postContent,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      creatorId: userId,
-    });
+    const response = await db
+      .collection("cards")
+      .add({
+        title: postTitle,
+        content: postContent,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        creatorId: userId,
+      })
+      .then(() => {
+        console.log(title, content);
+      });
 
     // const response = await fetch(
     //   `https://talkrelief-c20b8-default-rtdb.firebaseio.com/posts.json?auth=${token}`,
