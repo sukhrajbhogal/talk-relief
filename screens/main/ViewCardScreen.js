@@ -61,13 +61,13 @@ export default function ViewCardScreen() {
           <ScrollView style={styles.cardContainer}>
             <View>
               <Text style={[styles.fontStyle, styles.cardTitle]}>
-                {route.params.Card.Title}
+                {route.params.Card.title}
               </Text>
               <Text
                 numberOfLines={6}
                 style={[styles.fontStyle, styles.cardContent]}
               >
-                {route.params.Card.Content}
+                {route.params.Card.content}
               </Text>
               <Text style={styles.fontStyle}>
                 @{route.params.Card.username}

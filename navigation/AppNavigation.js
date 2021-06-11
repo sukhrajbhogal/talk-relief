@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 
-import HomeNavigation, { AuthNavigation } from "./HomeNavigation";
+import { HomeNavigation, AuthNavigation } from "./HomeNavigation";
 import StartUpScreen from "../screens/auth/StartUpScreen";
 
 const AppNavigation = (props) => {
@@ -11,10 +11,10 @@ const AppNavigation = (props) => {
 
   return (
     <NavigationContainer>
-      <HomeNavigation />
-      {/* {isAuth && <HomeNavigation />}
+      {/* <HomeNavigation /> */}
+      {isAuth && <HomeNavigation />}
       {!isAuth && didTryAutoLogin && <AuthNavigation />}
-      {!isAuth && !didTryAutoLogin && <StartUpScreen />} */}
+      {!isAuth && !didTryAutoLogin && <StartUpScreen />}
     </NavigationContainer>
   );
 };

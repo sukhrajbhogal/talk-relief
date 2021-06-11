@@ -21,16 +21,12 @@ import horizontalAnimation from "../components/horizontalAnimation";
 
 import { useNavigation } from "@react-navigation/native";
 
-const Stack = createStackNavigator();
-const InboxStack = createStackNavigator();
-const PostStack = createStackNavigator();
-const FeedStack = createStackNavigator();
-const AuthStackNavigation = createStackNavigator();
+const AuthStack = createStackNavigator();
+const HomeStack = createStackNavigator();
 
-// Changes header title when users navigation between tabs
+// Show a different header title on different screens
 function getHeaderTitle(route) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
-
   switch (routeName) {
     case "Home":
       return "TalkRelief";
@@ -43,21 +39,51 @@ function getHeaderTitle(route) {
 
 export const AuthNavigation = () => {
   return (
-    <AuthStackNavigation.Navigator screenOptions={defaultNavOptions}>
-      <AuthStackNavigation.Screen
+    <AuthStack.Navigator
+      // initialRouteName=""
+      mode="modal"
+    >
+      <AuthStack.Screen
         name="Auth"
         component={AuthScreen}
-        options={authScreenOptions}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          headerShown: false,
+        })}
       />
-    </AuthStackNavigation.Navigator>
+      <AuthStack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          headerShown: false,
+        })}
+      />
+      <AuthStack.Screen
+        name="Signup"
+        component={SignupScreen}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          headerShown: false,
+        })}
+      />
+      <AuthStack.Screen
+        name="StartUp"
+        component={StartUpScreen}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          headerShown: false,
+        })}
+      />
+    </AuthStack.Navigator>
   );
 };
 
-const HomeNavigation = () => {
+export const HomeNavigation = () => {
   //const navigation = useNavigation();
   return (
-    <Stack.Navigator
-      initialRouteName="StartUp"
+    <HomeStack.Navigator
+      // initialRouteName=""
       mode="modal"
       screenOptions={{
         headerTitleAlign: "left",
@@ -72,39 +98,7 @@ const HomeNavigation = () => {
         },
       }}
     >
-      <Stack.Screen
-        name="StartUp"
-        component={StartUpScreen}
-        options={({ route }) => ({
-          title: getHeaderTitle(route),
-          headerShown: false,
-        })}
-      />
-      <Stack.Screen
-        name="Auth"
-        component={AuthScreen}
-        options={({ route }) => ({
-          title: getHeaderTitle(route),
-          headerShown: false,
-        })}
-      />
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={({ route }) => ({
-          title: getHeaderTitle(route),
-          headerShown: false,
-        })}
-      />
-      <Stack.Screen
-        name="Signup"
-        component={SignupScreen}
-        options={({ route }) => ({
-          title: getHeaderTitle(route),
-          headerShown: false,
-        })}
-      />
-      <Stack.Screen
+      <HomeStack.Screen
         name="Home"
         component={TabNavigation}
         options={({ navigation, route }) => ({
@@ -120,7 +114,7 @@ const HomeNavigation = () => {
           ),
         })}
       />
-      <Stack.Screen
+      <HomeStack.Screen
         name="Add Post"
         component={AddPostScreen}
         options={({ route }) => ({
@@ -128,7 +122,7 @@ const HomeNavigation = () => {
           headerShown: false,
         })}
       />
-      <Stack.Screen
+      <HomeStack.Screen
         name="Inbox"
         component={InboxScreen}
         options={({ route }) => ({
@@ -136,7 +130,7 @@ const HomeNavigation = () => {
           headerShown: false,
         })}
       />
-      <InboxStack.Screen
+      <HomeStack.Screen
         name="View Letter"
         component={ViewLetterScreen}
         options={({ route }) => ({
@@ -144,7 +138,7 @@ const HomeNavigation = () => {
         })}
         options={horizontalAnimation}
       />
-      <Stack.Screen
+      <HomeStack.Screen
         name="View Card"
         component={ViewCardScreen}
         options={({ route }) => ({
@@ -152,7 +146,7 @@ const HomeNavigation = () => {
           headerShown: false,
         })}
       />
-      <Stack.Screen
+      <HomeStack.Screen
         name="Profile"
         component={ProfileScreen}
         options={({ route }) => ({
@@ -161,8 +155,6 @@ const HomeNavigation = () => {
         })}
         options={horizontalAnimation}
       />
-    </Stack.Navigator>
+    </HomeStack.Navigator>
   );
 };
-
-export default HomeNavigation;

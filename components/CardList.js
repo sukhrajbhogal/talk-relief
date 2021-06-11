@@ -121,21 +121,20 @@ export default function CardList() {
     onEndReachedCalledDuringMomentum = true;
   };
 
-  renderList = ({ id, username, Category, Title, Content, timestamp }) => {
+  renderList = ({ id, username, category, title, content, timestamp }) => {
     // Assign random pattern for each card
     const randomIndex = Math.floor(Math.random() * bgArray.length);
     const selectedBG = bgArray[randomIndex];
     // Assign random color for each card
     const randomColorIndex = Math.floor(Math.random() * colorArray.length);
     const selectedColor = colorArray[randomColorIndex];
-
     return (
       <TouchableOpacity
         activeOpacity={1}
         // Send card info to CardSectionScreen which displays the card full screen
         onPress={() =>
           navigation.push("View Card", {
-            Card: { Title, Content, username, selectedBG, selectedColor },
+            Card: { title, content, username, selectedBG, selectedColor },
           })
         }
       >
@@ -144,12 +143,12 @@ export default function CardList() {
           style={[styles.bgImage, { backgroundColor: selectedColor }]}
         >
           <View style={styles.cardStyle}>
-            <Text style={[styles.fontStyle, styles.cardTitle]}>{Title}</Text>
+            <Text style={[styles.fontStyle, styles.cardTitle]}>{title}</Text>
             <Text
               numberOfLines={6}
               style={[styles.fontStyle, styles.cardContent]}
             >
-              {Content}
+              {content}
             </Text>
             <Text style={styles.fontStyle}>@{username}</Text>
           </View>
