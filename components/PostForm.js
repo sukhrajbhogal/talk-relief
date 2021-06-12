@@ -49,7 +49,7 @@ const PostForm = () => {
 
   const createPost = () => {
     const userId = user.uid;
-    if (contentIsValid === false  titleIsValid === false) {
+    if (contentIsValid === false || titleIsValid === false) {
       setError("The title or story is empty!");
     }
     db.collection("cards")
