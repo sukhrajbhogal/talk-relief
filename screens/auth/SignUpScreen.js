@@ -31,7 +31,8 @@ const SignUpScreenV2 = () => {
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [show, setShow] = useState(false);
-  const [birthday, setBirthday] = useState("");
+  const [birthday, setBirthday] = useState(new Date());
+
   const [isFocused, setIsFocused] = useState(false);
 
   const userNameChangeHandler = (text) => {

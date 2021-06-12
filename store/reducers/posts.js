@@ -1,4 +1,4 @@
-import { SET_POSTS, DELETE_POST, CREATE_POST } from "../actions/posts";
+import { SET_POSTS, CREATE_POST } from "../actions/posts";
 import Post from "../../models/post";
 //import database from "../firebase";
 
@@ -12,12 +12,10 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case SET_POSTS:
       return {
-        availablePosts: action.posts,
-        userPosts: action.userPosts,
+        posts: action.posts,
       };
     case CREATE_POST:
       const newPost = new Post(
-        action.postData.postid,
         action.postData.title,
         action.postData.content,
         action.postData.timestamp,

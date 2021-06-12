@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -7,17 +7,22 @@ import {
   StyleSheet,
   TouchableOpacity,
   Button,
+  Alert,
 } from "react-native";
 import * as postActions from "../store/actions/posts";
 import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import firebase from "firebase";
+import * as firebase from "firebase";
+import { getAuth } from "firebase/auth";
+import db from "../firebase";
 
 const PostForm = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const user = firebase.auth().currentUser;
 
+  const [error, setError] = useState();
   const [postTitleText, setPostTitle] = useState("");
   const [titleIsValid, setTitleIsValid] = useState(false);
   const [postContentText, setPostContent] = useState("");
@@ -30,6 +35,7 @@ const PostForm = () => {
       setTitleIsValid(true);
     }
     setPostTitle(text);
+    console.log(postTitleText);
   };
 
   const contentChangeHandler = (text) => {
@@ -40,6 +46,31 @@ const PostForm = () => {
     }
     setPostContent(text);
   };
+
+  const createPost = () => {
+    const userId = user.uid;
+    if (contentIsValid === false  titleIsValid === false) {
+      setError("The title or story is empty!");
+    }
+    db.collection("cards")
+      .add({
+        title: postTitleText,
+        content: postContentText,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        username: user.displayName,
+        creatorId: userId,
+      })
+      .then(() => {
+        console.log(title, content);
+        props.navigation.navigate("Home");
+      });
+  };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
 
   const submitHandler = useCallback(() => {
     dispatch(postActions.createPost(postTitleText, postContentText));
@@ -61,8 +92,8 @@ const PostForm = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Create Post</Text>
 
-        <Pressable onPressOut={submitHandler}>
-          <Button title="POST" onPress={submitHandler} />
+        <Pressable onPressOut={createPost}>
+          <Button title="POST" onPress={createPost} />
           {/* <TouchableOpacity>
             <Text style={styles.Submit}>POST</Text>
           </TouchableOpacity> */}
