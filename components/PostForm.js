@@ -142,7 +142,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     alignItems: "center",
-    //backgroundColor: "grey",
     justifyContent: "space-between",
     borderBottomWidth: 0.75,
     borderBottomColor: "#E8D7CC",
@@ -158,8 +157,6 @@ const styles = StyleSheet.create({
   },
   Container: {
     padding: 15,
-    // paddingLeft: 15,
-    // paddingRight: 15,
   },
   titleContainer: {
     borderBottomWidth: 0.75,
@@ -175,7 +172,6 @@ const styles = StyleSheet.create({
   },
   postTitle: {
     fontSize: 60,
-    //fontWeight: ,
   },
   postContent: {
     height: "50%",
