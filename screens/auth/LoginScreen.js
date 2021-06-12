@@ -1,12 +1,14 @@
 import React, { useState, useCallback, useEffect, useReducer } from "react";
 import {
   SafeAreaView,
+  StatusBar,
   View,
   TextInput,
   Text,
   Button,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
   Alert,
   ActivityIndicator,
 } from "react-native";
@@ -14,6 +16,11 @@ import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import * as authActions from "../../store/actions/auth";
+import { FloatingLabelInput } from "react-native-floating-label-input";
+import "../../components/globalInputStyles";
+
+import hidePassword from "../../assets/eye.png";
+import showPassword from "../../assets/eye-off.png";
 
 // const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
@@ -45,6 +52,7 @@ const LoginScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
+  const [show, setShow] = useState(false);
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -103,113 +111,125 @@ const LoginScreen = (props) => {
   // );
 
   return (
-    <SafeAreaView style={styles.Container}>
+    <SafeAreaView style={styles.screen}>
+      <StatusBar barStyle="dark-content" animated={true} />
       <View style={styles.Header}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => navigation.goBack()}
         >
           <MaterialCommunityIcons
             name="window-close"
-            size={35}
+            size={30}
             color={"#202020"}
             style={styles.closeIcon}
           />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Log In</Text>
-
-        <Button title="Log In" onPress={logInHandler}></Button>
+        </TouchableOpacity> */}
+        <View style={styles.signupContainer}>
+          <Text>New to TalkRelief?</Text>
+          <TouchableOpacity activeOpacity={0.5}>
+            <Text
+              style={styles.signup}
+              onPress={() => navigation.navigate("Signup")}
+            >
+              Sign up
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.Message}>
-        <View style={styles.titleContainer}>
-          <Text>Email</Text>
-          <TextInput
-            style={styles.placeholder}
-            id="email"
-            name="E-Mail"
-            required
-            value={emailText}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            errorText="Please enter a valid email address"
-            placeholder="Abc@xyz.com"
-            placeholderTextColor="#7B7670"
-            onChangeText={emailChangeHandler}
-            //onChangeText={inputChangeHandler}
-          />
-        </View>
-        <View style={styles.contentContainer}>
-          <Text>Password</Text>
-          <TextInput
-            style={(styles.postContent, styles.placeholder)}
-            id="password"
-            name="Password"
-            secureTextEntry={true}
-            required
-            value={passwordText}
-            minLength={6}
-            errorText="Please enter a valid password"
-            autoCapitalize="none"
-            keyboardType="default"
-            placeholder="********"
-            placeholderTextColor="#7B7670"
-            onChangeText={passwordChangeHandler}
-            //onChangeText={inputChangeHandler}
-          />
-        </View>
+      <View style={styles.container}>
+        <Text style={styles.title}>Log In</Text>
+        <FloatingLabelInput
+          id="email"
+          textContentType="emailAddress"
+          label="Email address"
+          value={emailText}
+          required
+          maxLength={35}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          returnKeyType="next"
+          errorText="Please enter a valid email address"
+          onChangeText={emailChangeHandler}
+        />
+        <FloatingLabelInput
+          id="password"
+          textContentType="password"
+          label="Password"
+          value={passwordText}
+          isPassword
+          togglePassword={show}
+          required
+          maxLength={30}
+          autoCapitalize="none"
+          keyboardType="default"
+          returnKeyType="send"
+          errorText="Please enter a valid password"
+          customShowPasswordImage={showPassword}
+          customHidePasswordImage={hidePassword}
+          onChangeText={passwordChangeHandler}
+        />
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor="rgba(0,0,0,0.7)"
+          style={styles.btnBG}
+          onPress={logInHandler}
+        >
+          <Text style={styles.btnText}>Log in</Text>
+        </TouchableHighlight>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  Container: {
+  screen: {
+    flex: 1,
     backgroundColor: "#FFF1E4",
-    height: "100%",
+  },
+  container: {
+    marginHorizontal: 15,
   },
   Header: {
-    display: "flex",
     flexDirection: "row",
-    padding: 10,
-    paddingTop: 15,
-    paddingBottom: 15,
+    paddingHorizontal: 10,
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     borderBottomWidth: 0.75,
     borderBottomColor: "#E8D7CC",
   },
-  headerTitle: {
-    fontSize: 18,
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginVertical: 15,
+    marginTop: 30,
+  },
+  btnBG: {
+    backgroundColor: "rgba(0,0,0,0.9)",
+    padding: 10,
+    paddingLeft: 60,
+    paddingRight: 60,
+    borderRadius: 30,
+    minWidth: 300,
+    marginBottom: 25,
+    borderWidth: 2,
+  },
+  btnText: {
+    textAlign: "center",
+    color: "#fff",
+    fontSize: 20,
     fontWeight: "700",
   },
-  Submit: {
-    fontSize: 14,
-    color: "#FF005C",
-    fontWeight: "bold",
+  signupContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  Message: {
-    padding: 15,
-  },
-  titleContainer: {
-    borderBottomWidth: 0.75,
-    borderBottomColor: "#E8D7CC",
-    paddingTop: 5,
-    paddingBottom: 20,
-  },
-  contentContainer: {
-    paddingTop: 15,
-  },
-  placeholder: {
-    fontSize: 20,
-  },
-  postTitle: {
-    fontSize: 60,
-  },
-  postContent: {
-    height: "50%",
-    borderWidth: 1,
-    padding: 10,
-    margin: 5,
+  signup: {
+    color: "#C83E6F",
+    fontWeight: "700",
+    marginLeft: 5,
+    marginHorizontal: 5,
+    marginVertical: 10,
   },
 });
 
