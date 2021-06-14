@@ -4,10 +4,10 @@ import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 
 const dummyData = {
-  Title: "Everything will be ok",
+  Title: "How do you comfort a friend who’s super sad? :(",
   Content:
-    "No worries man. I hope you’re having a better day! It’s totally normal to feel that way dude. Sometimes we just need a helping hand every now and then. For me, basketball helps me feel better. I’m here for you man!",
-  username: "Saibi",
+    "When comforting someone, I try to focus on making them feel safe first. Treat them to a snack they like, turn on music they enjoy, watch something familiar, etc. There’s huge comfort in safety and even if it’s just temporarily distracting them, it’ll mean a lot to them! I’m rooting for you!",
+  username: "Pastaccine",
 };
 
 const CustomListItem = () => {

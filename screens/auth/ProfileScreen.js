@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Button,
   TouchableHighlight,
+  Linking,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -36,13 +37,32 @@ const ProfileScreen = (props) => {
         <View style={styles.linkContainer}>
           <Text style={styles.content}>Your posts</Text>
         </View>
-        <View style={styles.linkContainer}>
-          <Text style={styles.content}>About</Text>
+        {/* <View style={styles.linkContainer}>
+          <Text style={styles.content}>TalkRelief Guide</Text>
         </View>
+        <View style={styles.linkContainer}>
+          <Text style={styles.content}>Community Guidelines</Text>
+        </View> */}
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor="rgba(0,0,0,0.05)"
+          style={styles.linkContainer}
+          onPress={() => Linking.openURL("https://google.com")}
+        >
+          <Text style={styles.content}>Terms of Service</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor="rgba(0,0,0,0.05)"
+          style={styles.linkContainer}
+          onPress={() => Linking.openURL("https://google.com")}
+        >
+          <Text style={styles.content}>Privacy Policy</Text>
+        </TouchableHighlight>
         <View style={styles.linkContainer}>
           <TouchableHighlight
             activeOpacity={1}
-            underlayColor="rgba(232,215,204,0.25)"
+            underlayColor="rgba(232,215,204,0.4)"
             style={styles.btnBG}
             onPress={() => {
               dispatch(authActions.logout());

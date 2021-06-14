@@ -14,10 +14,10 @@ import CustomListItem from "../../components/CustomListItem";
 const Messages = [
   {
     id: 1,
-    username: "David",
-    Title: "Everything will be ok",
+    username: "Pastaccine",
+    Title: "How do you comfort a friend who’s super sad? :(",
     Content:
-      "It’s ok. Whatever the tough thing is, it’s ok. It’s ok that you feel like you don’t know how to handle it. You will be ok.",
+      "When comforting someone, I try to focus on making them feel safe first. Treat them to a snack they like, turn on music they enjoy, watch something familiar, etc. There’s huge comfort in safety and even if it’s just temporarily distracting them, it’ll mean a lot to them!",
   },
 ];
 
