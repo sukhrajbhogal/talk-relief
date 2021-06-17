@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as firebase from "firebase";
 
 export const LOGOUT = "LOGOUT";
 export const AUTHENTICATE = "AUTHENTICATE";
@@ -53,8 +54,8 @@ export const signup = (username, email, password) => {
     saveDataToStorage(
       resData.idToken,
       resData.localId,
-      expirationDate,
-      username
+      resData.displayName,
+      expirationDate
     );
   };
 };
@@ -108,23 +109,34 @@ export const login = (email, password) => {
     saveDataToStorage(
       resData.idToken,
       resData.localId,
-      expirationDate,
-      resData.displayName
+      resData.displayName,
+      expirationDate
     );
+    AsyncStorage.getAllKeys().then((res) => console.log(res));
   };
 };
 
 export const logout = () => {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      console.log("signed out");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   AsyncStorage.removeItem("userData");
   return { type: LOGOUT };
 };
 
-const saveDataToStorage = (token, userId, expirationDate, username) => {
+const saveDataToStorage = (token, userId, displayName, expirationDate) => {
   AsyncStorage.setItem(
     "userData",
     JSON.stringify({
       token: token,
       userId: userId,
+      displayName: displayName,
       expiryDate: expirationDate.toISOString(),
       displayName: username,
     })

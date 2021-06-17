@@ -1,5 +1,7 @@
-import React, { useLayoutEffect } from "react";
-import firebase from "firebase/auth";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import * as firebase from "firebase";
+import { auth } from "../../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import * as authActions from "../../store/actions/auth";
 import {
@@ -17,12 +19,29 @@ import { useNavigation } from "@react-navigation/native";
 const ProfileScreen = (props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [displayName, setDisplayName] = useState("");
 
-  // Update header title
+  useEffect(() => {
+    const getUsername = async () => {
+      try {
+        const value = await AsyncStorage.getItem("userData");
+        if (value != null) {
+          const username = JSON.parse(value).displayName;
+          console.log(username);
+          setDisplayName(username);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUsername();
+  }, [dispatch]);
+
+  // Update header titrle
   useLayoutEffect(() => {
     //navigation.mode = "mode";
     navigation.setOptions({
-      title: "Saibi",
+      title: displayName,
       headerTitleAlign: "center",
       headerBackTitle: "Back",
     });
@@ -31,6 +50,9 @@ const ProfileScreen = (props) => {
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView style={styles.container}>
+        <View style={styles.linkContainer}>
+          <Text style={styles.content}>{displayName}</Text>
+        </View>
         <View style={styles.linkContainer}>
           <Text style={styles.content}>Account</Text>
         </View>
@@ -74,7 +96,6 @@ const ProfileScreen = (props) => {
             style={styles.btnBG}
             onPress={() => {
               dispatch(authActions.logout());
-              //props.navigation.navigate("Auth");
             }}
           >
             <Text style={styles.logout}>Log out</Text>
