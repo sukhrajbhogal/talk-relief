@@ -20,10 +20,6 @@ import "firebase/auth";
 import { getAuth } from "firebase/auth";
 import { auth, database } from "../firebase";
 
-//Remove
-import * as authActions from "../store/actions/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 const PostForm = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();

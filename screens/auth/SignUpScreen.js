@@ -140,7 +140,7 @@ const SignUpScreenV2 = () => {
               customHidePasswordImage={hidePassword}
               onChangeText={passwordChangeHandler}
             />
-            <FloatingLabelInput
+            {/* <FloatingLabelInput
               id="birthday"
               label="Birthday (MM/DD/YYYY)"
               value={birthday}
@@ -153,18 +153,6 @@ const SignUpScreenV2 = () => {
               errorText="Please enter a valid username"
               onChangeText={birthdayChangeHandler}
             />
-            {/* <FloatingLabelInput
-              id="Gender"
-              label="What is your gender?"
-              value={gender}
-              required
-              //maxLength={20}
-              //autoCapitalize="none"
-              //keyboardType="numeric"
-              //returnKeyType="next"
-              errorText="Please select an option"
-              onChangeText={genderChangeHandler}
-            /> */}
             <RNPickerSelect
               onValueChange={(value) => console.log(value)}
               placeholder={placeholder}
@@ -189,7 +177,7 @@ const SignUpScreenV2 = () => {
               style={{
                 ...pickerSelectStyles,
               }}
-            />
+            /> */}
             <TouchableHighlight
               activeOpacity={1}
               underlayColor="rgba(0,0,0,0.7)"
