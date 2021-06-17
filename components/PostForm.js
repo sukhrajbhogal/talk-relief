@@ -1,4 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
   View,
   TextInput,
@@ -14,19 +16,54 @@ import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
+import "firebase/auth";
 import { getAuth } from "firebase/auth";
-import db from "../firebase";
+import { auth, database } from "../firebase";
 
 const PostForm = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const user = firebase.auth().currentUser;
 
   const [error, setError] = useState();
   const [postTitleText, setPostTitle] = useState("");
   const [titleIsValid, setTitleIsValid] = useState(false);
   const [postContentText, setPostContent] = useState("");
   const [contentIsValid, setContentIsValid] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [userId, setUserId] = useState("");
+
+  // const user = auth.currentUser;
+  // console.log(user);
+  // setDisplayName(user.displayName);
+  // setUserId(user.uid);
+
+  // useEffect(() => {
+  //   auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       console.log(user);
+  //     } else {
+  //       console.log("current user is null");
+  //     }
+  //   });
+  // });
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("userData");
+        if (value != null) {
+          const username = JSON.parse(value).displayName;
+          const uid = JSON.parse(value).userId;
+          console.log(username);
+          setDisplayName(username);
+          setUserId(uid);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserData();
+  }, [dispatch]);
 
   const titleChangeHandler = (text) => {
     if (text.length === 0) {
@@ -35,7 +72,6 @@ const PostForm = () => {
       setTitleIsValid(true);
     }
     setPostTitle(text);
-    console.log(postTitleText);
   };
 
   const contentChangeHandler = (text) => {
@@ -48,16 +84,16 @@ const PostForm = () => {
   };
 
   const createPost = () => {
-    const userId = user.uid;
     if (contentIsValid === false || titleIsValid === false) {
       setError("The title or story is empty!");
     }
-    db.collection("cards")
+    database
+      .collection("cards")
       .add({
         title: postTitleText,
         content: postContentText,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        username: user.displayName,
+        username: displayName,
         creatorId: userId,
       })
       .then(() => {
@@ -72,9 +108,9 @@ const PostForm = () => {
     }
   }, [error]);
 
-  const submitHandler = useCallback(() => {
-    dispatch(postActions.createPost(postTitleText, postContentText));
-  }, []);
+  // const submitHandler = useCallback(() => {
+  //   dispatch(postActions.createPost(postTitleText, postContentText));
+  // }, []);
 
   return (
     <View>

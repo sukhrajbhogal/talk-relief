@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import database from "../firebase";
+import { database } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 
 import bg0 from "../assets/bg.png";
