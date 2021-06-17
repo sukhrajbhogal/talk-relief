@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import {
   View,
   TextInput,
@@ -16,8 +15,6 @@ import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
-import "firebase/auth";
-import { getAuth } from "firebase/auth";
 import { auth, database } from "../firebase";
 
 const PostForm = () => {
@@ -34,8 +31,6 @@ const PostForm = () => {
 
   // const user = auth.currentUser;
   // console.log(user);
-  // setDisplayName(user.displayName);
-  // setUserId(user.uid);
 
   // useEffect(() => {
   //   auth.onAuthStateChanged((user) => {
@@ -86,20 +81,20 @@ const PostForm = () => {
   const createPost = () => {
     if (contentIsValid === false || titleIsValid === false) {
       setError("The title or story is empty!");
+    } else {
+      database
+        .collection("cards")
+        .add({
+          title: postTitleText,
+          content: postContentText,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          username: displayName,
+          creatorId: userId,
+        })
+        .then(() => {
+          navigation.navigate("Home");
+        });
     }
-    database
-      .collection("cards")
-      .add({
-        title: postTitleText,
-        content: postContentText,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        username: displayName,
-        creatorId: userId,
-      })
-      .then(() => {
-        console.log(title, content);
-        props.navigation.navigate("Home");
-      });
   };
 
   useEffect(() => {
