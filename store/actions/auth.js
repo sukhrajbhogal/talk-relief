@@ -138,7 +138,6 @@ const saveDataToStorage = (token, userId, displayName, expirationDate) => {
       userId: userId,
       displayName: displayName,
       expiryDate: expirationDate.toISOString(),
-      displayName: username,
     })
   );
 };
