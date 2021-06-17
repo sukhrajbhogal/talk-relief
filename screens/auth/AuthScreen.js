@@ -14,7 +14,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthScreen = () => {
   const navigation = useNavigation();
-  // const bg;
 
   return (
     <ImageBackground
@@ -47,16 +46,6 @@ const AuthScreen = () => {
           >
             <Text style={styles.btnText}>Login</Text>
           </TouchableHighlight>
-          {/* <Button
-            title="Sign Up"
-            color="white"
-            onPress={() => navigation.navigate("Signup")}
-          />
-          <Button
-            title="Log In"
-            color="white"
-            onPress={() => navigation.navigate("Login")}
-          /> */}
         </View>
       </SafeAreaView>
     </ImageBackground>

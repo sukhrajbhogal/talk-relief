@@ -90,12 +90,12 @@ const LoginScreen = (props) => {
     setIsLoading(true);
     try {
       await dispatch(action);
-      props.navigation.replace("Home");
+      //props.navigation.navigate("Home");
     } catch (err) {
       setError(err.message);
       console.log(err.message);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   // const inputChangeHandler = useCallback(

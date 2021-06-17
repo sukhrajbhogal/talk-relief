@@ -47,7 +47,11 @@ const ProfileScreen = (props) => {
           activeOpacity={1}
           underlayColor="rgba(0,0,0,0.05)"
           style={styles.linkContainer}
-          onPress={() => Linking.openURL("https://google.com")}
+          onPress={() =>
+            Linking.openURL(
+              "https://talkrelief.webflow.io/terms-privacy-policy#terms"
+            )
+          }
         >
           <Text style={styles.content}>Terms of Service</Text>
         </TouchableHighlight>
@@ -55,7 +59,11 @@ const ProfileScreen = (props) => {
           activeOpacity={1}
           underlayColor="rgba(0,0,0,0.05)"
           style={styles.linkContainer}
-          onPress={() => Linking.openURL("https://google.com")}
+          onPress={() =>
+            Linking.openURL(
+              "https://talkrelief.webflow.io/terms-privacy-policy"
+            )
+          }
         >
           <Text style={styles.content}>Privacy Policy</Text>
         </TouchableHighlight>
@@ -66,7 +74,7 @@ const ProfileScreen = (props) => {
             style={styles.btnBG}
             onPress={() => {
               dispatch(authActions.logout());
-              props.navigation.navigate("Auth");
+              //props.navigation.navigate("Auth");
             }}
           >
             <Text style={styles.logout}>Log out</Text>

@@ -12,15 +12,24 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import * as authActions from "../../store/actions/auth";
-import { useAnimatedScrollHandler } from "react-native-reanimated";
 import { FloatingLabelInput } from "react-native-floating-label-input";
 import "../../components/globalInputStyles";
+import RNPickerSelect from "react-native-picker-select";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import hidePassword from "../../assets/eye.png";
 import showPassword from "../../assets/eye-off.png";
+
+const options = [
+  { value: "female", label: "Female" },
+  { value: "male", label: "Male" },
+  { value: "nonbinary", label: "Non-binary" },
+  { value: "transgender", label: "Transgender" },
+  { value: "intersex", label: "Intersex" },
+  { value: "none", label: "I prefer not to say" },
+];
 
 const SignUpScreenV2 = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +40,8 @@ const SignUpScreenV2 = () => {
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [show, setShow] = useState(false);
-  const [birthday, setBirthday] = useState(new Date());
+  const [birthday, setBirthday] = useState("");
+  // const [gender, setGender] = useState("");
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -50,10 +60,19 @@ const SignUpScreenV2 = () => {
     setBirthday(text);
   };
 
+  // const genderChangeHandler = (text) => {
+  //   //setGender(text);
+  // };
+
   const signUpHandler = async () => {
     setIsLoading(true);
     dispatch(authActions.signup(userNameText, emailText, passwordText));
     setIsLoading(false);
+  };
+
+  const placeholder = {
+    label: "What's your gender?",
+    value: null,
   };
 
   return (
@@ -134,17 +153,42 @@ const SignUpScreenV2 = () => {
               errorText="Please enter a valid username"
               onChangeText={birthdayChangeHandler}
             />
-            <FloatingLabelInput
+            {/* <FloatingLabelInput
               id="Gender"
               label="What is your gender?"
-              value={birthday}
+              value={gender}
               required
-              maxLength={20}
-              autoCapitalize="none"
-              keyboardType="numeric"
-              returnKeyType="next"
-              errorText="Please enter a valid username"
-              //   onChangeText={userNameChangeHandler}
+              //maxLength={20}
+              //autoCapitalize="none"
+              //keyboardType="numeric"
+              //returnKeyType="next"
+              errorText="Please select an option"
+              onChangeText={genderChangeHandler}
+            /> */}
+            <RNPickerSelect
+              onValueChange={(value) => console.log(value)}
+              placeholder={placeholder}
+              items={[
+                { label: "Female", value: "female" },
+                { label: "Male", value: "male" },
+                { label: "Non-binary", value: "nonbinary" },
+                { label: "Transgender", value: "transgender" },
+                { label: "Intersex", value: "intersex" },
+                { label: "I prefer not to say", value: "none" },
+              ]}
+              Icon={() => {
+                return (
+                  <MaterialCommunityIcons
+                    name="chevron-down"
+                    color={"#202020"}
+                    size={40}
+                    style={styles.chevron}
+                  />
+                );
+              }}
+              style={{
+                ...pickerSelectStyles,
+              }}
             />
             <TouchableHighlight
               activeOpacity={1}
@@ -191,6 +235,11 @@ const styles = StyleSheet.create({
   subtitle: {
     marginBottom: 15,
   },
+  chevron: {
+    paddingTop: 8,
+    paddingRight: 10,
+    alignItems: "center",
+  },
   btnBG: {
     backgroundColor: "rgba(0,0,0,0.9)",
     padding: 10,
@@ -212,6 +261,35 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginHorizontal: 5,
     marginVertical: 10,
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  placeholder: { color: "#202020" },
+  inputIOS: {
+    fontSize: 18,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderRadius: 4,
+    color: "#202020",
+    paddingRight: 30, // to ensure the text is never behind the icon
+    borderWidth: 2,
+    borderColor: "rgba(0,0,0,0.1)",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    marginBottom: 15,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: "purple",
+    borderRadius: 8,
+    color: "#202020",
+    paddingRight: 30, // to ensure the text is never behind the icon
   },
 });
 

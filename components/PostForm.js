@@ -17,10 +17,14 @@ import * as firebase from "firebase";
 import { getAuth } from "firebase/auth";
 import db from "../firebase";
 
+//Remove
+import * as authActions from "../store/actions/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const PostForm = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const user = firebase.auth().currentUser;
+  //const user = firebase.auth().currentUser;
 
   const [error, setError] = useState();
   const [postTitleText, setPostTitle] = useState("");
@@ -35,7 +39,7 @@ const PostForm = () => {
       setTitleIsValid(true);
     }
     setPostTitle(text);
-    console.log(postTitleText);
+    // console.log(postTitleText);
   };
 
   const contentChangeHandler = (text) => {
@@ -48,33 +52,53 @@ const PostForm = () => {
   };
 
   const createPost = () => {
-    const userId = user.uid;
-    if (contentIsValid === false || titleIsValid === false) {
-      setError("The title or story is empty!");
-    }
-    db.collection("cards")
-      .add({
-        title: postTitleText,
-        content: postContentText,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        username: user.displayName,
-        creatorId: userId,
-      })
-      .then(() => {
-        console.log(title, content);
-        props.navigation.navigate("Home");
-      });
+    //const userId = user.uid;
+    // if (contentIsValid === false || titleIsValid === false) {
+    //   setError("The title or story is empty!");
+    // }
+    console.log(postTitleText);
+    console.log(postContentText);
+    // db.collection("cards")
+    //   .add({
+    //     title: postTitleText,
+    //     content: postContentText,
+    //     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //     username: user.displayName,
+    //     //creatorId: userId,
+    //     //creatorId: user.localId,
+    //   })
+    //   .then(() => {
+    //     //console.log(title, content);
+    //     console.log(postTitleText, postContentText);
+    //     navigation.navigate("Home");
+    //   });
+    // console.log(user);
+
+    //Remove
+    // console.log("state = unknown (until the callback is invoked)");
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   if (user) {
+    //     console.log("state = definitely signed in");
+    //     // User is signed in, see docs for a list of available properties
+    //     // https://firebase.google.com/docs/reference/js/firebase.User
+    //     // ...
+    //   } else {
+    //     console.log("state = definitely signed out");
+    //     // User is signed out
+    //     // ...
+    //   }
+    // });
   };
+
+  // const submitHandler = useCallback(() => {
+  //   dispatch(postActions.createPost(postTitleText, postContentText));
+  // }, []);
 
   useEffect(() => {
     if (error) {
       Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
     }
   }, [error]);
-
-  const submitHandler = useCallback(() => {
-    dispatch(postActions.createPost(postTitleText, postContentText));
-  }, []);
 
   return (
     <View>
@@ -92,12 +116,12 @@ const PostForm = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Create Post</Text>
 
-        <Pressable onPressOut={createPost}>
-          <Button title="POST" onPress={createPost} />
-          {/* <TouchableOpacity>
+        {/* <Pressable onPressOut={createPost}> */}
+        <Button title="POST" onPress={createPost} />
+        {/* <TouchableOpacity>
             <Text style={styles.Submit}>POST</Text>
           </TouchableOpacity> */}
-        </Pressable>
+        {/* </Pressable> */}
       </View>
       <View style={styles.Container}>
         <View style={styles.titleContainer}>
