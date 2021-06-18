@@ -4,10 +4,9 @@ import {
   View,
   TextInput,
   Text,
-  Pressable,
   StyleSheet,
   TouchableOpacity,
-  Button,
+  TouchableHighlight,
   Alert,
 } from "react-native";
 import * as postActions from "../store/actions/posts";
@@ -133,11 +132,16 @@ const PostForm = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Create Post</Text>
 
-        <Button title="POST" onPress={createPost} />
-        {/* <TouchableOpacity>
-            <Text style={styles.Submit}>POST</Text>
-          </TouchableOpacity> */}
-        {/* </Pressable> */}
+        {/* Post button */}
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor="rgba(0,0,0,0.7)"
+          style={styles.submit}
+          onPress={createPost}
+        >
+          <Text style={styles.submitText}>Post</Text>
+        </TouchableHighlight>
+        {/* <Button title="POST" onPress={createPost} /> */}
       </View>
       <View style={styles.Container}>
         <View style={styles.titleContainer}>
@@ -190,11 +194,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
   },
-  Submit: {
-    fontSize: 14,
-    color: "#FF005C",
-    fontWeight: "bold",
-  },
   Container: {
     padding: 15,
   },
@@ -219,8 +218,17 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
   },
-  notification: {
-    fontSize: 18,
+  submit: {
+    marginRight: 5,
+    backgroundColor: "#202020",
+    borderRadius: 20,
+    padding: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  submitText: {
+    color: "#fff",
+    fontWeight: "500",
   },
 });
 
