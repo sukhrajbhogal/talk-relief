@@ -13,6 +13,7 @@ import {
 import * as postActions from "../store/actions/posts";
 import { useDispatch } from "react-redux";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
 import { auth, database } from "../firebase";
@@ -93,13 +94,18 @@ const PostForm = () => {
         })
         .then(() => {
           navigation.navigate("Home");
+
+          // Creates a 3 second toast notification when post is submitted
+          Toast.show({
+            text1: "Your post was created. 😊",
+            visibilityTime: 2000,
+            topOffset: 50,
+            autoHide: true,
+            fontSize: 20,
+          });
         });
     }
   };
-
-  // const submitHandler = useCallback(() => {
-  //   dispatch(postActions.createPost(postTitleText, postContentText));
-  // }, []);
 
   useEffect(() => {
     if (error) {
@@ -127,7 +133,6 @@ const PostForm = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Create Post</Text>
 
-        {/* <Pressable onPressOut={createPost}> */}
         <Button title="POST" onPress={createPost} />
         {/* <TouchableOpacity>
             <Text style={styles.Submit}>POST</Text>
@@ -213,6 +218,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     margin: 5,
+  },
+  notification: {
+    fontSize: 18,
   },
 });
 
