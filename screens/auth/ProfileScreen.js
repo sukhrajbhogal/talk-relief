@@ -59,10 +59,15 @@ const ProfileScreen = (props) => {
         <View style={styles.linkContainer}>
           <Text style={styles.content}>Your posts</Text>
         </View>
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor="rgba(0,0,0,0.05)"
+          style={styles.linkContainer}
+          onPress={() => navigation.navigate("Onboarding")}
+        >
+          <Text style={styles.content}>How it works</Text>
+        </TouchableHighlight>
         {/* <View style={styles.linkContainer}>
-          <Text style={styles.content}>TalkRelief Guide</Text>
-        </View>
-        <View style={styles.linkContainer}>
           <Text style={styles.content}>Community Guidelines</Text>
         </View> */}
         <TouchableHighlight

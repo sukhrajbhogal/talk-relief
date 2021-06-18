@@ -16,6 +16,7 @@ import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignUpScreen";
 import ProfileScreen from "../screens/auth/ProfileScreen";
 import StartUpScreen from "../screens/auth/StartUpScreen";
+import OnboardingScreen from "../screens/auth/OnboardingScreen";
 
 import horizontalAnimation from "../components/horizontalAnimation";
 
@@ -151,9 +152,15 @@ export const HomeNavigation = () => {
         component={ProfileScreen}
         options={({ route }) => ({
           title: getHeaderTitle(route),
-          headerShown: false,
+          // headerShown: false,
         })}
         options={horizontalAnimation}
+      />
+      <HomeStack.Screen
+        name="Onboarding"
+        component={OnboardingScreen}
+        //options={horizontalAnimation}
+        options={{ title: "How it works", headerShown: false }}
       />
     </HomeStack.Navigator>
   );
