@@ -1,4 +1,8 @@
 import React, { useState, useCallback, useReducer } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as firebase from "firebase";
+import { database } from "../../firebase";
+
 import {
   SafeAreaView,
   StatusBar,
@@ -39,6 +43,7 @@ const SignUpScreenV2 = () => {
   const [userNameText, setUserNameText] = useState("");
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
+  const [userId, setUserId] = useState("");
   const [show, setShow] = useState(false);
   const [birthday, setBirthday] = useState("");
   // const [gender, setGender] = useState("");
@@ -51,7 +56,6 @@ const SignUpScreenV2 = () => {
   const emailChangeHandler = (text) => {
     setEmailText(text);
   };
-
   const passwordChangeHandler = (text) => {
     setPasswordText(text);
   };
@@ -64,10 +68,44 @@ const SignUpScreenV2 = () => {
   //   //setGender(text);
   // };
 
+  const getUserId = async () => {
+    try {
+      const value = await AsyncStorage.getItem("userData");
+      if (value != null) {
+        console.log(value);
+        const uid = JSON.parse(value).userId;
+        genUserProfile(uid);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const genUserProfile = (uid) => {
+    database
+      .collection("users")
+      .doc(uid)
+      .set({
+        username: uid,
+        birthday: "",
+        gender: "",
+      })
+      .then(() => {
+        database.collection("users").doc(uid).collection("posts").add({});
+      })
+      .then(() => {
+        database.collection("users").doc(uid).collection("replies").add({});
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const signUpHandler = async () => {
     setIsLoading(true);
-    dispatch(authActions.signup(userNameText, emailText, passwordText));
+    await dispatch(authActions.signup(userNameText, emailText, passwordText));
     setIsLoading(false);
+    getUserId();
   };
 
   const placeholder = {

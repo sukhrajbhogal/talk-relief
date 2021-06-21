@@ -121,7 +121,14 @@ export default function CardList() {
     onEndReachedCalledDuringMomentum = true;
   };
 
-  renderList = ({ id, username, category, title, content, timestamp }) => {
+  renderList = ({
+    creatorId,
+    username,
+    category,
+    title,
+    content,
+    timestamp,
+  }) => {
     // Assign random pattern for each card
     const randomIndex = Math.floor(Math.random() * bgArray.length);
     const selectedBG = bgArray[randomIndex];
@@ -134,7 +141,14 @@ export default function CardList() {
         // Send card info to CardSectionScreen which displays the card full screen
         onPress={() =>
           navigation.push("View Card", {
-            Card: { title, content, username, selectedBG, selectedColor },
+            Card: {
+              title,
+              content,
+              username,
+              creatorId,
+              selectedBG,
+              selectedColor,
+            },
           })
         }
       >
