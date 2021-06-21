@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as firebase from "firebase";
+import { database } from "../../firebase";
+import Toast from "react-native-toast-message";
+import { useDispatch } from "react-redux";
 import {
   SafeAreaView,
   ScrollView,
@@ -22,15 +27,71 @@ const { height } = Dimensions.get("window");
 export const fullHeight = (height * 1564) / 974;
 
 export default function ViewCardScreen() {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
   const [input, setInput] = useState("");
+  const [inputIsValid, setInputIsValid] = useState(false);
   const [isActive, setActive] = useState(false);
+  const [userIdCollection, setUserIdCollection] = useState("");
+  const [replierUserName, setReplierUserName] = useState("");
 
-  const sendMessage = () => {
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("userData");
+        if (value != null) {
+          const username = JSON.parse(value).displayName;
+          const uid = JSON.parse(value).userId;
+          setReplierUserName(username);
+          setUserIdCollection(uid);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserData();
+  }, [dispatch]);
+
+  const inputChangeHandler = (text) => {
+    if (text.length === 0) {
+      setInputIsValid(false);
+    } else {
+      setInputIsValid(true);
+    }
+    setInput(text);
+  };
+
+  const sendReply = () => {
+    if (setInputIsValid === false) {
+      setError("The title or story is empty!");
+    } else {
+      database
+        .collection("users")
+        .doc(route.params.Card.creatorId)
+        .collection("replies")
+        .add({
+          replyContent: input,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          replierUsername: replierUserName,
+          replierId: userIdCollection,
+          creatorId: route.params.Card.creatorId,
+        })
+        .then(() => {
+          navigation.navigate("Home");
+
+          // Creates a 3 second toast notification when post is submitted
+          Toast.show({
+            text1: "Your reply was sent. 😊",
+            visibilityTime: 2000,
+            topOffset: 50,
+            autoHide: true,
+            fontSize: 20,
+          });
+        });
+    }
     Keyboard.dismiss();
     setInput("");
-    // Code saves message to the database
   };
 
   const cancelMessage = () => {
@@ -71,6 +132,9 @@ export default function ViewCardScreen() {
               <Text style={styles.fontStyle}>
                 @{route.params.Card.username}
               </Text>
+              <Text style={styles.fontStyle}>
+                {route.params.Card.creatorId}
+              </Text>
             </View>
           </ScrollView>
 
@@ -91,7 +155,7 @@ export default function ViewCardScreen() {
 
               {/* Send button */}
               <Pressable style={styles.submit}>
-                <TouchableOpacity onPress={sendMessage} activeOpacity={0.3}>
+                <TouchableOpacity onPress={sendReply} activeOpacity={0.3}>
                   <Text>Send</Text>
                 </TouchableOpacity>
               </Pressable>
@@ -116,7 +180,7 @@ export default function ViewCardScreen() {
               }}
               onFocus={() => setActive(true)}
               onBlur={() => setActive(false)}
-              onChangeText={(text) => setInput(text)}
+              onChangeText={inputChangeHandler}
               placeholder="Write kind words"
               placeholderTextColor="rgba(255,255,255,0.5)"
             />

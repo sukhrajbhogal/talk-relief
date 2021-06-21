@@ -49,7 +49,6 @@ const PostForm = () => {
         if (value != null) {
           const username = JSON.parse(value).displayName;
           const uid = JSON.parse(value).userId;
-          console.log(username);
           setDisplayName(username);
           setUserId(uid);
         }
@@ -91,7 +90,15 @@ const PostForm = () => {
           username: displayName,
           creatorId: userId,
         })
-        .then(() => {
+        .then((post) => {
+          database.collection("users").doc(userId).collection("posts").add({
+            title: postTitleText,
+            content: postContentText,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            username: displayName,
+            creatorId: userId,
+          });
+          console.log("SUCCESS " + post);
           navigation.navigate("Home");
 
           // Creates a 3 second toast notification when post is submitted
