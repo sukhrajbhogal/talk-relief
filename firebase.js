@@ -1,6 +1,7 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 import "firebase/auth";
+import analytics from "@react-native-firebase/analytics";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAc-FyoaMXEDn_FyK1Anwt39DDB4U4ToKQ",
@@ -23,4 +24,4 @@ if (firebase.apps.length === 0) {
 const database = firebaseApp.firestore();
 const auth = firebase.auth();
 
-export { auth, database };
+export { auth, database, analytics };

@@ -10,7 +10,6 @@ import auth from "./store/reducers/auth";
 import { Provider } from "react-redux";
 
 import Toast from "react-native-toast-message";
-import { toastConfig } from "./components/toastConfig";
 
 const rootReducer = combineReducers({
   posts: posts,
@@ -28,6 +27,7 @@ const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 export default function App() {
   // Makes sure custom font is finished loading
   const [fontLoaded, setFontLoaded] = useState(false);
+
   if (!fontLoaded) {
     return (
       <AppLoading

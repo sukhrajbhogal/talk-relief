@@ -63,7 +63,10 @@ const ProfileScreen = (props) => {
           activeOpacity={1}
           underlayColor="rgba(0,0,0,0.05)"
           style={styles.linkContainer}
-          onPress={() => navigation.navigate("Onboarding")}
+          onPress={
+            () => navigation.navigate("Onboarding")
+            //analytics().logEvent("viewed_onboarding"))
+          }
         >
           <Text style={styles.content}>How it works</Text>
         </TouchableHighlight>
