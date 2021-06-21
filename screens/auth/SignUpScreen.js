@@ -178,7 +178,7 @@ const SignUpScreenV2 = () => {
               customHidePasswordImage={hidePassword}
               onChangeText={passwordChangeHandler}
             />
-            {/* <FloatingLabelInput
+            <FloatingLabelInput
               id="birthday"
               label="Birthday (MM/DD/YYYY)"
               value={birthday}
@@ -215,7 +215,7 @@ const SignUpScreenV2 = () => {
               style={{
                 ...pickerSelectStyles,
               }}
-            /> */}
+            />
             <TouchableHighlight
               activeOpacity={1}
               underlayColor="rgba(0,0,0,0.7)"
