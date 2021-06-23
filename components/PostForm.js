@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import * as postActions from "../store/actions/posts";
 import { useDispatch } from "react-redux";
@@ -20,7 +21,7 @@ import { auth, database } from "../firebase";
 const PostForm = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [postTitleText, setPostTitle] = useState("");
   const [titleIsValid, setTitleIsValid] = useState(false);
@@ -77,11 +78,12 @@ const PostForm = () => {
     setPostContent(text);
   };
 
-  const createPost = () => {
+  const createPost = async () => {
+    setIsLoading(true);
     if (contentIsValid === false || titleIsValid === false) {
       setError("The title or story is empty!");
     } else {
-      database
+      await database
         .collection("cards")
         .add({
           title: postTitleText,
@@ -110,6 +112,7 @@ const PostForm = () => {
           });
         });
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -145,8 +148,13 @@ const PostForm = () => {
           style={styles.submit}
           onPress={createPost}
         >
-          <Text style={styles.submitText}>Post</Text>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.submitText}>Post</Text>
+          )}
         </TouchableHighlight>
+
         {/* <Button title="POST" onPress={createPost} /> */}
       </View>
       <View style={styles.Container}>
@@ -189,8 +197,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     padding: 10,
-    paddingTop: 15,
-    paddingBottom: 15,
+    paddingVertical: 15,
     alignItems: "center",
     justifyContent: "space-between",
     borderBottomWidth: 0.75,
@@ -228,9 +235,10 @@ const styles = StyleSheet.create({
     marginRight: 5,
     backgroundColor: "#202020",
     borderRadius: 20,
-    padding: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
+    minWidth: 60,
+    minHeight: 35,
+    justifyContent: "center",
+    alignItems: "center",
   },
   submitText: {
     color: "#fff",

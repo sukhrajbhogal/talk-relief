@@ -18,6 +18,7 @@ import {
   Platform,
   Pressable,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -28,6 +29,7 @@ export const fullHeight = (height * 1564) / 974;
 
 export default function ViewCardScreen() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
   const [input, setInput] = useState("");
@@ -62,11 +64,12 @@ export default function ViewCardScreen() {
     setInput(text);
   };
 
-  const sendReply = () => {
+  const sendReply = async () => {
+    setIsLoading(true);
     if (setInputIsValid === false) {
       setError("The title or story is empty!");
     } else {
-      database
+      await database
         .collection("users")
         .doc(route.params.Card.creatorId)
         .collection("replies")
@@ -89,6 +92,7 @@ export default function ViewCardScreen() {
             fontSize: 20,
           });
         });
+      setIsLoading(false);
     }
     Keyboard.dismiss();
     setInput("");
@@ -156,7 +160,15 @@ export default function ViewCardScreen() {
               {/* Send button */}
               <Pressable style={styles.submit}>
                 <TouchableOpacity onPress={sendReply} activeOpacity={0.3}>
-                  <Text>Send</Text>
+                  {isLoading ? (
+                    <ActivityIndicator
+                      size="small"
+                      color="black"
+                      style={styles.loading}
+                    />
+                  ) : (
+                    <Text style={styles.submitText}>Send</Text>
+                  )}
                 </TouchableOpacity>
               </Pressable>
             </View>
@@ -278,8 +290,12 @@ const styles = StyleSheet.create({
     marginRight: 5,
     backgroundColor: "#fff",
     borderRadius: 20,
-    padding: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
+    minWidth: 60,
+    minHeight: 35,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  submitText: {
+    fontWeight: "500",
   },
 });
