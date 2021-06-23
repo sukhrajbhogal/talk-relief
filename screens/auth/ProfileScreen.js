@@ -57,8 +57,20 @@ const ProfileScreen = (props) => {
           <Text style={styles.content}>Account</Text>
         </View>
         <View style={styles.linkContainer}>
-          <Text style={styles.content}>Your posts</Text>
+          <Text style={styles.content}>Your Posts</Text>
         </View>
+        {/* <View style={styles.linkContainer}>
+          <TouchableHighlight
+            activeOpacity={1}
+            underlayColor="rgba(0,0,0,0.05)"
+            style={styles.linkContainer}
+            onPress={() => {
+              navigation.navigate("Your Posts");
+            }}
+          >
+            <Text style={styles.content}>Your posts</Text>
+          </TouchableHighlight>
+        </View> */}
         <TouchableHighlight
           activeOpacity={1}
           underlayColor="rgba(0,0,0,0.05)"

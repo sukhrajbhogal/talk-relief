@@ -28,19 +28,7 @@ const PostForm = () => {
   const [contentIsValid, setContentIsValid] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [userId, setUserId] = useState("");
-
-  // const user = auth.currentUser;
-  // console.log(user);
-
-  // useEffect(() => {
-  //   auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       console.log(user);
-  //     } else {
-  //       console.log("current user is null");
-  //     }
-  //   });
-  // });
+  let docId;
 
   useEffect(() => {
     const getUserData = async () => {
@@ -91,14 +79,30 @@ const PostForm = () => {
           creatorId: userId,
         })
         .then((post) => {
-          database.collection("users").doc(userId).collection("posts").add({
-            title: postTitleText,
-            content: postContentText,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            username: displayName,
-            creatorId: userId,
-          });
-          console.log("SUCCESS " + post);
+          console.log("Document written with ID: ", post.id);
+          docId = post.id;
+          database.collection("cards").doc(post.id).set(
+            {
+              postId: docId,
+            },
+            { merge: true }
+          );
+        })
+        .then((post) => {
+          database
+            .collection("users")
+            .doc(userId)
+            .collection("posts")
+            .doc(docId)
+            .set({
+              title: postTitleText,
+              postId: docId,
+              content: postContentText,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+              username: displayName,
+              creatorId: userId,
+            });
+          console.log("SUCCESS ");
           navigation.navigate("Home");
 
           // Creates a 3 second toast notification when post is submitted
@@ -118,10 +122,6 @@ const PostForm = () => {
       Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
     }
   }, [error]);
-
-  // const submitHandler = useCallback(() => {
-  //   dispatch(postActions.createPost(postTitleText, postContentText));
-  // }, []);
 
   return (
     <View>
