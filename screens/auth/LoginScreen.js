@@ -81,6 +81,7 @@ const LoginScreen = (props) => {
     if (error) {
       Alert.alert("Login Failed", error, [{ text: "Okay" }]);
     }
+    setError(null);
   }, [error]);
 
   const logInHandler = async () => {

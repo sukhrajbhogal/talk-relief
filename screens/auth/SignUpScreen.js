@@ -107,6 +107,7 @@ const SignUpScreenV2 = () => {
     if (error) {
       Alert.alert("Sign Up Failed", error, [{ text: "Okay" }]);
     }
+    setError(null);
   }, [error]);
 
   const signUpHandler = async () => {
