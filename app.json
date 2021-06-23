@@ -4,12 +4,12 @@
     "slug": "TalkRelief",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/tr_icon.png",
+    "icon": "./assets/icon.png",
     "description": "Community emotional support.",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#C83E6F"
+      "backgroundColor": "#0a0006"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
