@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useReducer } from "react";
+import React, { useState, useEffect, useCallback, useReducer } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as firebase from "firebase";
 import { database } from "../../firebase";
@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -38,6 +39,7 @@ const options = [
 const SignUpScreenV2 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const [error, setError] = useState(null);
   const navigation = useNavigation();
 
   const [userNameText, setUserNameText] = useState("");
@@ -101,9 +103,20 @@ const SignUpScreenV2 = () => {
       });
   };
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Sign Up Failed", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
+
   const signUpHandler = async () => {
+    setError(null);
     setIsLoading(true);
-    await dispatch(authActions.signup(userNameText, emailText, passwordText));
+    try {
+      await dispatch(authActions.signup(userNameText, emailText, passwordText));
+    } catch (err) {
+      setError(err.message);
+    }
     setIsLoading(false);
     getUserId();
   };
@@ -172,7 +185,7 @@ const SignUpScreenV2 = () => {
               maxLength={30}
               autoCapitalize="none"
               keyboardType="default"
-              returnKeyType="join"
+              returnKeyType="next"
               errorText="Please enter a valid password"
               customShowPasswordImage={showPassword}
               customHidePasswordImage={hidePassword}
@@ -194,6 +207,7 @@ const SignUpScreenV2 = () => {
             <RNPickerSelect
               onValueChange={(value) => console.log(value)}
               placeholder={placeholder}
+              required
               items={[
                 { label: "Female", value: "female" },
                 { label: "Male", value: "male" },
@@ -216,13 +230,20 @@ const SignUpScreenV2 = () => {
                 ...pickerSelectStyles,
               }}
             />
+
+            {/* Display a loading animation when user account is being created */}
+
             <TouchableHighlight
               activeOpacity={1}
               underlayColor="rgba(0,0,0,0.7)"
               style={styles.btnBG}
               onPress={signUpHandler}
             >
-              <Text style={styles.btnText}>Create Account</Text>
+              {isLoading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text style={styles.btnText}>Create Account</Text>
+              )}
             </TouchableHighlight>
           </View>
           <Text style={styles.subtitle}>

@@ -79,7 +79,7 @@ const LoginScreen = (props) => {
 
   useEffect(() => {
     if (error) {
-      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+      Alert.alert("Login Failed", error, [{ text: "Okay" }]);
     }
   }, [error]);
 
@@ -90,12 +90,11 @@ const LoginScreen = (props) => {
     setIsLoading(true);
     try {
       await dispatch(action);
-      //props.navigation.navigate("Home");
     } catch (err) {
       setError(err.message);
       console.log(err.message);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   // const inputChangeHandler = useCallback(
@@ -175,7 +174,11 @@ const LoginScreen = (props) => {
           style={styles.btnBG}
           onPress={logInHandler}
         >
-          <Text style={styles.btnText}>Log in</Text>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.btnText}>Log in</Text>
+          )}
         </TouchableHighlight>
       </View>
     </SafeAreaView>
