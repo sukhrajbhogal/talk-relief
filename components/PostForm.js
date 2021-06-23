@@ -101,13 +101,12 @@ const PostForm = () => {
           console.log("SUCCESS " + post);
           navigation.navigate("Home");
 
-          // Creates a 3 second toast notification when post is submitted
+          // Creates a 2 second toast notification when post is submitted
           Toast.show({
-            text1: "Your post was created. 😊",
-            visibilityTime: 2000,
-            topOffset: 50,
+            text1: "Your post was created! 😊",
+            visibilityTime: 1000,
+            topOffset: 40,
             autoHide: true,
-            fontSize: 20,
           });
         });
     }
