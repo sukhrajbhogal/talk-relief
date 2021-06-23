@@ -90,9 +90,7 @@ const ProfileScreen = (props) => {
           underlayColor="rgba(0,0,0,0.05)"
           style={styles.linkContainer}
           onPress={() =>
-            Linking.openURL(
-              "https://talkrelief.webflow.io/terms-privacy-policy#terms"
-            )
+            Linking.openURL("https://talkrelief.app/terms-of-service")
           }
         >
           <Text style={styles.content}>Terms of Service</Text>
@@ -102,9 +100,7 @@ const ProfileScreen = (props) => {
           underlayColor="rgba(0,0,0,0.05)"
           style={styles.linkContainer}
           onPress={() =>
-            Linking.openURL(
-              "https://talkrelief.webflow.io/terms-privacy-policy"
-            )
+            Linking.openURL("https://talkrelief.app/privacy-policy")
           }
         >
           <Text style={styles.content}>Privacy Policy</Text>

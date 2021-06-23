@@ -18,7 +18,8 @@ import {
   Platform,
   Pressable,
   Keyboard,
-  Alert
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -29,6 +30,7 @@ export const fullHeight = (height * 1564) / 974;
 
 export default function ViewCardScreen() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
   const [error, setError] = useState();
@@ -68,7 +70,7 @@ export default function ViewCardScreen() {
     if (inputIsValid === false) {
       setError("The title or story is empty!");
     } else {
-      database
+      await database
         .collection("users")
         .doc(route.params.Card.creatorId)
         .collection("replies")
@@ -80,10 +82,18 @@ export default function ViewCardScreen() {
           creatorId: route.params.Card.creatorId,
         })
         .then((reply) => {
-          replyId = reply.id
-          database.collection("users").doc(route.params.Card.creatorId).collection("replies").doc(replyId).set({
-            replyId: replyId,
-          }, {merge: true})
+          replyId = reply.id;
+          database
+            .collection("users")
+            .doc(route.params.Card.creatorId)
+            .collection("replies")
+            .doc(replyId)
+            .set(
+              {
+                replyId: replyId,
+              },
+              { merge: true }
+            );
           navigation.navigate("Home");
 
           // Creates a 3 second toast notification when post is submitted
@@ -95,6 +105,7 @@ export default function ViewCardScreen() {
             fontSize: 20,
           });
         });
+      setIsLoading(false);
     }
     Keyboard.dismiss();
     setInput("");
@@ -105,7 +116,6 @@ export default function ViewCardScreen() {
       Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
     }
   }, [error]);
-
 
   const cancelMessage = () => {
     Keyboard.dismiss();
@@ -169,7 +179,15 @@ export default function ViewCardScreen() {
               {/* Send button */}
               <Pressable style={styles.submit}>
                 <TouchableOpacity onPress={sendReply} activeOpacity={0.3}>
-                  <Text>Send</Text>
+                  {isLoading ? (
+                    <ActivityIndicator
+                      size="small"
+                      color="black"
+                      style={styles.loading}
+                    />
+                  ) : (
+                    <Text style={styles.submitText}>Send</Text>
+                  )}
                 </TouchableOpacity>
               </Pressable>
             </View>
@@ -291,8 +309,12 @@ const styles = StyleSheet.create({
     marginRight: 5,
     backgroundColor: "#fff",
     borderRadius: 20,
-    padding: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
+    minWidth: 60,
+    minHeight: 35,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  submitText: {
+    fontWeight: "500",
   },
 });

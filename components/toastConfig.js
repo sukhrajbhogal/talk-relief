@@ -1,25 +1,37 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import Toast, { BaseToast } from "react-native-toast-message";
 
-// const props = {
-//   topOffset: 50,
-//   visibilityTime: 4000,
-//   autoHide: true,
-//   height: 60,
-//   position: "top",
+import bg10 from "../assets/bg10.png";
+
+// Available props for BaseToast
+// const baseToastProps = {
+//   leadingIcon: ImageSource,
+//   trailingIcon: ImageSource,
+//   text1: String,
+//   text2: String,
+//   onPress: Function,
+//   onLeadingIconPress: Function,
+//   onTrailingIconPress: Function,
+//   style: ViewStyle,
+//   leadingIconContainerStyle: ViewStyle,
+//   trailingIconContainerStyle: ViewStyle,
+//   leadingIconStyle: ViewStyle,
+//   trailingIconStyle: ViewStyle,
+//   contentContainerStyle: ViewStyle,
+//   text1Style: ViewStyle,
+//   text2Style: ViewStyle,
+//   activeOpacity: Number
 // };
 
 export const toastConfig = {
   success: ({ text1, style, props, ...rest }) => (
     <BaseToast
       {...rest}
-      style={{ borderLeftColor: "green", paddingLeft: 15 }}
-      //contentContainerStyle={{ paddingHorizontal: 15 }}
-      text1Style={{
-        fontSize: 18,
-        fontWeight: "400",
-      }}
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      text1Style={styles.text}
+      trailingIconStyle={styles.trailingIconStyle}
       text1={"😊 Your post was created!"}
       text2={props.uuid}
     />
@@ -28,3 +40,24 @@ export const toastConfig = {
   info: () => {},
   any_custom_type: () => {},
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#1BB002",
+    borderLeftColor: "#1BB002",
+    paddingLeft: 25,
+    borderRadius: 15,
+    height: 60,
+  },
+  contentContainer: {
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 18,
+    fontWeight: "400",
+    color: "rgba(255,255,255,1)",
+  },
+  trailingIconStyle: {
+    display: "none",
+  },
+});

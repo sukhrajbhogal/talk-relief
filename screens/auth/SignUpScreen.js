@@ -38,6 +38,7 @@ const options = [
 const SignUpScreenV2 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const [error, setError] = useState(null);
   const navigation = useNavigation();
   const [error, setError] = useState();
 
@@ -132,6 +133,13 @@ const SignUpScreenV2 = () => {
       });
   };
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Sign Up Failed", error, [{ text: "Okay" }]);
+    }
+    setError(null);
+  }, [error]);
+
   const signUpHandler = async () => {
     if (
       usernameIsValid === false ||
@@ -213,7 +221,7 @@ const SignUpScreenV2 = () => {
               maxLength={30}
               autoCapitalize="none"
               keyboardType="default"
-              returnKeyType="join"
+              returnKeyType="next"
               errorText="Please enter a valid password"
               customShowPasswordImage={showPassword}
               customHidePasswordImage={hidePassword}
@@ -235,6 +243,7 @@ const SignUpScreenV2 = () => {
             <RNPickerSelect
               onValueChange={genderChangeHandler}
               placeholder={placeholder}
+              required
               items={[
                 { label: "Female", value: "female" },
                 { label: "Male", value: "male" },
@@ -257,13 +266,20 @@ const SignUpScreenV2 = () => {
                 ...pickerSelectStyles,
               }}
             />
+
+            {/* Display a loading animation when user account is being created */}
+
             <TouchableHighlight
               activeOpacity={1}
               underlayColor="rgba(0,0,0,0.7)"
               style={styles.btnBG}
               onPress={signUpHandler}
             >
-              <Text style={styles.btnText}>Create Account</Text>
+              {isLoading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text style={styles.btnText}>Create Account</Text>
+              )}
             </TouchableHighlight>
           </View>
           <Text style={styles.subtitle}>

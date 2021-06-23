@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-
 const CustomListItem = ({ username, content }) => {
   const navigation = useNavigation();
 

@@ -39,8 +39,11 @@ export const signup = (username, email, password) => {
       const errorId = errorResData.error.message;
       console.log(errorId);
       let message = errorId;
+      if (errorId === "INVALID_EMAIL") {
+        message = "Please enter a valid email. Like yourname@example.com";
+      }
       if (errorId === "EMAIL_EXISTS") {
-        message = "This email already exists!";
+        message = "This email already exists. Please use a different email.";
       }
       throw new Error(message);
     }
@@ -81,15 +84,16 @@ export const login = (email, password) => {
       const errorResData = await response.json();
       console.log(errorResData);
       const errorId = errorResData.error.message;
-      let message = "Something went wrong!";
+      let message = "Something went wrong.";
       if (errorId === "EMAIL_NOT_FOUND") {
-        message = "This email could not be found!";
+        message = "This email could not be found.";
       } else if (errorId === "INVALID_PASSWORD") {
-        message = "This password is not valid!";
+        message = "Please enter a valid password.";
       } else if (errorId === "INVALID_EMAIL") {
-        message = "This email is invalid!";
+        message =
+          "Please enter a valid email address. Like yourname@example.com";
       } else if (errorId === "MISSING_PASSWORD") {
-        message = "This password is missing!";
+        message = "Please enter a password.";
       }
       throw new Error(message);
     }

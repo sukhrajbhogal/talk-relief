@@ -10,6 +10,7 @@ import auth from "./store/reducers/auth";
 import { Provider } from "react-redux";
 
 import Toast from "react-native-toast-message";
+import { toastConfig } from "./components/toastConfig";
 
 const rootReducer = combineReducers({
   posts: posts,
@@ -43,7 +44,7 @@ export default function App() {
       <AppNavigation />
 
       {/* Allows you to create a toast notification (success | error | info) */}
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
     </Provider>
   );
 }
