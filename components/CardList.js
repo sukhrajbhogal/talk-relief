@@ -167,14 +167,20 @@ export default function CardList() {
             <Text style={styles.fontStyle}>@{username}</Text>
           </View>
           <View style={styles.replyBG}>
-            <TouchableOpacity activeOpacity={0.5}>
+            <MaterialCommunityIcons
+              name="lead-pencil"
+              size={35}
+              color={"#202020"}
+              style={styles.replyIcon}
+            />
+            {/* <TouchableOpacity activeOpacity={0.5}>
               <MaterialCommunityIcons
                 name="lead-pencil"
                 size={35}
                 color={"#202020"}
                 style={styles.replyIcon}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </ImageBackground>
       </TouchableOpacity>

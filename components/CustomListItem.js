@@ -24,7 +24,7 @@ const CustomListItem = ({ username, title, content }) => {
         <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode="tail"
-          style={styles.username}
+          style={styles.titles}
         >
           {title}
         </ListItem.Subtitle>
@@ -53,8 +53,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   title: {
-    fontWeight: "700",
+    fontWeight: "900",
     lineHeight: 30,
+    fontSize: 15,
   },
   textPreview: {
     opacity: 0.8,

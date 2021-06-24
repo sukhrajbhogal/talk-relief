@@ -1,9 +1,8 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import * as firebase from "firebase";
-import { auth } from "../../firebase";
+import { database } from "../../firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import * as authActions from "../../store/actions/auth";
 import {
   Text,
   ScrollView,
@@ -14,8 +13,10 @@ import {
   TouchableHighlight,
   Linking,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import CustomListItem from "../../components/CustomListItem";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const ProfileScreen = (props) => {
@@ -23,21 +24,51 @@ const ProfileScreen = (props) => {
   const navigation = useNavigation();
   const [displayName, setDisplayName] = useState("");
 
-  // Grab user's username
-  useLayoutEffect(() => {
-    const getUsername = async () => {
+  const postsRef = database.collection("users");
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const getUserData = async () => {
       try {
         const value = await AsyncStorage.getItem("userData");
         if (value != null) {
+          const uid = JSON.parse(value).userId;
           const username = JSON.parse(value).displayName;
           setDisplayName(username);
+          getPosts(uid);
         }
       } catch (error) {
         console.log(error);
       }
     };
-    getUsername();
+    getUserData();
   }, [dispatch]);
+
+  const getPosts = async (uid) => {
+    setIsLoading(true);
+    const snapshot = await postsRef
+      .doc(uid)
+      .collection("posts")
+      .where("creatorId", "==", uid)
+      .orderBy("timestamp", "desc")
+      .get();
+
+    let userPosts = [];
+
+    console.log("getPosts SIZE: " + snapshot.size);
+
+    for (let i = 0; i < snapshot.size; i++) {
+      userPosts.push(snapshot.docs[i].data());
+      console.log(userPosts);
+    }
+    setPosts(userPosts);
+    setIsLoading(false);
+  };
+
+  onRefresh = () => {
+    getReplies();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,6 +99,20 @@ const ProfileScreen = (props) => {
         </View>
         <Text style={styles.content}>Your posts:</Text>
       </ScrollView>
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.postId}
+        renderItem={({ item }) => (
+          <CustomListItem
+            username={item.username}
+            title={item.title}
+            content={item.content}
+          />
+        )}
+        // refreshControl={
+        //   <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        // }
+      />
     </SafeAreaView>
   );
 };

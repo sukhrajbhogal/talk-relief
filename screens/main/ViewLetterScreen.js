@@ -25,7 +25,9 @@ function ViewLetterScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.Screen}>
       <ScrollView style={styles.Container}>
-        {/* <Text style={styles.Title}>{route.params.Title}</Text> */}
+        <Text style={styles.Title}>
+          Replying to: {route.params.Reply.title}
+        </Text>
         <Text style={styles.Content}>{route.params.Reply.content}</Text>
         {/* <Image
           source={require("../../assets/charm.png")}
