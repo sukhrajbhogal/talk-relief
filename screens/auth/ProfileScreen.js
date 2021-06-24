@@ -13,121 +13,107 @@ import {
   Button,
   TouchableHighlight,
   Linking,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const ProfileScreen = (props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [displayName, setDisplayName] = useState("");
 
-  useEffect(() => {
+  // Update header title
+  useLayoutEffect(() => {
     const getUsername = async () => {
       try {
         const value = await AsyncStorage.getItem("userData");
         if (value != null) {
           const username = JSON.parse(value).displayName;
-          console.log(username);
+          // console.log(username);
           setDisplayName(username);
         }
       } catch (error) {
         console.log(error);
       }
     };
-    getUsername();
-  }, [dispatch]);
-
-  // Update header titrle
-  useLayoutEffect(() => {
-    //navigation.mode = "mode";
     navigation.setOptions({
-      title: displayName,
+      title: "",
       headerTitleAlign: "center",
       headerBackTitle: "Back",
     });
-  }, [navigation]);
+    getUsername();
+  }, [dispatch]);
+
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     title: displayName,
+  //     headerTitleAlign: "center",
+  //     headerBackTitle: "Back",
+  //   });
+  // }, []);
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <ScrollView style={styles.container}>
-        <View style={styles.linkContainer}>
-          <Text style={styles.content}>{displayName}</Text>
-        </View>
-        <View style={styles.linkContainer}>
-          <Text style={styles.content}>Account</Text>
-        </View>
-        <View style={styles.linkContainer}>
-          <Text style={styles.content}>Your posts</Text>
-        </View>
-        <TouchableHighlight
-          activeOpacity={1}
-          underlayColor="rgba(0,0,0,0.05)"
-          style={styles.linkContainer}
-          onPress={
-            () => navigation.navigate("Onboarding")
-            //analytics().logEvent("viewed_onboarding"))
-          }
+    <SafeAreaView style={styles.container}>
+      <View style={styles.Header}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => navigation.goBack()}
         >
-          <Text style={styles.content}>How it works</Text>
-        </TouchableHighlight>
-        {/* <View style={styles.linkContainer}>
-          <Text style={styles.content}>Community Guidelines</Text>
-        </View> */}
-        <TouchableHighlight
-          activeOpacity={1}
-          underlayColor="rgba(0,0,0,0.05)"
-          style={styles.linkContainer}
-          onPress={() =>
-            Linking.openURL("https://talkrelief.app/terms-of-service")
-          }
-        >
-          <Text style={styles.content}>Terms of Service</Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          activeOpacity={1}
-          underlayColor="rgba(0,0,0,0.05)"
-          style={styles.linkContainer}
-          onPress={() =>
-            Linking.openURL("https://talkrelief.app/privacy-policy")
-          }
-        >
-          <Text style={styles.content}>Privacy Policy</Text>
-        </TouchableHighlight>
-        <View style={styles.linkContainer}>
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor="rgba(232,215,204,0.4)"
-            style={styles.btnBG}
-            onPress={() => {
-              dispatch(authActions.logout());
-            }}
-          >
-            <Text style={styles.logout}>Log out</Text>
-          </TouchableHighlight>
+          <MaterialCommunityIcons
+            name="window-close"
+            size={35}
+            color={"#202020"}
+            style={styles.closeIcon}
+          />
+        </TouchableOpacity>
+        {/* <Text style={styles.headerTitle}>Sign Up</Text> */}
+
+        <MaterialCommunityIcons
+          name="cog"
+          size={30}
+          color={"#202020"}
+          style={styles.closeIcon}
+          onPress={() => navigation.navigate("Settings")}
+        />
+      </View>
+
+      <ScrollView style={styles.contentContainer}>
+        <View>
+          <Text style={styles.username}>{displayName}</Text>
         </View>
-        {/* <Button
-          title="Log out"
-          onPress={() => {
-            dispatch(authActions.logout());
-            props.navigation.navigate("Auth");
-          }}
-        /> */}
+        <Text>Displays all of the user's posts</Text>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
+  container: {
     flex: 1,
     backgroundColor: "#FFF1E4",
   },
-  container: {
-    // marginVertical: 20,
-  },
-  linkContainer: {
+  Header: {
+    display: "flex",
+    flexDirection: "row",
+    paddingLeft: 10,
+    paddingRight: 15,
+    paddingVertical: 5,
+    alignItems: "center",
+    justifyContent: "space-between",
     borderBottomWidth: 0.75,
     borderBottomColor: "#E8D7CC",
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  contentContainer: {
+    padding: 20,
+  },
+  username: {
+    fontSize: 30,
+    fontFamily: "Cocogoose",
   },
   content: {
     fontSize: 18,
