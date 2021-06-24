@@ -16,7 +16,7 @@ function ViewLetterScreen({ navigation }) {
   useLayoutEffect(() => {
     navigation.mode = "mode";
     navigation.setOptions({
-      title: route.params.username + "'s reply",
+      title: route.params.Reply.username + "'s reply",
       headerTitleAlign: "center",
       headerBackTitle: "Back",
     });
@@ -25,8 +25,8 @@ function ViewLetterScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.Screen}>
       <ScrollView style={styles.Container}>
-        <Text style={styles.Title}>{route.params.Title}</Text>
-        <Text style={styles.Content}>{route.params.Content}</Text>
+        {/* <Text style={styles.Title}>{route.params.Title}</Text> */}
+        <Text style={styles.Content}>{route.params.Reply.content}</Text>
         <Image
           source={require("../../assets/charm.png")}
           style={styles.charm}

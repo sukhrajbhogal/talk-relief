@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useReducer } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as firebase from "firebase";
 import { database } from "../../firebase";
 
 import {
@@ -41,34 +40,62 @@ const SignUpScreenV2 = () => {
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
   const navigation = useNavigation();
+  const [error, setError] = useState();
 
   const [userNameText, setUserNameText] = useState("");
+  const [usernameIsValid, setUsernameIsValid] = useState(false);
   const [emailText, setEmailText] = useState("");
+  const [emailIsValid, setEmailIsValid] = useState(false);
   const [passwordText, setPasswordText] = useState("");
-  const [userId, setUserId] = useState("");
+  const [passwordIsValid, setPasswordIsValid] = useState(false);
   const [show, setShow] = useState(false);
   const [birthday, setBirthday] = useState("");
-  // const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("");
 
   const [isFocused, setIsFocused] = useState(false);
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
+
   const userNameChangeHandler = (text) => {
+    if (text.length === 0) {
+      setUsernameIsValid(false);
+    } else {
+      setUsernameIsValid(true);
+    }
     setUserNameText(text);
   };
+
   const emailChangeHandler = (text) => {
+    if (text.length === 0) {
+      setEmailIsValid(false);
+    } else {
+      setEmailIsValid(true);
+    }
     setEmailText(text);
   };
+
   const passwordChangeHandler = (text) => {
+    if (text.length < 6) {
+      setPasswordIsValid(false);
+    } else {
+      setPasswordIsValid(true);
+    }
     setPasswordText(text);
   };
 
   const birthdayChangeHandler = (text) => {
     setBirthday(text);
+    console.log(birthday);
   };
 
-  // const genderChangeHandler = (text) => {
-  //   //setGender(text);
-  // };
+  const genderChangeHandler = (text) => {
+    setGender(text);
+    console.log(gender);
+  };
 
   const getUserId = async () => {
     try {
@@ -83,23 +110,26 @@ const SignUpScreenV2 = () => {
     }
   };
 
-  const genUserProfile = (uid) => {
+  const genUserProfile = async (uid) => {
+    console.log("generating user profile for: " + uid);
     database
       .collection("users")
       .doc(uid)
       .set({
         username: uid,
-        birthday: "",
-        gender: "",
+        birthday: birthday,
+        gender: gender,
       })
       .then(() => {
+        console.log("generating posts collection");
         database.collection("users").doc(uid).collection("posts").add({});
       })
       .then(() => {
+        console.log("generating replies collection");
         database.collection("users").doc(uid).collection("replies").add({});
       })
       .catch((err) => {
-        console.log(err);
+        console.log("ERROR: " + err);
       });
   };
 
@@ -111,15 +141,20 @@ const SignUpScreenV2 = () => {
   }, [error]);
 
   const signUpHandler = async () => {
-    setError(null);
-    setIsLoading(true);
-    try {
+    if (
+      usernameIsValid === false ||
+      emailIsValid === false ||
+      passwordIsValid === false
+    ) {
+      setError(
+        "The username or email is empty or the password is less than 6 characters! "
+      );
+    } else {
+      setIsLoading(true);
       await dispatch(authActions.signup(userNameText, emailText, passwordText));
-    } catch (err) {
-      setError(err.message);
+      setIsLoading(false);
+      getUserId();
     }
-    setIsLoading(false);
-    getUserId();
   };
 
   const placeholder = {
@@ -206,7 +241,7 @@ const SignUpScreenV2 = () => {
               onChangeText={birthdayChangeHandler}
             />
             <RNPickerSelect
-              onValueChange={(value) => console.log(value)}
+              onValueChange={genderChangeHandler}
               placeholder={placeholder}
               required
               items={[

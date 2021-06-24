@@ -12,6 +12,7 @@ import AddPostScreen from "../screens/main/AddPostScreen";
 import InboxScreen from "../screens/main/InboxScreen";
 import ViewCardScreen from "../screens/main/ViewCardScreen";
 import ViewLetterScreen from "../screens/main/ViewLetterScreen";
+//import UsersPostsScreen from "../screens/main/UserPostsScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignUpScreen";
 import StartUpScreen from "../screens/auth/StartUpScreen";
@@ -162,6 +163,15 @@ export const HomeNavigation = () => {
         component={SettingsScreen}
         options={horizontalAnimation}
       />
+      {/* <HomeStack.Screen
+        name="Your Posts"
+        component={UsersPostsScreen}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          // headerShown: false,
+        })}
+        options={horizontalAnimation}
+      /> */}
       <HomeStack.Screen
         name="Onboarding"
         component={OnboardingScreen}

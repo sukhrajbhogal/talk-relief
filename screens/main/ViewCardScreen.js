@@ -18,6 +18,7 @@ import {
   Platform,
   Pressable,
   Keyboard,
+  Alert,
   ActivityIndicator,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -32,6 +33,7 @@ export default function ViewCardScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
+  const [error, setError] = useState();
   const [input, setInput] = useState("");
   const [inputIsValid, setInputIsValid] = useState(false);
   const [isActive, setActive] = useState(false);
@@ -64,9 +66,8 @@ export default function ViewCardScreen() {
     setInput(text);
   };
 
-  const sendReply = async () => {
-    setIsLoading(true);
-    if (setInputIsValid === false) {
+  const sendReply = () => {
+    if (inputIsValid === false) {
       setError("The title or story is empty!");
     } else {
       await database
@@ -80,7 +81,19 @@ export default function ViewCardScreen() {
           replierId: userIdCollection,
           creatorId: route.params.Card.creatorId,
         })
-        .then(() => {
+        .then((reply) => {
+          replyId = reply.id;
+          database
+            .collection("users")
+            .doc(route.params.Card.creatorId)
+            .collection("replies")
+            .doc(replyId)
+            .set(
+              {
+                replyId: replyId,
+              },
+              { merge: true }
+            );
           navigation.navigate("Home");
 
           // Creates a 3 second toast notification when post is submitted
@@ -97,6 +110,12 @@ export default function ViewCardScreen() {
     Keyboard.dismiss();
     setInput("");
   };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
 
   const cancelMessage = () => {
     Keyboard.dismiss();

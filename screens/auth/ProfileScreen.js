@@ -56,10 +56,7 @@ const ProfileScreen = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.Header}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity>
           <MaterialCommunityIcons
             name="window-close"
             size={35}

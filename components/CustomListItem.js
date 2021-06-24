@@ -2,39 +2,36 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-
-const dummyData = {
-  Title: "How do you comfort a friend who’s super sad? :(",
-  Content:
-    "When comforting someone, I try to focus on making them feel safe first. Treat them to a snack they like, turn on music they enjoy, watch something familiar, etc. There’s huge comfort in safety and even if it’s just temporarily distracting them, it’ll mean a lot to them! I’m rooting for you!",
-  username: "Pastaccine",
-};
-
-const CustomListItem = () => {
+const CustomListItem = ({ username, content }) => {
   const navigation = useNavigation();
 
   return (
     <ListItem
       containerStyle={styles.container}
-      onPress={() => navigation.push("View Letter", dummyData)}
+      onPress={() =>
+        navigation.push("View Letter", {
+          Reply: {
+            content,
+            username,
+          },
+        })
+      }
     >
       <ListItem.Content>
-        <ListItem.Title style={styles.username}>
-          @{dummyData.username}
-        </ListItem.Title>
-        <ListItem.Subtitle
+        <ListItem.Title style={styles.username}>@{username}</ListItem.Title>
+        {/* <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode="tail"
-          style={styles.title}
+          style={styles.username}
         >
-          {dummyData.Title}
-        </ListItem.Subtitle>
+          {username}
+        </ListItem.Subtitle> */}
         <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode="tail"
           style={styles.textPreview}
         >
-          {dummyData.Content}
+          {content}
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
