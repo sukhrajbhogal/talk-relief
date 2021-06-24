@@ -23,40 +23,29 @@ const ProfileScreen = (props) => {
   const navigation = useNavigation();
   const [displayName, setDisplayName] = useState("");
 
-  // Update header title
+  // Grab user's username
   useLayoutEffect(() => {
     const getUsername = async () => {
       try {
         const value = await AsyncStorage.getItem("userData");
         if (value != null) {
           const username = JSON.parse(value).displayName;
-          // console.log(username);
           setDisplayName(username);
         }
       } catch (error) {
         console.log(error);
       }
     };
-    navigation.setOptions({
-      title: "",
-      headerTitleAlign: "center",
-      headerBackTitle: "Back",
-    });
     getUsername();
   }, [dispatch]);
 
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     title: displayName,
-  //     headerTitleAlign: "center",
-  //     headerBackTitle: "Back",
-  //   });
-  // }, []);
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.Header}>
-        <TouchableOpacity>
+      <View style={styles.header}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => navigation.goBack()}
+        >
           <MaterialCommunityIcons
             name="window-close"
             size={35}
@@ -64,8 +53,6 @@ const ProfileScreen = (props) => {
             style={styles.closeIcon}
           />
         </TouchableOpacity>
-        {/* <Text style={styles.headerTitle}>Sign Up</Text> */}
-
         <MaterialCommunityIcons
           name="cog"
           size={30}
@@ -79,7 +66,7 @@ const ProfileScreen = (props) => {
         <View>
           <Text style={styles.username}>{displayName}</Text>
         </View>
-        <Text>Displays all of the user's posts</Text>
+        <Text style={styles.content}>Your posts:</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -90,7 +77,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFF1E4",
   },
-  Header: {
+  header: {
     display: "flex",
     flexDirection: "row",
     paddingLeft: 10,
@@ -101,10 +88,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.75,
     borderBottomColor: "#E8D7CC",
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-  },
   contentContainer: {
     padding: 20,
   },
@@ -114,14 +97,6 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 18,
-    marginVertical: 20,
-    marginHorizontal: 15,
-  },
-  logout: {
-    fontSize: 18,
-    marginVertical: 20,
-    marginHorizontal: 15,
-    color: "red",
   },
 });
 

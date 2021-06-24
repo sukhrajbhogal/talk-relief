@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   Linking,
+  Pressable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -29,64 +30,126 @@ const SettingsScreen = (props) => {
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView style={styles.container}>
-        <View style={styles.rowContainer}>
+        {/* Account */}
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? "#F6E2D0" : "#FFF1E4",
+            },
+            styles.rowContainer,
+          ]}
+        >
           <MaterialCommunityIcons
             name="account-circle-outline"
             size={30}
             color={"#202020"}
-            style={styles.closeIcon}
           />
           <Text style={styles.content}>Account</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor="rgba(0,0,0,0.05)"
-            style={styles.rowContainer}
-            onPress={() => navigation.navigate("Onboarding")}
-          >
-            <Text style={styles.content}>How it works</Text>
-          </TouchableHighlight>
-        </View>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={35}
+            color={"#202020"}
+          />
+        </Pressable>
+        {/* How it works */}
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? "#F6E2D0" : "#FFF1E4",
+            },
+            styles.rowContainer,
+          ]}
+          onPress={() => navigation.navigate("Onboarding")}
+        >
+          <MaterialCommunityIcons
+            name="school-outline"
+            size={30}
+            color={"#202020"}
+          />
+          <Text style={styles.content}>How it works</Text>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={35}
+            color={"#202020"}
+          />
+        </Pressable>
         {/* <View style={styles.rowContainer}>
           <Text style={styles.content}>Community Guidelines</Text>
         </View> */}
-        <View style={styles.rowContainer}>
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor="rgba(0,0,0,0.05)"
-            style={styles.rowContainer}
-            onPress={() =>
-              Linking.openURL("https://talkrelief.app/terms-of-service")
-            }
-          >
-            <Text style={styles.content}>Terms of Service</Text>
-          </TouchableHighlight>
-        </View>
-        <View style={styles.rowContainer}>
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor="rgba(0,0,0,0.05)"
-            style={styles.rowContainer}
-            onPress={() =>
-              Linking.openURL("https://talkrelief.app/privacy-policy")
-            }
-          >
-            <Text style={styles.content}>Privacy Policy</Text>
-          </TouchableHighlight>
-        </View>
-        <View style={styles.rowContainer}>
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor="rgba(232,215,204,0.4)"
-            style={styles.btnBG}
-            onPress={() => {
-              dispatch(authActions.logout());
-            }}
-          >
-            <Text style={styles.logout}>Log out</Text>
-          </TouchableHighlight>
-        </View>
+        {/* Terms of Service */}
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? "#F6E2D0" : "#FFF1E4",
+            },
+            styles.rowContainer,
+          ]}
+          onPress={() =>
+            Linking.openURL("https://talkrelief.app/terms-of-service")
+          }
+        >
+          <MaterialCommunityIcons
+            name="script-text-outline"
+            size={30}
+            color={"#202020"}
+          />
+          <Text style={styles.content}>Terms of Service</Text>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={35}
+            color={"#202020"}
+          />
+        </Pressable>
+
+        {/* Privacy Policy */}
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? "#F6E2D0" : "#FFF1E4",
+            },
+            styles.rowContainer,
+          ]}
+          onPress={() =>
+            Linking.openURL("https://talkrelief.app/privacy-policy")
+          }
+        >
+          <MaterialCommunityIcons
+            name="key-outline"
+            size={30}
+            color={"#202020"}
+          />
+          <Text style={styles.content}>Privacy Policy</Text>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={35}
+            color={"#202020"}
+          />
+        </Pressable>
+        {/* Log out */}
+
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? "#F6E2D0" : "#FFF1E4",
+            },
+            styles.rowContainer,
+          ]}
+          onPress={() => {
+            dispatch(authActions.logout());
+          }}
+        >
+          <MaterialCommunityIcons
+            name="logout-variant"
+            size={30}
+            color={"red"}
+          />
+          <Text style={[styles.content, styles.logout]}>Log out</Text>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={35}
+            color={"#202020"}
+          />
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -112,11 +175,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 20,
     marginHorizontal: 10,
+    marginRight: "auto",
   },
   logout: {
-    fontSize: 18,
-    marginVertical: 20,
-    marginHorizontal: 15,
     color: "red",
   },
 });
