@@ -15,8 +15,9 @@ import ViewLetterScreen from "../screens/main/ViewLetterScreen";
 //import UsersPostsScreen from "../screens/main/UserPostsScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignUpScreen";
-import ProfileScreen from "../screens/auth/ProfileScreen";
 import StartUpScreen from "../screens/auth/StartUpScreen";
+import ProfileScreen from "../screens/auth/ProfileScreen";
+import SettingsScreen from "../screens/auth/SettingsScreen";
 import OnboardingScreen from "../screens/auth/OnboardingScreen";
 
 import horizontalAnimation from "../components/horizontalAnimation";
@@ -93,6 +94,8 @@ export const HomeNavigation = () => {
           backgroundColor: "#FFF1E4",
         },
         headerTintColor: "#202020",
+
+        // Logo
         headerTitleStyle: {
           fontWeight: "bold",
           fontSize: 20,
@@ -151,10 +154,13 @@ export const HomeNavigation = () => {
       <HomeStack.Screen
         name="Profile"
         component={ProfileScreen}
-        options={({ route }) => ({
-          title: getHeaderTitle(route),
-          // headerShown: false,
-        })}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="Settings"
+        component={SettingsScreen}
         options={horizontalAnimation}
       />
       {/* <HomeStack.Screen
@@ -169,7 +175,6 @@ export const HomeNavigation = () => {
       <HomeStack.Screen
         name="Onboarding"
         component={OnboardingScreen}
-        //options={horizontalAnimation}
         options={{ title: "How it works", headerShown: false }}
       />
     </HomeStack.Navigator>

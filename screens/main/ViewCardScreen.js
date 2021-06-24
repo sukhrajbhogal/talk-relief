@@ -66,7 +66,8 @@ export default function ViewCardScreen() {
     setInput(text);
   };
 
-  const sendReply = () => {
+  const sendReply = async () => {
+    setIsLoading(true);
     if (inputIsValid === false) {
       setError("The title or story is empty!");
     } else {
@@ -99,7 +100,7 @@ export default function ViewCardScreen() {
 
           // Creates a 3 second toast notification when post is submitted
           Toast.show({
-            text1: "Your reply was sent. 😊",
+            text1: "Your reply was sent. 💌 😊",
             visibilityTime: 2000,
             topOffset: 50,
             autoHide: true,

@@ -40,7 +40,7 @@ const SignUpScreenV2 = () => {
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
   const navigation = useNavigation();
-  const [error, setError] = useState();
+  // const [error, setError] = useState();
 
   const [userNameText, setUserNameText] = useState("");
   const [usernameIsValid, setUsernameIsValid] = useState(false);
