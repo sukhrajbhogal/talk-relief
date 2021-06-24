@@ -70,12 +70,13 @@ export default function ViewCardScreen() {
     if (inputIsValid === false) {
       setError("The title or story is empty!");
     } else {
-      await database
+      database
         .collection("users")
         .doc(route.params.Card.creatorId)
         .collection("replies")
         .add({
           replyContent: input,
+          postTitle: route.params.Card.title,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           replierUsername: replierUserName,
           replierId: userIdCollection,

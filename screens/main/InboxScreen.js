@@ -79,6 +79,7 @@ const InboxScreen = (props) => {
         renderItem={({ item }) => (
           <CustomListItem
             username={item.replierUsername}
+            title={item.postTitle}
             content={item.replyContent}
           />
         )}

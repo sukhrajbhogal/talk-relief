@@ -2,7 +2,8 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-const CustomListItem = ({ username, content }) => {
+
+const CustomListItem = ({ username, title, content }) => {
   const navigation = useNavigation();
 
   return (
@@ -13,19 +14,20 @@ const CustomListItem = ({ username, content }) => {
           Reply: {
             content,
             username,
+            title,
           },
         })
       }
     >
       <ListItem.Content>
         <ListItem.Title style={styles.username}>@{username}</ListItem.Title>
-        {/* <ListItem.Subtitle
+        <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode="tail"
           style={styles.username}
         >
-          {username}
-        </ListItem.Subtitle> */}
+          {title}
+        </ListItem.Subtitle>
         <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode="tail"
