@@ -98,7 +98,7 @@ export const login = (email, password) => {
       throw new Error(message);
     }
     const resData = await response.json();
-    console.log(resData);
+    // console.log(resData);
     //console.log("Username: " + resData.displayName);
     dispatch(
       authenticate(

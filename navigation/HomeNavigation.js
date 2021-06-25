@@ -1,8 +1,5 @@
-import React from "react";
-import {
-  NavigationContainer,
-  getFocusedRouteNameFromRoute,
-} from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -21,8 +18,6 @@ import SettingsScreen from "../screens/auth/SettingsScreen";
 import OnboardingScreen from "../screens/auth/OnboardingScreen";
 
 import horizontalAnimation from "../components/horizontalAnimation";
-
-import { useNavigation } from "@react-navigation/native";
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -83,7 +78,6 @@ export const AuthNavigation = () => {
 };
 
 export const HomeNavigation = () => {
-  //const navigation = useNavigation();
   return (
     <HomeStack.Navigator
       // initialRouteName=""
@@ -175,7 +169,7 @@ export const HomeNavigation = () => {
       <HomeStack.Screen
         name="Onboarding"
         component={OnboardingScreen}
-        options={{ title: "How it works", headerShown: false }}
+        options={{ headerShown: false }}
       />
     </HomeStack.Navigator>
   );

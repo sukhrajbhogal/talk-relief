@@ -13,11 +13,20 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SettingsScreen = (props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [displayName, setDisplayName] = useState("");
+
+  const clearOnboarding = async () => {
+    try {
+      await AsyncStorage.removeItem("@viewedOnboarding");
+    } catch (err) {
+      console.log("Error @clearOnboarding: ", err);
+    }
+  };
 
   // Update header title
   useLayoutEffect(() => {
@@ -125,8 +134,8 @@ const SettingsScreen = (props) => {
             color={"#202020"}
           />
         </Pressable>
-        {/* Log out */}
 
+        {/* Log out */}
         <Pressable
           style={({ pressed }) => [
             {
@@ -144,6 +153,29 @@ const SettingsScreen = (props) => {
             color={"red"}
           />
           <Text style={[styles.content, styles.logout]}>Log out</Text>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={35}
+            color={"#202020"}
+          />
+        </Pressable>
+
+        {/* Remove */}
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? "#F6E2D0" : "#FFF1E4",
+            },
+            styles.rowContainer,
+          ]}
+          onPress={clearOnboarding}
+        >
+          <MaterialCommunityIcons
+            name="bug-outline"
+            size={30}
+            color={"#202020"}
+          />
+          <Text style={styles.content}>Clear onboarding</Text>
           <MaterialCommunityIcons
             name="chevron-right"
             size={35}

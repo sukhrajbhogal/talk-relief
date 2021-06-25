@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import {
   SafeAreaView,
   View,
-  Text,
   StyleSheet,
   FlatList,
   Animated,
@@ -13,12 +12,11 @@ import OnboardingItem from "../../components/OnboardingItem";
 import Paginator from "../../components/Paginator";
 import NextButton from "../../components/NextButton";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Shows each onboarding screen (3) as a horizontal flatlist with a carousel effect
+// Shows each onboarding screen as a horizontal flatlist with a carousel effect
 const OnboardingScreen = () => {
   const navigation = useNavigation();
-
-  // Get the index of the current slide shown on screen (3 slides : 0, 1, 2)
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // animation value linked to current slide
@@ -35,13 +33,21 @@ const OnboardingScreen = () => {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
   // Next button moves to the next slide
-  const scrollTo = () => {
+  const scrollTo = async () => {
     if (currentSlide < OnboardingSlides.length - 1) {
       slidesRef.current.scrollToIndex({ index: currentSlide + 1 });
     } else {
-      console.log("Last item.");
-      //At the end, go back to the previous screen
-      navigation.goBack();
+      // After the final slide, remember user viewed onboarding
+      try {
+        await AsyncStorage.setItem("@viewedOnboarding", "true");
+      } catch (err) {
+        console.log("Error, @setItem: ", err);
+      }
+      //Reset the navigation to home screen
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
     }
   };
 

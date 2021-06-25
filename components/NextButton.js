@@ -6,7 +6,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // Displays a circle next button with a progress bar border
 const NextButton = ({ percentage, scrollTo }) => {
   const size = 128;
-  const strokeWidth = 2;
+  const strokeWidth = 8;
   const center = size / 2;
   const radius = size / 2 - strokeWidth / 2;
   const circumference = 2 * Math.PI * radius;
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   button: {
     position: "absolute",
-    backgroundColor: "#C83E6F",
+    backgroundColor: "#202020",
     borderRadius: 100,
     padding: 20,
   },

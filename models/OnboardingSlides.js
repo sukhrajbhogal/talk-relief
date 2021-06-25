@@ -10,7 +10,7 @@ export default [
     id: "2",
     title: "Express your feelings",
     description:
-      "You can create a new post by tapping on the ⨁ icon. Users can read your post and reply with support, encouragement, or advice.",
+      "You can create a new post by tapping on the ⨁ icon. Users can read your post and reply with support, kindness, or encouragement.",
     image: require("../assets/O2.png"),
   },
   {
