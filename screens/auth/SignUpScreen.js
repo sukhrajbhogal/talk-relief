@@ -14,6 +14,7 @@ import {
   TouchableHighlight,
   ActivityIndicator,
   Alert,
+  TextPropTypes,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -50,7 +51,9 @@ const SignUpScreenV2 = () => {
   const [passwordIsValid, setPasswordIsValid] = useState(false);
   const [show, setShow] = useState(false);
   const [birthday, setBirthday] = useState("");
+  const [birthdayIsValid, setBirthdayIsValid] = useState(false);
   const [gender, setGender] = useState("");
+  const [genderIsValid, setGenderIsValid] = useState(false);
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -88,11 +91,21 @@ const SignUpScreenV2 = () => {
   };
 
   const birthdayChangeHandler = (text) => {
+    if (text.length < 8) {
+      setBirthdayIsValid(false);
+    } else {
+      setBirthdayIsValid(true);
+    }
     setBirthday(text);
     console.log(birthday);
   };
 
   const genderChangeHandler = (text) => {
+    if (text === "null") {
+      setGenderIsValid(false);
+    } else {
+      setGenderIsValid(true);
+    }
     setGender(text);
     console.log(gender);
   };
@@ -144,13 +157,17 @@ const SignUpScreenV2 = () => {
     if (
       usernameIsValid === false ||
       emailIsValid === false ||
-      passwordIsValid === false
+      passwordIsValid === false ||
+      birthdayIsValid === false ||
+      genderIsValid === false
     ) {
       setError(
         "The username or email is empty or the password is less than 6 characters! "
       );
     } else {
       setIsLoading(true);
+      console.log("Birthday: " + birthday);
+      console.log("Gender: " + gender);
       await dispatch(authActions.signup(userNameText, emailText, passwordText));
       setIsLoading(false);
       getUserId();
@@ -159,7 +176,7 @@ const SignUpScreenV2 = () => {
 
   const placeholder = {
     label: "What's your gender?",
-    value: null,
+    value: "null",
   };
 
   return (
