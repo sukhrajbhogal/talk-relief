@@ -31,7 +31,7 @@ const SettingsScreen = (props) => {
     <SafeAreaView style={styles.screen}>
       <ScrollView style={styles.container}>
         {/* Account */}
-        <Pressable
+        {/* <Pressable
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? "#F6E2D0" : "#FFF1E4",
@@ -50,7 +50,7 @@ const SettingsScreen = (props) => {
             size={35}
             color={"#202020"}
           />
-        </Pressable>
+        </Pressable> */}
         {/* How it works */}
         <Pressable
           style={({ pressed }) => [

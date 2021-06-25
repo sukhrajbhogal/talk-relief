@@ -93,27 +93,29 @@ const ProfileScreen = (props) => {
         />
       </View>
 
-      <ScrollView style={styles.contentContainer}>
+      {/* <ScrollView style={styles.contentContainer}> */}
+      <View style={styles.contentContainer}>
         <View style={styles.usernameContainer}>
-          <Text style={styles.username}>{displayName}</Text>
-          <Text style={styles.content}>Your posts:</Text>
+          <Text style={styles.username}>{displayName}'s posts</Text>
+          {/* <Text style={styles.content}>Your posts:</Text> */}
         </View>
-        {/* Display user posts */}
-        <FlatList
-          data={posts}
-          keyExtractor={(item) => item.postId}
-          renderItem={({ item }) => (
-            <CustomListItem
-              username={item.username}
-              title={item.title}
-              content={item.content}
-            />
-          )}
-          // refreshControl={
-          //   <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
-          // }
-        />
-      </ScrollView>
+      </View>
+      {/* </ScrollView> */}
+      {/* Display user posts */}
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.postId}
+        renderItem={({ item }) => (
+          <CustomListItem
+            username={item.username}
+            title={item.title}
+            content={item.content}
+          />
+        )}
+        // refreshControl={
+        //   <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        // }
+      />
     </SafeAreaView>
   );
 };
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E8D7CC",
   },
   username: {
-    fontSize: 30,
+    fontSize: 20,
     fontFamily: "Cocogoose",
   },
   content: {
