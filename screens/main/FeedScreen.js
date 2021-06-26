@@ -1,14 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 import CardList from "../../components/CardList";
-import OnboardingScreen from "../auth/OnboardingScreen";
 
 const FeedScreen = (props) => {
+  const [loading, setLoading] = useState(true);
   const [viewedOnboarding, setViewedOnboarding] = useState(false);
+  const navigation = useNavigation();
 
-  // Onboarding
+  const Loading = () => {
+    return <ActivityIndicator size={"large"} />;
+  };
+
+  // Checks user's async storage if they've viewed onboarding
   const checkOnboarding = async () => {
     try {
       const value = await AsyncStorage.getItem("@viewedOnboarding");
@@ -17,8 +29,11 @@ const FeedScreen = (props) => {
       }
     } catch (err) {
       console.log("Error @checkOnboarding: ", err);
+    } finally {
+      setLoading(false);
     }
   };
+
   useEffect(() => {
     checkOnboarding();
   }, []);
@@ -27,7 +42,13 @@ const FeedScreen = (props) => {
     <SafeAreaView style={styles.screen}>
       <StatusBar barStyle="dark-content" animated={true} />
       {/* If user has viewed onboarding, show feed. Otherwise, show onboarding. */}
-      {viewedOnboarding ? <CardList /> : <OnboardingScreen />}
+      {loading ? (
+        <Loading />
+      ) : viewedOnboarding ? (
+        <CardList />
+      ) : (
+        navigation.navigate("Onboarding")
+      )}
     </SafeAreaView>
   );
 };

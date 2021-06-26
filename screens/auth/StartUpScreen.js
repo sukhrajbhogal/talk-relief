@@ -31,7 +31,7 @@ const StartUpScreen = (props) => {
       }
       console.log("AL successful");
       console.log("User ID: " + userId);
-      //console.log(userData);
+      // console.log(userData);
       dispatch(authActions.authenticate(userId, token));
       //props.navigation.navigate("Home");
     };
