@@ -13,7 +13,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { database } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 
-import bg0 from "../assets/bg.png";
+import bg1 from "../assets/bg.png";
 import bg2 from "../assets/bg2.png";
 import bg3 from "../assets/bg3.png";
 import bg4 from "../assets/bg4.png";
@@ -24,12 +24,13 @@ import bg8 from "../assets/bg8.png";
 import bg9 from "../assets/bg9.png";
 import bg10 from "../assets/bg10.png";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Card from "./Card";
 
 const { width } = Dimensions.get("window");
 export const CARD_HEIGHT = (width * 1564) / 974;
 
 // Card Pattern and Color arrays
-export const bgArray = [bg0, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10];
+export const bgArray = [bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10];
 const colorArray = [
   "#C83E6F",
   "#FF6B00",
@@ -121,71 +122,71 @@ export default function CardList() {
     onEndReachedCalledDuringMomentum = true;
   };
 
-  renderList = ({
-    creatorId,
-    username,
-    category,
-    title,
-    content,
-    timestamp,
-  }) => {
-    // Assign random pattern for each card
-    const randomIndex = Math.floor(Math.random() * bgArray.length);
-    const selectedBG = bgArray[randomIndex];
-    // Assign random color for each card
-    const randomColorIndex = Math.floor(Math.random() * colorArray.length);
-    const selectedColor = colorArray[randomColorIndex];
-    return (
-      <TouchableOpacity
-        activeOpacity={1}
-        // Send card info to CardSectionScreen which displays the card full screen
-        onPress={() =>
-          navigation.push("View Card", {
-            Card: {
-              title,
-              content,
-              username,
-              creatorId,
-              selectedBG,
-              selectedColor,
-            },
-          })
-        }
-      >
-        <ImageBackground
-          source={selectedBG}
-          style={[styles.bgImage, { backgroundColor: selectedColor }]}
-        >
-          <View style={styles.cardStyle}>
-            <Text style={[styles.fontStyle, styles.cardTitle]}>{title}</Text>
-            <Text
-              numberOfLines={6}
-              style={[styles.fontStyle, styles.cardContent]}
-            >
-              {content}
-            </Text>
-            <Text style={styles.fontStyle}>@{username}</Text>
-          </View>
-          <View style={styles.replyBG}>
-            <MaterialCommunityIcons
-              name="lead-pencil"
-              size={35}
-              color={"#202020"}
-              style={styles.replyIcon}
-            />
-            {/* <TouchableOpacity activeOpacity={0.5}>
-              <MaterialCommunityIcons
-                name="lead-pencil"
-                size={35}
-                color={"#202020"}
-                style={styles.replyIcon}
-              />
-            </TouchableOpacity> */}
-          </View>
-        </ImageBackground>
-      </TouchableOpacity>
-    );
-  };
+  // renderList = ({
+  //   creatorId,
+  //   username,
+  //   category,
+  //   title,
+  //   content,
+  //   timestamp,
+  // }) => {
+  //   // Assign random pattern for each card
+  //   const randomIndex = Math.floor(Math.random() * bgArray.length);
+  //   const selectedBG = bgArray[randomIndex];
+  //   // Assign random color for each card
+  //   const randomColorIndex = Math.floor(Math.random() * colorArray.length);
+  //   const selectedColor = colorArray[randomColorIndex];
+  //   return (
+  //     <TouchableOpacity
+  //       activeOpacity={1}
+  //       // Send card info to CardSectionScreen which displays the card full screen
+  //       onPress={() =>
+  //         navigation.push("View Card", {
+  //           Card: {
+  //             title,
+  //             content,
+  //             username,
+  //             creatorId,
+  //             selectedBG,
+  //             selectedColor,
+  //           },
+  //         })
+  //       }
+  //     >
+  //       <ImageBackground
+  //         source={selectedBG}
+  //         style={[styles.bgImage, { backgroundColor: selectedColor }]}
+  //       >
+  //         <View style={styles.cardStyle}>
+  //           <Text style={[styles.fontStyle, styles.cardTitle]}>{title}</Text>
+  //           <Text
+  //             numberOfLines={6}
+  //             style={[styles.fontStyle, styles.cardContent]}
+  //           >
+  //             {content}
+  //           </Text>
+  //           <Text style={styles.fontStyle}>@{username}</Text>
+  //         </View>
+  //         <View style={styles.replyBG}>
+  //           <MaterialCommunityIcons
+  //             name="lead-pencil"
+  //             size={35}
+  //             color={"#202020"}
+  //             style={styles.replyIcon}
+  //           />
+  //           {/* <TouchableOpacity activeOpacity={0.5}>
+  //             <MaterialCommunityIcons
+  //               name="lead-pencil"
+  //               size={35}
+  //               color={"#202020"}
+  //               style={styles.replyIcon}
+  //             />
+  //           </TouchableOpacity> */}
+  //         </View>
+  //       </ImageBackground>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   // Load more cards on refresh trigger
   onRefresh = () => {
@@ -211,7 +212,15 @@ export default function CardList() {
         showsVerticalScrollIndicator={false}
         data={cards}
         keyExtractor={(item) => item.timestamp.toString()}
-        renderItem={({ item }) => renderList(item)}
+        renderItem={({ item }) => (
+          <Card
+            username={item.username}
+            title={item.title}
+            content={item.content}
+            postPattern={item.cardPattern}
+            postColor={item.cardColor}
+          />
+        )}
         ListFooterComponent={renderFooter}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />

@@ -25,6 +25,35 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { TextInput } from "react-native";
 
+import bg1 from "../../assets/bg.png";
+import bg2 from "../../assets/bg2.png";
+import bg3 from "../../assets/bg3.png";
+import bg4 from "../../assets/bg4.png";
+import bg5 from "../../assets/bg5.png";
+import bg6 from "../../assets/bg6.png";
+import bg7 from "../../assets/bg7.png";
+import bg8 from "../../assets/bg8.png";
+import bg9 from "../../assets/bg9.png";
+import bg10 from "../../assets/bg10.png";
+
+const colorArray = [
+  "#C83E6F",
+  "#FF6B00",
+  "#0085FF",
+  "#128200",
+  "#008272",
+  "#6e7582",
+  "#7A78DF",
+  "#F08EEC",
+  "#194350",
+  "#1FAB4F",
+  "#1F46AB",
+  "#AB1F1F",
+  "#51C4D3",
+];
+
+const bgArray = [bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10];
+
 const { height } = Dimensions.get("window");
 export const fullHeight = (height * 1564) / 974;
 
@@ -129,10 +158,10 @@ export default function ViewCardScreen() {
   return (
     // Show card full screen as background
     <ImageBackground
-      source={route.params.Card.selectedBG}
+      source={bgArray[route.params.Card.postPattern]}
       style={[
         styles.screen,
-        { backgroundColor: route.params.Card.selectedColor },
+        { backgroundColor: colorArray[route.params.Card.postColor] },
       ]}
     >
       <SafeAreaView style={styles.container}>

@@ -11,7 +11,6 @@ const AppNavigation = (props) => {
 
   return (
     <NavigationContainer>
-      {/* <HomeNavigation /> */}
       {isAuth && <HomeNavigation />}
       {!isAuth && didTryAutoLogin && <AuthNavigation />}
       {!isAuth && !didTryAutoLogin && <StartUpScreen />}

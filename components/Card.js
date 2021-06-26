@@ -4,16 +4,14 @@ import {
   Text,
   StyleSheet,
   ImageBackground,
-  ActivityIndicator,
-  RefreshControl,
-  Dimensions,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
-import { database } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 
-import bg0 from "../assets/bg.png";
+//import { bgArray, colorArray } from "../models/bgAndColor";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import bg1 from "../assets/bg.png";
 import bg2 from "../assets/bg2.png";
 import bg3 from "../assets/bg3.png";
 import bg4 from "../assets/bg4.png";
@@ -23,17 +21,36 @@ import bg7 from "../assets/bg7.png";
 import bg8 from "../assets/bg8.png";
 import bg9 from "../assets/bg9.png";
 import bg10 from "../assets/bg10.png";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+export const bgArray = [bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10];
+const colorArray = [
+  "#C83E6F",
+  "#FF6B00",
+  "#0085FF",
+  "#128200",
+  "#008272",
+  "#6e7582",
+  "#7A78DF",
+  "#F08EEC",
+  "#194350",
+  "#1FAB4F",
+  "#1F46AB",
+  "#AB1F1F",
+  "#51C4D3",
+];
 
-export const bgArray = [bg0, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10];
+const { width } = Dimensions.get("window");
+export const CARD_HEIGHT = (width * 1564) / 974;
+const Card = ({
+  docId,
+  username,
+  userId,
+  title,
+  content,
+  postPattern,
+  postColor,
+}) => {
+  const navigation = useNavigation();
 
-const Card = ({ docId, username, userId, title, content }) => {
-  // Assign random pattern for each card
-  const randomIndex = Math.floor(Math.random() * bgArray.length);
-  const selectedBG = bgArray[randomIndex];
-  // Assign random color for each card
-  const randomColorIndex = Math.floor(Math.random() * colorArray.length);
-  const selectedColor = colorArray[randomColorIndex];
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -42,19 +59,20 @@ const Card = ({ docId, username, userId, title, content }) => {
         navigation.push("View Card", {
           Card: {
             docId,
+            creatorId,
             username,
             userId,
             title,
             content,
-            selectedBG,
-            selectedColor,
+            postPattern,
+            postColor,
           },
         })
       }
     >
       <ImageBackground
-        source={selectedBG}
-        style={[styles.bgImage, { backgroundColor: selectedColor }]}
+        source={bgArray[postPattern]}
+        style={[styles.bgImage, { backgroundColor: colorArray[postColor] }]}
       >
         <View style={styles.cardStyle}>
           <Text style={[styles.fontStyle, styles.cardTitle]}>{title}</Text>
