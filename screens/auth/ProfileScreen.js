@@ -16,8 +16,8 @@ import {
   FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import CustomListItem from "../../components/CustomListItem";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import UserPostsList from "../../components/UserPostsList";
 
 const ProfileScreen = (props) => {
   const dispatch = useDispatch();
@@ -106,10 +106,11 @@ const ProfileScreen = (props) => {
         data={posts}
         keyExtractor={(item) => item.postId}
         renderItem={({ item }) => (
-          <CustomListItem
-            username={item.username}
+          <UserPostsList
             title={item.title}
             content={item.content}
+            postPattern={item.cardPattern}
+            postColor={item.cardColor}
           />
         )}
         // refreshControl={

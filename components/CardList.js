@@ -215,6 +215,7 @@ export default function CardList() {
         renderItem={({ item }) => (
           <Card
             username={item.username}
+            creatorId={item.creatorId}
             title={item.title}
             content={item.content}
             postPattern={item.cardPattern}

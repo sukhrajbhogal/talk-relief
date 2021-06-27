@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 
-const CustomListItem = ({ username, title, content }) => {
+const InboxList = ({ username, title, content }) => {
   const navigation = useNavigation();
 
   return (
@@ -40,7 +40,7 @@ const CustomListItem = ({ username, title, content }) => {
   );
 };
 
-export default CustomListItem;
+export default InboxList;
 
 const styles = StyleSheet.create({
   container: {

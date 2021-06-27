@@ -186,9 +186,6 @@ export default function ViewCardScreen() {
               <Text style={styles.fontStyle}>
                 @{route.params.Card.username}
               </Text>
-              <Text style={styles.fontStyle}>
-                {route.params.Card.creatorId}
-              </Text>
             </View>
           </ScrollView>
 

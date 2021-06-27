@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 
-function ViewLetterScreen({ navigation }) {
+const ViewLetterScreen = ({ navigation }) => {
   const route = useRoute();
 
   // Update header title
@@ -36,7 +36,7 @@ function ViewLetterScreen({ navigation }) {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   Screen: {

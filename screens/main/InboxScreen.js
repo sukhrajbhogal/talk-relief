@@ -16,7 +16,7 @@ import {
   RefreshControl,
 } from "react-native";
 
-import CustomListItem from "../../components/CustomListItem";
+import InboxList from "../../components/InboxList";
 
 const InboxScreen = (props) => {
   const dispatch = useDispatch();
@@ -39,9 +39,6 @@ const InboxScreen = (props) => {
       }
     };
     getUserData();
-    console.log("REPLIES CONSTANT:");
-    console.log(replies);
-    console.log("^^REPLIES CONSTANT^^");
   }, [dispatch]);
 
   const getReplies = async (uid) => {
@@ -77,7 +74,7 @@ const InboxScreen = (props) => {
         data={replies}
         keyExtractor={(item) => item.replyId}
         renderItem={({ item }) => (
-          <CustomListItem
+          <InboxList
             username={item.replierUsername}
             title={item.postTitle}
             content={item.replyContent}

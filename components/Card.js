@@ -43,6 +43,7 @@ export const CARD_HEIGHT = (width * 1564) / 974;
 const Card = ({
   docId,
   username,
+  creatorId,
   userId,
   title,
   content,

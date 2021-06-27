@@ -9,7 +9,7 @@ import AddPostScreen from "../screens/main/AddPostScreen";
 import InboxScreen from "../screens/main/InboxScreen";
 import ViewCardScreen from "../screens/main/ViewCardScreen";
 import ViewLetterScreen from "../screens/main/ViewLetterScreen";
-//import UsersPostsScreen from "../screens/main/UserPostsScreen";
+import ViewPostScreen from "../screens/main/ViewPostScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignUpScreen";
 import StartUpScreen from "../screens/auth/StartUpScreen";
@@ -140,6 +140,14 @@ export const HomeNavigation = () => {
       <HomeStack.Screen
         name="View Card"
         component={ViewCardScreen}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          headerShown: false,
+        })}
+      />
+      <HomeStack.Screen
+        name="View Post"
+        component={ViewPostScreen}
         options={({ route }) => ({
           title: getHeaderTitle(route),
           headerShown: false,
