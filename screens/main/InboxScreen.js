@@ -75,38 +75,6 @@ const InboxScreen = (props) => {
     setIsLoading(false);
   };
 
-  // getMore = async () => {
-  //   if (lastDoc) {
-  //     setIsMoreLoading(true);
-
-  //     setTimeout(async () => {
-  //       let snapshot = await repliesRef
-  //         .where("creatorId", "==", uid)
-  //         .orderBy("timestamp", "desc")
-  //         .limit(5)
-  //         .get();
-
-  //       if (!snapshot.empty) {
-  //         let inbox = replies;
-  //         setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
-
-  //         for (let i = 0; i < snapshot.docs.length; i++) {
-  //           inbox.push(snaoshot.docs[i].data());
-  //         }
-
-  //         setReplies(inbox);
-  //         if (snapshot.docs.length < 5) setLastDoc(null);
-  //       } else {
-  //         setLastDoc(null);
-  //       }
-
-  //       setIsMoreLoading(false);
-  //     }, 1000);
-  //   }
-
-  //   onEndReachedCalledDuringMomentum = true;
-  // };
-
   onRefresh = () => {
     getReplies();
   };
@@ -127,14 +95,6 @@ const InboxScreen = (props) => {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
         }
-        // onMomentumScrollBegin={() => {
-        //   onEndReachedCalledDuringMomentum = false;
-        // }}
-        // onEndReached={() => {
-        //   if (!onEndReachedCalledDuringMomentum && !isMoreLoading) {
-        //     getMore();
-        //   }
-        // }}
       />
     </SafeAreaView>
   );
