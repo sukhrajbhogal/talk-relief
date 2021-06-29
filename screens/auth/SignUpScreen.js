@@ -20,6 +20,7 @@ import {
   TouchableHighlight,
   ActivityIndicator,
   Alert,
+  Linking,
   KeyboardAvoidingView,
   TextPropTypes,
 } from "react-native";
@@ -343,8 +344,25 @@ const SignUpScreenV2 = () => {
         </TouchableHighlight>
 
         <Text style={styles.subtitle}>
-          By continuing, you confirm you are over 13 and accept our Terms and
-          Privacy Policy.
+          By continuing, you confirm you are over 18 and accept our{" "}
+          <Text
+            style={styles.disclaimerLink}
+            onPress={() =>
+              Linking.openURL("https://talkrelief.app/terms-of-service")
+            }
+          >
+            Terms
+          </Text>{" "}
+          and{" "}
+          <Text
+            style={styles.disclaimerLink}
+            onPress={() =>
+              Linking.openURL("https://talkrelief.app/privacy-policy")
+            }
+          >
+            Privacy Policy
+          </Text>
+          .
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -410,6 +428,10 @@ const styles = StyleSheet.create({
     // marginHorizontal: 5,
     // marginVertical: 10,
     fontSize: 20,
+  },
+  disclaimerLink: {
+    color: "#C83E6F",
+    textDecorationLine: "underline",
   },
 });
 
