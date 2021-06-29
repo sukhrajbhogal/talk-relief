@@ -148,7 +148,10 @@ const PostForm = () => {
               cardColor: cardColor,
             });
           console.log("SUCCESS");
-          navigation.navigate("Home");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Home" }],
+          });
 
           // Creates a 2 second toast notification when post is submitted
           Toast.show({
