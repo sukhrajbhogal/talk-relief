@@ -27,4 +27,11 @@ export default [
       "This is a place of support for real people with real problems. Violators will be banned from the community.",
     image: require("../assets/O4.png"),
   },
+  {
+    id: "5",
+    title: "Check back later",
+    description:
+      "You won't receive notifications for new replies. (We'll have this set up for you soon!)",
+    image: require("../assets/O5.png"),
+  },
 ];

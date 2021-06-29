@@ -143,8 +143,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E8D7CC",
   },
   username: {
-    fontSize: 20,
-    fontFamily: "Cocogoose",
+    fontSize: 24,
+    fontWeight: "700",
+    // fontFamily: "Cocogoose",
   },
   content: {
     fontSize: 15,

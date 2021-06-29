@@ -71,7 +71,7 @@ const SettingsScreen = (props) => {
           onPress={() => navigation.navigate("Onboarding")}
         >
           <MaterialCommunityIcons
-            name="school-outline"
+            name="help-circle-outline"
             size={30}
             color={"#202020"}
           />
@@ -161,7 +161,7 @@ const SettingsScreen = (props) => {
         </Pressable>
 
         {/* Remove */}
-        <Pressable
+        {/* <Pressable
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? "#F6E2D0" : "#FFF1E4",
@@ -181,7 +181,7 @@ const SettingsScreen = (props) => {
             size={35}
             color={"#202020"}
           />
-        </Pressable>
+        </Pressable> */}
       </ScrollView>
     </SafeAreaView>
   );
