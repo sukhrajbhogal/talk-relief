@@ -32,7 +32,7 @@ export const toastConfig = {
       contentContainerStyle={styles.contentContainer}
       text1Style={styles.text}
       trailingIconStyle={styles.trailingIconStyle}
-      text1={"😊 Your post was created!"}
+      text1={text1}
       text2={props.uuid}
     />
   ),

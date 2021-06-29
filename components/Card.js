@@ -92,6 +92,20 @@ const Card = ({
               size={35}
               color={"#202020"}
               style={styles.replyIcon}
+              onPress={() =>
+                navigation.push("View Card", {
+                  Card: {
+                    docId,
+                    creatorId,
+                    username,
+                    userId,
+                    title,
+                    content,
+                    postPattern,
+                    postColor,
+                  },
+                })
+              }
             />
           </TouchableOpacity>
         </View>

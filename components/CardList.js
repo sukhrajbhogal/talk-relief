@@ -65,10 +65,10 @@ export default function CardList() {
   getCards = async () => {
     setIsLoading(true);
 
-    // Database grabs the next 3 cards (older)
-    const snapshot = await cardsRef.orderBy("timestamp", "desc").limit(3).get();
+    // Database grabs the next 7 cards (older)
+    const snapshot = await cardsRef.orderBy("timestamp", "desc").limit(7).get();
 
-    // Show the next 3 cards if there are more available
+    // Show the next 7 cards if there are more available
     if (!snapshot.empty) {
       let newCards = [];
 
@@ -97,7 +97,7 @@ export default function CardList() {
         let snapshot = await cardsRef
           .orderBy("timestamp", "desc")
           .startAfter(lastDoc.data().timestamp)
-          .limit(3)
+          .limit(7)
           .get();
 
         if (!snapshot.empty) {
@@ -110,7 +110,7 @@ export default function CardList() {
           }
 
           setCards(newCards);
-          if (snapshot.docs.length < 3) setLastDoc(null);
+          if (snapshot.docs.length < 7) setLastDoc(null);
         } else {
           setLastDoc(null);
         }
@@ -160,7 +160,7 @@ export default function CardList() {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
         }
-        initialNumToRender={3}
+        initialNumToRender={7}
         onEndReachedThreshold={0.1}
         onMomentumScrollBegin={() => {
           onEndReachedCalledDuringMomentum = false;

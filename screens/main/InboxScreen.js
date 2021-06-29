@@ -20,10 +20,13 @@ import InboxList from "../../components/InboxList";
 
 const InboxScreen = (props) => {
   const dispatch = useDispatch();
+  let onEndReachedCalledDuringMomentum = false;
 
   const repliesRef = database.collection("users");
   const [replies, setReplies] = useState([]);
+  const [lastDoc, setLastDoc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMoreLoading, setIsMoreLoading] = useState(false);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -43,29 +46,70 @@ const InboxScreen = (props) => {
 
   const getReplies = async (uid) => {
     setIsLoading(true);
+
+    // DB grabs all replies
     const snapshot = await repliesRef
       .doc(uid)
       .collection("replies")
-      .where("creatorId", "==", uid)
+      // .where("creatorId", "==", uid)
       .orderBy("timestamp", "desc")
       .get();
 
-    let inbox = [];
+    if (!snapshot.empty) {
+      let inbox = [];
 
-    console.log("getReplies SIZE: " + snapshot.size);
+      setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
 
-    for (let i = 0; i < snapshot.size; i++) {
-      inbox.push(snapshot.docs[i].data());
-      console.log(inbox);
+      console.log("getReplies SIZE: " + snapshot.size);
+
+      for (let i = 0; i < snapshot.size; i++) {
+        inbox.push(snapshot.docs[i].data());
+        console.log(inbox);
+      }
+      setReplies(inbox);
+    } else {
+      // Stop if there are no more replies to load
+      setLastDoc(null);
     }
-    setReplies(inbox);
 
     setIsLoading(false);
   };
 
-  // onRefresh = () => {
-  //   getReplies();
+  // getMore = async () => {
+  //   if (lastDoc) {
+  //     setIsMoreLoading(true);
+
+  //     setTimeout(async () => {
+  //       let snapshot = await repliesRef
+  //         .where("creatorId", "==", uid)
+  //         .orderBy("timestamp", "desc")
+  //         .limit(5)
+  //         .get();
+
+  //       if (!snapshot.empty) {
+  //         let inbox = replies;
+  //         setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+
+  //         for (let i = 0; i < snapshot.docs.length; i++) {
+  //           inbox.push(snaoshot.docs[i].data());
+  //         }
+
+  //         setReplies(inbox);
+  //         if (snapshot.docs.length < 5) setLastDoc(null);
+  //       } else {
+  //         setLastDoc(null);
+  //       }
+
+  //       setIsMoreLoading(false);
+  //     }, 1000);
+  //   }
+
+  //   onEndReachedCalledDuringMomentum = true;
   // };
+
+  onRefresh = () => {
+    getReplies();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,9 +124,17 @@ const InboxScreen = (props) => {
             content={item.replyContent}
           />
         )}
-        // refreshControl={
-        //   <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
-        // }
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        }
+        // onMomentumScrollBegin={() => {
+        //   onEndReachedCalledDuringMomentum = false;
+        // }}
+        // onEndReached={() => {
+        //   if (!onEndReachedCalledDuringMomentum && !isMoreLoading) {
+        //     getMore();
+        //   }
+        // }}
       />
     </SafeAreaView>
   );

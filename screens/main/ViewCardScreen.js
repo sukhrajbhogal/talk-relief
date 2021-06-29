@@ -100,7 +100,7 @@ export default function ViewCardScreen() {
     if (inputIsValid === false) {
       setError("The title or story is empty!");
     } else {
-      database
+      await database
         .collection("users")
         .doc(route.params.Card.creatorId)
         .collection("replies")
@@ -129,7 +129,7 @@ export default function ViewCardScreen() {
 
           // Creates a 3 second toast notification when post is submitted
           Toast.show({
-            text1: "Your reply was sent. 💌 😊",
+            text1: "Your reply was sent! 😊 💌",
             visibilityTime: 2000,
             topOffset: 50,
             autoHide: true,

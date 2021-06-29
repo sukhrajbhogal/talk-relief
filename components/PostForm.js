@@ -104,12 +104,7 @@ const PostForm = () => {
       setError("The title or story is empty!");
     } else {
       const randomIndex = Math.floor(Math.random() * bgArray.length);
-      setCardPattern(randomIndex);
-      console.log(randomIndex);
       const randomColorIndex = Math.floor(Math.random() * colorArray.length);
-      console.log(randomColorIndex);
-
-      setCardColor(randomColorIndex);
       await database
         .collection("cards")
         .add({
@@ -118,8 +113,8 @@ const PostForm = () => {
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           username: displayName,
           creatorId: userId,
-          cardPattern: cardPattern,
-          cardColor: cardColor,
+          cardPattern: randomIndex,
+          cardColor: randomColorIndex,
         })
         .then((post) => {
           console.log("Document written with ID: ", post.id);
