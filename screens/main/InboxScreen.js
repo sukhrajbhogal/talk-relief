@@ -63,9 +63,9 @@ const InboxScreen = (props) => {
     setIsLoading(false);
   };
 
-  onRefresh = () => {
-    getReplies();
-  };
+  // onRefresh = () => {
+  //   getReplies();
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,9 +80,9 @@ const InboxScreen = (props) => {
             content={item.replyContent}
           />
         )}
-        refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
-        }
+        // refreshControl={
+        //   <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        // }
       />
     </SafeAreaView>
   );
