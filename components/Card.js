@@ -6,6 +6,9 @@ import {
   ImageBackground,
   TouchableOpacity,
   Dimensions,
+  Modal,
+  Pressable,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -51,6 +54,7 @@ const Card = ({
   postColor,
 }) => {
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <TouchableOpacity
@@ -85,27 +89,122 @@ const Card = ({
           </Text>
           <Text style={styles.fontStyle}>@{username}</Text>
         </View>
-        <View style={styles.replyBG}>
-          <TouchableOpacity activeOpacity={0.5}>
+
+        {/* Modal */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Report @{username}</Text>
+              <Text style={styles.modalSubtitle}>We won't tell them.</Text>
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? "rgba(0,0,0,0.05)" : "white",
+                  },
+                  styles.rowContainer,
+                ]}
+              >
+                <Text style={styles.modalText}>Inappropriate behaviour</Text>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={35}
+                  color={"rgba(0,0,0,0.8)"}
+                />
+              </Pressable>
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? "rgba(0,0,0,0.05)" : "white",
+                  },
+                  styles.rowContainer,
+                ]}
+              >
+                <Text style={styles.modalText}>Underage user</Text>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={35}
+                  color={"rgba(0,0,0,0.8)"}
+                />
+              </Pressable>
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? "rgba(0,0,0,0.05)" : "white",
+                  },
+                  styles.rowContainer,
+                ]}
+              >
+                <Text style={styles.modalText}>Someone is in danger</Text>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={35}
+                  color={"rgba(0,0,0,0.8)"}
+                />
+              </Pressable>
+              {/* Cancel */}
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? "rgba(0,0,0,0.05)" : "white",
+                    borderBottomLeftRadius: 20,
+                    borderBottomRightRadius: 20,
+                  },
+                  styles.cancelContainer,
+                ]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.cancel}>Cancel</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Report button */}
+        <View style={styles.report}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => setModalVisible(true)}
+          >
+            <MaterialCommunityIcons
+              name="flag-variant"
+              size={35}
+              color={"#202020"}
+              style={styles.btnIcon}
+            />
+          </TouchableOpacity>
+        </View>
+        {/* Reply button */}
+        <View style={styles.btnBG}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() =>
+              navigation.push("View Card", {
+                Card: {
+                  docId,
+                  creatorId,
+                  username,
+                  userId,
+                  title,
+                  content,
+                  postPattern,
+                  postColor,
+                },
+              })
+            }
+          >
             <MaterialCommunityIcons
               name="lead-pencil"
               size={35}
               color={"#202020"}
-              style={styles.replyIcon}
-              onPress={() =>
-                navigation.push("View Card", {
-                  Card: {
-                    docId,
-                    creatorId,
-                    username,
-                    userId,
-                    title,
-                    content,
-                    postPattern,
-                    postColor,
-                  },
-                })
-              }
+              style={styles.btnIcon}
             />
           </TouchableOpacity>
         </View>
@@ -147,7 +246,21 @@ const styles = StyleSheet.create({
     marginBottom: "7%",
     lineHeight: 30,
   },
-  replyBG: {
+  report: {
+    flexDirection: "row",
+    backgroundColor: "white",
+    width: 60,
+    height: 60,
+    position: "absolute",
+    bottom: 100,
+    right: 20,
+    borderRadius: 50,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    shadowColor: "black",
+    shadowOffset: { height: 5, width: 0 },
+  },
+  btnBG: {
     flexDirection: "row",
     backgroundColor: "white",
     width: 60,
@@ -161,11 +274,71 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOffset: { height: 5, width: 0 },
   },
-  replyIcon: {
+  btnIcon: {
     top: 12,
     right: 12,
     bottom: 12,
     left: 12,
+  },
+  // Modal
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingTop: 20,
+    width: "90%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    textAlign: "center",
+    color: "rgba(0,0,0,0.6)",
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  rowContainer: {
+    paddingVertical: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 10,
+    borderTopWidth: 1,
+    borderColor: "rgba(0,0,0,0.10)",
+  },
+  modalText: {
+    fontSize: 18,
+    color: "rgba(0,0,0,0.8)",
+    marginRight: "auto",
+  },
+  cancelContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderColor: "rgba(0,0,0,0.10)",
+  },
+  cancel: {
+    fontSize: 20,
+    color: "rgba(0,0,0,0.8)",
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
