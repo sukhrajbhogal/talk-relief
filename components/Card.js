@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
   View,
   Text,
@@ -11,6 +13,8 @@ import {
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { database } from "../firebase";
 
 //import { bgArray, colorArray } from "../models/bgAndColor";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -55,6 +59,40 @@ const Card = ({
 }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
+
+  const userID = useSelector((state) => state.auth.userId);
+
+  const blockUser = async () => {
+    await database
+      .collection("users")
+      .doc(userID)
+      .collection("blocked")
+      .doc(creatorId)
+      .set({
+        blockedId: creatorId,
+        blockedUserName: username,
+      });
+    // .then((post) => {
+    //   console.log("Document written with ID: ", post.id);
+    //   docId = post.id;
+    //   database
+    //     .collection("users")
+    //     .doc(userID)
+    //     .collection("blocked")
+    //     .doc(post.id)
+    //     .set(
+    //       {
+    //         postId: docId,
+    //       },
+    //       { merge: true }
+    //     );
+
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home" }],
+    });
+  };
 
   return (
     <TouchableOpacity
@@ -111,6 +149,7 @@ const Card = ({
                   },
                   styles.rowContainer,
                 ]}
+                onPress={() => setModalVisible(!modalVisible)}
               >
                 <Text style={styles.modalText}>Inappropriate behaviour</Text>
                 <MaterialCommunityIcons
@@ -119,6 +158,7 @@ const Card = ({
                   color={"rgba(0,0,0,0.8)"}
                 />
               </Pressable>
+
               <Pressable
                 style={({ pressed }) => [
                   {
@@ -126,23 +166,9 @@ const Card = ({
                   },
                   styles.rowContainer,
                 ]}
+                onPress={blockUser}
               >
-                <Text style={styles.modalText}>Underage user</Text>
-                <MaterialCommunityIcons
-                  name="chevron-right"
-                  size={35}
-                  color={"rgba(0,0,0,0.8)"}
-                />
-              </Pressable>
-              <Pressable
-                style={({ pressed }) => [
-                  {
-                    backgroundColor: pressed ? "rgba(0,0,0,0.05)" : "white",
-                  },
-                  styles.rowContainer,
-                ]}
-              >
-                <Text style={styles.modalText}>Someone is in danger</Text>
+                <Text style={styles.modalText}>Block User</Text>
                 <MaterialCommunityIcons
                   name="chevron-right"
                   size={35}
@@ -161,7 +187,7 @@ const Card = ({
                 ]}
                 onPress={() => setModalVisible(!modalVisible)}
               >
-                <Text style={styles.cancel}>Cancel</Text>
+                <Text style={styles.cancel}>Close</Text>
               </Pressable>
             </View>
           </View>

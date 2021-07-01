@@ -155,6 +155,10 @@ const SignUpScreenV2 = () => {
         console.log("generating replies collection");
         database.collection("users").doc(uid).collection("replies").add({});
       })
+      .then(() => {
+        console.log("generating blocked collection");
+        database.collection("users").doc(uid).collection("blocked").add({});
+      })
       .catch((err) => {
         console.log("ERROR: " + err);
       });

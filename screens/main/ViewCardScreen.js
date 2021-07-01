@@ -95,6 +95,7 @@ export default function ViewCardScreen() {
     setInput(text);
   };
 
+
   const sendReply = async () => {
     setIsLoading(true);
     if (inputIsValid === false) {

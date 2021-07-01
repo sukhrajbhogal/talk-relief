@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
 import {
   SafeAreaView,
   StatusBar,
@@ -16,6 +18,7 @@ const FeedScreen = (props) => {
   const [viewedOnboarding, setViewedOnboarding] = useState(false);
   const navigation = useNavigation();
 
+  
   const Loading = () => {
     return <ActivityIndicator size={"large"} />;
   };

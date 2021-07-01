@@ -2,7 +2,8 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import * as firebase from "firebase";
 import { database } from "../../firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
 import {
   Text,
   ScrollView,

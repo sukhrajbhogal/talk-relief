@@ -9,6 +9,8 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
 import { FlatList } from "react-native-gesture-handler";
 import { database } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
@@ -25,6 +27,7 @@ import bg9 from "../assets/bg9.png";
 import bg10 from "../assets/bg10.png";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Card from "./Card";
+import { block } from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
 export const CARD_HEIGHT = (width * 1564) / 974;
@@ -47,26 +50,55 @@ const colorArray = [
   "#51C4D3",
 ];
 
-export default function CardList() {
+const CardList = () => {
   let onEndReachedCalledDuringMomentum = false;
 
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const cardsRef = database.collection("cards");
+  const userID = useSelector((state) => state.auth.userId);
   const [lastDoc, setLastDoc] = useState(null);
   const [cards, setCards] = useState([]);
+  const [blockedUsers, setBlockedUsers] = useState([]);
 
   useEffect(() => {
     getCards();
+    getBlockedList();
   }, []);
+
+  const getBlockedList = async () => {
+    console.log("getting blocked users");
+    const snapshot = await database
+      .collection("users")
+      .doc(userID)
+      .collection("blocked")
+      .get();
+
+    if (!snapshot.empty) {
+      let blockedArray = [];
+      console.log(snapshot.size);
+
+      for (let i = 0; i < snapshot.docs.length; i++) {
+        console.log(snapshot.docs[i].id);
+        blockedArray.push(snapshot.docs[i].id);
+      }
+      setBlockedUsers(blockedArray);
+      console.log(blockedUsers);
+    }
+  };
 
   // Load cards from database
   getCards = async () => {
     setIsLoading(true);
+    console.log(blockedUsers);
 
     // Database grabs the next 7 cards (older)
-    const snapshot = await cardsRef.orderBy("timestamp", "desc").limit(7).get();
+    const snapshot = await cardsRef
+      .where("creatorId", "not-in", blockedUsers)
+      .orderBy("timestamp", "desc")
+      .limit(7)
+      .get();
 
     // Show the next 7 cards if there are more available
     if (!snapshot.empty) {
@@ -173,7 +205,9 @@ export default function CardList() {
       />
     </View>
   );
-}
+};
+
+export default CardList;
 
 const styles = StyleSheet.create({
   cardContainer: {
