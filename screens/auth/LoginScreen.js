@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useEffect, useReducer } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  useReducer,
+} from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -53,6 +59,9 @@ const LoginScreen = (props) => {
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [show, setShow] = useState(false);
+
+  const emailInput = useRef(null);
+  const passwordInput = useRef(null);
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -144,6 +153,7 @@ const LoginScreen = (props) => {
           textContentType="emailAddress"
           label="Email address"
           value={emailText}
+          ref={emailInput}
           required
           maxLength={35}
           autoCapitalize="none"
@@ -151,12 +161,16 @@ const LoginScreen = (props) => {
           returnKeyType="next"
           errorText="Please enter a valid email address"
           onChangeText={emailChangeHandler}
+          onSubmitEditing={() => {
+            passwordInput.current.focus();
+          }}
         />
         <FloatingLabelInput
           id="password"
           textContentType="password"
           label="Password"
           value={passwordText}
+          ref={passwordInput}
           isPassword
           togglePassword={show}
           required
@@ -168,6 +182,7 @@ const LoginScreen = (props) => {
           customShowPasswordImage={showPassword}
           customHidePasswordImage={hidePassword}
           onChangeText={passwordChangeHandler}
+          onSubmitEditing={logInHandler}
         />
         <TouchableHighlight
           activeOpacity={1}
