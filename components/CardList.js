@@ -57,14 +57,17 @@ const CardList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const cardsRef = database.collection("cards");
+  const userRef = database.collection("users");
   const userID = useSelector((state) => state.auth.userId);
   const [lastDoc, setLastDoc] = useState(null);
   const [cards, setCards] = useState([]);
-  const [blockedUsers, setBlockedUsers] = useState([]);
+  //const [blockedUsers, setBlockedUsers] = useState(["i"]);
+
+  let blockedArray = [];
 
   useEffect(() => {
     getCards();
-    getBlockedList();
+    //getBlockedList();
   }, []);
 
   const getBlockedList = async () => {
@@ -75,39 +78,53 @@ const CardList = () => {
       .collection("blocked")
       .get();
 
-    if (!snapshot.empty) {
-      let blockedArray = [];
-      console.log(snapshot.size);
-
-      for (let i = 0; i < snapshot.docs.length; i++) {
-        console.log(snapshot.docs[i].id);
-        blockedArray.push(snapshot.docs[i].id);
-      }
-      setBlockedUsers(blockedArray);
-      console.log(blockedUsers);
-    }
+    // for (let n = 0; n < cards.length; n++) {
+    //   if (cards[n].creatorId) console.log("creator: " + cards[n].creatorId);
+    // }
   };
-
   // Load cards from database
   getCards = async () => {
     setIsLoading(true);
-    console.log(blockedUsers);
+    //console.log(blockedUsers);
 
     // Database grabs the next 7 cards (older)
-    const snapshot = await cardsRef
-      .where("creatorId", "not-in", blockedUsers)
+    const cardSnapshot = await cardsRef
       .orderBy("timestamp", "desc")
       .limit(7)
       .get();
 
+    const blockedSnapshot = await userRef
+      .doc(userID)
+      .collection("blocked")
+      .get();
+
+    if (!blockedSnapshot.empty) {
+      console.log(blockedSnapshot.size);
+
+      for (let i = 0; i < blockedSnapshot.docs.length; i++) {
+        blockedArray.push(blockedSnapshot.docs[i].id);
+      }
+      console.log("BLOCKED LIST: " + blockedArray);
+    }
     // Show the next 7 cards if there are more available
-    if (!snapshot.empty) {
+    if (!cardSnapshot.empty) {
       let newCards = [];
 
-      setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+      setLastDoc(cardSnapshot.docs[cardSnapshot.docs.length - 1]);
 
-      for (let i = 0; i < snapshot.docs.length; i++) {
-        newCards.push(snapshot.docs[i].data());
+      for (let i = 0; i < cardSnapshot.docs.length; i++) {
+        console.log(
+          "post creator id: " + cardSnapshot.docs[i].data().creatorId
+        );
+        console.log(
+          "blocked: " +
+            blockedArray.includes(cardSnapshot.docs[i].data().creatorId)
+        );
+        if (
+          blockedArray.includes(cardSnapshot.docs[i].data().creatorId) === false
+        ) {
+          newCards.push(cardSnapshot.docs[i].data());
+        }
       }
 
       setCards(newCards);
@@ -124,6 +141,19 @@ const CardList = () => {
     if (lastDoc) {
       setIsMoreLoading(true);
 
+      const blockedSnapshot = await userRef
+        .doc(userID)
+        .collection("blocked")
+        .get();
+
+      if (!blockedSnapshot.empty) {
+        console.log(blockedSnapshot.size);
+
+        for (let i = 0; i < blockedSnapshot.docs.length; i++) {
+          blockedArray.push(blockedSnapshot.docs[i].id);
+        }
+      }
+
       // Stop loading after a certain amount of time passes
       setTimeout(async () => {
         let snapshot = await cardsRef
@@ -138,7 +168,12 @@ const CardList = () => {
           setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
 
           for (let i = 0; i < snapshot.docs.length; i++) {
-            newCards.push(snapshot.docs[i].data());
+            if (
+              blockedArray.includes(snapshot.docs[i].data().creatorId) === false
+            ) {
+              newCards.push(snapshot.docs[i].data());
+            }
+            //newCards.push(snapshot.docs[i].data());
           }
 
           setCards(newCards);

@@ -238,6 +238,7 @@ const Card = ({
     </TouchableOpacity>
   );
 };
+export default Card;
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -367,5 +368,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-export default Card;
