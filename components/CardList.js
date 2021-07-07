@@ -58,12 +58,15 @@ const CardList = () => {
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const cardsRef = database.collection("cards");
   const userRef = database.collection("users");
+  const reportedRef = database.collection("reportedPosts");
+
   const userID = useSelector((state) => state.auth.userId);
   const [lastDoc, setLastDoc] = useState(null);
   const [cards, setCards] = useState([]);
   //const [blockedUsers, setBlockedUsers] = useState(["i"]);
 
   let blockedArray = [];
+  let reportedArray = [];
 
   useEffect(() => {
     getCards();
@@ -86,6 +89,8 @@ const CardList = () => {
       .collection("blocked")
       .get();
 
+    const reportedSnapshot = await reportedRef.get();
+
     if (!blockedSnapshot.empty) {
       //console.log(blockedSnapshot.size);
 
@@ -93,6 +98,14 @@ const CardList = () => {
         blockedArray.push(blockedSnapshot.docs[i].id);
       }
       //console.log("BLOCKED LIST: " + blockedArray);
+    }
+
+    if (!reportedSnapshot.empty) {
+      //console.log(blockedSnapshot.size);
+
+      for (let i = 0; i < reportedSnapshot.docs.length; i++) {
+        reportedArray.push(reportedSnapshot.docs[i].id);
+      }
     }
     // Show the next 7 cards if there are more available
     if (!cardSnapshot.empty) {
@@ -104,13 +117,17 @@ const CardList = () => {
         // console.log(
         //   "post creator id: " + cardSnapshot.docs[i].data().creatorId
         // );
-        // console.log(
-        //   "blocked: " +
-        //     blockedArray.includes(cardSnapshot.docs[i].data().creatorId)
-        // );
+        console.log(
+          "reported: " +
+            reportedArray.includes(cardSnapshot.docs[i].data().postId)
+        );
         if (
-          blockedArray.includes(cardSnapshot.docs[i].data().creatorId) === false
+          blockedArray.includes(cardSnapshot.docs[i].data().creatorId) ===
+            true ||
+          reportedArray.includes(cardSnapshot.docs[i].data().postId) === true
         ) {
+          console.log("excluded post since it's reported or user is blocked");
+        } else {
           newCards.push(cardSnapshot.docs[i].data());
         }
       }
@@ -134,12 +151,23 @@ const CardList = () => {
         .collection("blocked")
         .get();
 
+      const reportedSnapshot = await reportedRef.get();
+
       if (!blockedSnapshot.empty) {
         //console.log(blockedSnapshot.size);
 
         for (let i = 0; i < blockedSnapshot.docs.length; i++) {
           blockedArray.push(blockedSnapshot.docs[i].id);
         }
+      }
+
+      if (!reportedSnapshot.empty) {
+        //console.log(blockedSnapshot.size);
+
+        for (let i = 0; i < reportedSnapshot.docs.length; i++) {
+          reportedArray.push(reportedSnapshot.docs[i].id);
+        }
+        //console.log("BLOCKED LIST: " + blockedArray);
       }
 
       // Stop loading after a certain amount of time passes
@@ -157,7 +185,10 @@ const CardList = () => {
 
           for (let i = 0; i < snapshot.docs.length; i++) {
             if (
-              blockedArray.includes(snapshot.docs[i].data().creatorId) === false
+              blockedArray.includes(snapshot.docs[i].data().creatorId) ===
+                false ||
+              reportedArray.includes(cardSnapshot.docs[i].data().postId) ===
+                false
             ) {
               newCards.push(snapshot.docs[i].data());
             }

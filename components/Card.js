@@ -10,6 +10,8 @@ import {
   Pressable,
   Alert,
 } from "react-native";
+import Toast from "react-native-toast-message";
+
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { database } from "../firebase";
@@ -42,6 +44,8 @@ const colorArray = [
 ];
 
 const { width } = Dimensions.get("window");
+
+//const blockedMessage = `${username} + " has been blocked`;
 export const CARD_HEIGHT = (width * 1564) / 974;
 const Card = ({
   postId,
@@ -72,6 +76,13 @@ const Card = ({
       index: 0,
       routes: [{ name: "Home" }],
     });
+    Toast.show({
+      text1: `${username} has been blocked`,
+      visibilityTime: 1000,
+      topOffset: 40,
+      fontSize: 20,
+      autoHide: true,
+    });
   };
 
   const reportPost = async () => {
@@ -86,6 +97,17 @@ const Card = ({
       .collection("cards")
       .doc(postId)
       .set({ flagged: true }, { merge: true });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home" }],
+    });
+    Toast.show({
+      text1: `${username}'s post has been flagged`,
+      visibilityTime: 1000,
+      topOffset: 40,
+      fontSize: 20,
+      autoHide: true,
+    });
   };
 
   return (
