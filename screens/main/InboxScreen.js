@@ -34,7 +34,7 @@ const InboxScreen = (props) => {
         const value = await AsyncStorage.getItem("userData");
         if (value != null) {
           const uid = JSON.parse(value).userId;
-          console.log(uid);
+          //console.log(uid);
           getReplies(uid);
         }
       } catch (error) {
@@ -60,7 +60,7 @@ const InboxScreen = (props) => {
 
       setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
 
-      console.log("getReplies SIZE: " + snapshot.size);
+      //console.log("getReplies SIZE: " + snapshot.size);
 
       for (let i = 0; i < snapshot.size; i++) {
         inbox.push(snapshot.docs[i].data());

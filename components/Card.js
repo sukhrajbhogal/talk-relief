@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import {
   View,
   Text,
@@ -15,8 +13,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { database } from "../firebase";
-
-//import { bgArray, colorArray } from "../models/bgAndColor";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import bg1 from "../assets/bg.png";
 import bg2 from "../assets/bg2.png";
@@ -58,11 +54,9 @@ const Card = ({
 }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const dispatch = useDispatch();
 
   const userID = useSelector((state) => state.auth.userId);
   const displayName = useSelector((state) => state.auth.displayName);
-  console.log("displayName: " + displayName);
 
   const blockUser = async () => {
     await database
