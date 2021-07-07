@@ -70,18 +70,6 @@ const CardList = () => {
     //getBlockedList();
   }, []);
 
-  const getBlockedList = async () => {
-    console.log("getting blocked users");
-    const snapshot = await database
-      .collection("users")
-      .doc(userID)
-      .collection("blocked")
-      .get();
-
-    // for (let n = 0; n < cards.length; n++) {
-    //   if (cards[n].creatorId) console.log("creator: " + cards[n].creatorId);
-    // }
-  };
   // Load cards from database
   getCards = async () => {
     setIsLoading(true);
@@ -99,12 +87,12 @@ const CardList = () => {
       .get();
 
     if (!blockedSnapshot.empty) {
-      console.log(blockedSnapshot.size);
+      //console.log(blockedSnapshot.size);
 
       for (let i = 0; i < blockedSnapshot.docs.length; i++) {
         blockedArray.push(blockedSnapshot.docs[i].id);
       }
-      console.log("BLOCKED LIST: " + blockedArray);
+      //console.log("BLOCKED LIST: " + blockedArray);
     }
     // Show the next 7 cards if there are more available
     if (!cardSnapshot.empty) {
@@ -113,13 +101,13 @@ const CardList = () => {
       setLastDoc(cardSnapshot.docs[cardSnapshot.docs.length - 1]);
 
       for (let i = 0; i < cardSnapshot.docs.length; i++) {
-        console.log(
-          "post creator id: " + cardSnapshot.docs[i].data().creatorId
-        );
-        console.log(
-          "blocked: " +
-            blockedArray.includes(cardSnapshot.docs[i].data().creatorId)
-        );
+        // console.log(
+        //   "post creator id: " + cardSnapshot.docs[i].data().creatorId
+        // );
+        // console.log(
+        //   "blocked: " +
+        //     blockedArray.includes(cardSnapshot.docs[i].data().creatorId)
+        // );
         if (
           blockedArray.includes(cardSnapshot.docs[i].data().creatorId) === false
         ) {
@@ -147,7 +135,7 @@ const CardList = () => {
         .get();
 
       if (!blockedSnapshot.empty) {
-        console.log(blockedSnapshot.size);
+        //console.log(blockedSnapshot.size);
 
         for (let i = 0; i < blockedSnapshot.docs.length; i++) {
           blockedArray.push(blockedSnapshot.docs[i].id);
@@ -215,6 +203,7 @@ const CardList = () => {
         keyExtractor={(item) => item.timestamp.toString()}
         renderItem={({ item }) => (
           <Card
+            postId={item.postId}
             username={item.username}
             creatorId={item.creatorId}
             title={item.title}

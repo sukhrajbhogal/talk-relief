@@ -5,9 +5,14 @@ export const LOGOUT = "LOGOUT";
 export const AUTHENTICATE = "AUTHENTICATE";
 export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
 
-export const authenticate = (userId, token) => {
+export const authenticate = (userId, token, displayName) => {
   return (dispatch) => {
-    dispatch({ type: AUTHENTICATE, userId: userId, token: token });
+    dispatch({
+      type: AUTHENTICATE,
+      userId: userId,
+      token: token,
+      displayName: displayName,
+    });
   };
 };
 
@@ -99,11 +104,12 @@ export const login = (email, password) => {
     }
     const resData = await response.json();
     // console.log(resData);
-    //console.log("Username: " + resData.displayName);
+    console.log("Username: " + resData.displayName);
     dispatch(
       authenticate(
         resData.localId,
         resData.idToken,
+        resData.displayName,
         parseInt(resData.expiresIn) * 1000
       )
     );

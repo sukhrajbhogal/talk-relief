@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import {
   View,
   Text,
@@ -15,8 +13,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { database } from "../firebase";
-
-//import { bgArray, colorArray } from "../models/bgAndColor";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import bg1 from "../assets/bg.png";
 import bg2 from "../assets/bg2.png";
@@ -48,10 +44,9 @@ const colorArray = [
 const { width } = Dimensions.get("window");
 export const CARD_HEIGHT = (width * 1564) / 974;
 const Card = ({
-  docId,
+  postId,
   username,
   creatorId,
-  userId,
   title,
   content,
   postPattern,
@@ -59,9 +54,9 @@ const Card = ({
 }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const dispatch = useDispatch();
 
   const userID = useSelector((state) => state.auth.userId);
+  const displayName = useSelector((state) => state.auth.displayName);
 
   const blockUser = async () => {
     await database
@@ -73,25 +68,24 @@ const Card = ({
         blockedId: creatorId,
         blockedUserName: username,
       });
-    // .then((post) => {
-    //   console.log("Document written with ID: ", post.id);
-    //   docId = post.id;
-    //   database
-    //     .collection("users")
-    //     .doc(userID)
-    //     .collection("blocked")
-    //     .doc(post.id)
-    //     .set(
-    //       {
-    //         postId: docId,
-    //       },
-    //       { merge: true }
-    //     );
-
     navigation.reset({
       index: 0,
       routes: [{ name: "Home" }],
     });
+  };
+
+  const reportPost = async () => {
+    await database.collection("reportedPosts").doc(postId).set({
+      postId: postId,
+      postTitle: title,
+      reportedById: userID,
+      reportedByUser: displayName,
+      creatorId: creatorId,
+    });
+    await database
+      .collection("cards")
+      .doc(postId)
+      .set({ flagged: true }, { merge: true });
   };
 
   return (
@@ -104,7 +98,6 @@ const Card = ({
             docId,
             creatorId,
             username,
-            userId,
             title,
             content,
             postPattern,
@@ -149,9 +142,10 @@ const Card = ({
                   },
                   styles.rowContainer,
                 ]}
-                onPress={() => setModalVisible(!modalVisible)}
+                onPressIn={reportPost}
+                onPressOut={() => setModalVisible(!modalVisible)}
               >
-                <Text style={styles.modalText}>Inappropriate behaviour</Text>
+                <Text style={styles.modalText}>Report Post</Text>
                 <MaterialCommunityIcons
                   name="chevron-right"
                   size={35}
@@ -217,7 +211,6 @@ const Card = ({
                   docId,
                   creatorId,
                   username,
-                  userId,
                   title,
                   content,
                   postPattern,

@@ -71,12 +71,6 @@ const SignUpScreenV2 = () => {
 
   const [isFocused, setIsFocused] = useState(false);
 
-  useEffect(() => {
-    if (error) {
-      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
-    }
-  }, [error]);
-
   const userNameChangeHandler = (text) => {
     if (text.length === 0) {
       setUsernameIsValid(false);
@@ -180,12 +174,10 @@ const SignUpScreenV2 = () => {
       genderIsValid === false
     ) {
       setError(
-        "The username or email is empty or the password is less than 6 characters! "
+        "The username, email, birthday is empty or the password is less than 6 characters!"
       );
     } else {
       setIsLoading(true);
-      console.log("Birthday: " + birthday);
-      console.log("Gender: " + gender);
       await dispatch(authActions.signup(userNameText, emailText, passwordText));
       setIsLoading(false);
       getUserId();
