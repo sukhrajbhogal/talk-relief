@@ -115,6 +115,7 @@ const PostForm = () => {
           creatorId: userId,
           cardPattern: randomIndex,
           cardColor: randomColorIndex,
+          flagged: false,
         })
         .then((post) => {
           console.log("Document written with ID: ", post.id);
