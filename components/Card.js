@@ -80,6 +80,7 @@ const Card = ({
       text1: `${username} has been blocked`,
       visibilityTime: 1000,
       topOffset: 40,
+      fontSize: 20,
       autoHide: true,
     });
   };
@@ -97,9 +98,10 @@ const Card = ({
       .doc(postId)
       .set({ flagged: true }, { merge: true });
     Toast.show({
-      text1: `${username} post has been flagged`,
+      text1: `${username}'s post has been flagged`,
       visibilityTime: 1000,
       topOffset: 40,
+      fontSize: 20,
       autoHide: true,
     });
   };

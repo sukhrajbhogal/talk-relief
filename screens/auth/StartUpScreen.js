@@ -17,7 +17,7 @@ const StartUpScreen = (props) => {
       console.log("Trying auto login");
 
       const transformedData = JSON.parse(userData);
-      const { token, userId, expiryDate } = transformedData;
+      const { token, userId, expiryDate, displayName } = transformedData;
 
       const expirationDate = new Date(expiryDate);
 
@@ -32,7 +32,7 @@ const StartUpScreen = (props) => {
       console.log("AL successful");
       console.log("User ID: " + userId);
       // console.log(userData);
-      dispatch(authActions.authenticate(userId, token));
+      dispatch(authActions.authenticate(userId, token, displayName));
       //props.navigation.navigate("Home");
     };
 
