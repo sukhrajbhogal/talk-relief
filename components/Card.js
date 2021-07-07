@@ -97,6 +97,10 @@ const Card = ({
       .collection("cards")
       .doc(postId)
       .set({ flagged: true }, { merge: true });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home" }],
+    });
     Toast.show({
       text1: `${username}'s post has been flagged`,
       visibilityTime: 1000,
