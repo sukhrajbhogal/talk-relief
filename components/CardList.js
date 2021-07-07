@@ -215,6 +215,7 @@ const CardList = () => {
         keyExtractor={(item) => item.timestamp.toString()}
         renderItem={({ item }) => (
           <Card
+            postId={item.postId}
             username={item.username}
             creatorId={item.creatorId}
             title={item.title}
