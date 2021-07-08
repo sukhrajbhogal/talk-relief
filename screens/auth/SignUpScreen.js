@@ -282,7 +282,7 @@ const SignUpScreenV2 = () => {
         />
         <FloatingLabelInput
           id="birthday"
-          label="Birthday (MM/DD/YYYY)"
+          label="Birthday (MM/DD/YYYY) (Optional)"
           mask="99/99/9999"
           value={birthday}
           ref={birthdayInput}
