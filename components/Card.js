@@ -48,6 +48,7 @@ const { width } = Dimensions.get("window");
 //const blockedMessage = `${username} + " has been blocked`;
 export const CARD_HEIGHT = (width * 1564) / 974;
 const Card = ({
+  docId,
   postId,
   username,
   creatorId,
