@@ -170,7 +170,6 @@ const SignUpScreenV2 = () => {
       usernameIsValid === false ||
       emailIsValid === false ||
       passwordIsValid === false ||
-      birthdayIsValid === false ||
       genderIsValid === false
     ) {
       setError(
