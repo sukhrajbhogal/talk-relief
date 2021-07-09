@@ -3,45 +3,44 @@ import { StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 
-const dummyData = {
-  Title: "Everything will be ok",
-  Content:
-    "No worries man. I hope you’re having a better day! It’s totally normal to feel that way dude. Sometimes we just need a helping hand every now and then. For me, basketball helps me feel better. I’m here for you man!",
-  username: "Saibi",
-};
-
-const CustomListItem = () => {
+const InboxList = ({ username, title, content }) => {
   const navigation = useNavigation();
 
   return (
     <ListItem
       containerStyle={styles.container}
-      onPress={() => navigation.push("View Letter", dummyData)}
+      onPress={() =>
+        navigation.push("View Letter", {
+          Reply: {
+            content,
+            username,
+            title,
+          },
+        })
+      }
     >
       <ListItem.Content>
-        <ListItem.Title style={styles.username}>
-          @{dummyData.username}
-        </ListItem.Title>
+        <ListItem.Title style={styles.username}>@{username}</ListItem.Title>
         <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode="tail"
           style={styles.title}
         >
-          {dummyData.Title}
+          {title}
         </ListItem.Subtitle>
         <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode="tail"
           style={styles.textPreview}
         >
-          {dummyData.Content}
+          {content}
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
   );
 };
 
-export default CustomListItem;
+export default InboxList;
 
 const styles = StyleSheet.create({
   container: {

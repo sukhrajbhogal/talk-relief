@@ -5,10 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "description": "Community emotional support.",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0a0006"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.talkrelief.talkrelief",
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {

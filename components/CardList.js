@@ -9,11 +9,13 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
 import { FlatList } from "react-native-gesture-handler";
-import database from "../firebase";
+import { database } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 
-import bg0 from "../assets/bg.png";
+import bg1 from "../assets/bg.png";
 import bg2 from "../assets/bg2.png";
 import bg3 from "../assets/bg3.png";
 import bg4 from "../assets/bg4.png";
@@ -24,12 +26,14 @@ import bg8 from "../assets/bg8.png";
 import bg9 from "../assets/bg9.png";
 import bg10 from "../assets/bg10.png";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Card from "./Card";
+import { block } from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
 export const CARD_HEIGHT = (width * 1564) / 974;
 
 // Card Pattern and Color arrays
-export const bgArray = [bg0, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10];
+export const bgArray = [bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10];
 const colorArray = [
   "#C83E6F",
   "#FF6B00",
@@ -46,35 +50,86 @@ const colorArray = [
   "#51C4D3",
 ];
 
-export default function CardList() {
+const CardList = () => {
   let onEndReachedCalledDuringMomentum = false;
 
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const cardsRef = database.collection("cards");
+  const userRef = database.collection("users");
+  const reportedRef = database.collection("reportedPosts");
+
+  const userID = useSelector((state) => state.auth.userId);
   const [lastDoc, setLastDoc] = useState(null);
   const [cards, setCards] = useState([]);
+  //const [blockedUsers, setBlockedUsers] = useState(["i"]);
+
+  let blockedArray = [];
+  let reportedArray = [];
 
   useEffect(() => {
     getCards();
+    //getBlockedList();
   }, []);
 
   // Load cards from database
   getCards = async () => {
     setIsLoading(true);
+    //console.log(blockedUsers);
 
-    // Database grabs the next 3 cards (older)
-    const snapshot = await cardsRef.orderBy("timestamp", "desc").limit(3).get();
+    // Database grabs the next 7 cards (older)
+    const cardSnapshot = await cardsRef
+      .orderBy("timestamp", "desc")
+      .limit(7)
+      .get();
 
-    // Show the next 3 cards if there are more available
-    if (!snapshot.empty) {
+    const blockedSnapshot = await userRef
+      .doc(userID)
+      .collection("blocked")
+      .get();
+
+    const reportedSnapshot = await reportedRef.get();
+
+    if (!blockedSnapshot.empty) {
+      //console.log(blockedSnapshot.size);
+
+      for (let i = 0; i < blockedSnapshot.docs.length; i++) {
+        blockedArray.push(blockedSnapshot.docs[i].id);
+      }
+      //console.log("BLOCKED LIST: " + blockedArray);
+    }
+
+    if (!reportedSnapshot.empty) {
+      //console.log(blockedSnapshot.size);
+
+      for (let i = 0; i < reportedSnapshot.docs.length; i++) {
+        reportedArray.push(reportedSnapshot.docs[i].id);
+      }
+    }
+    // Show the next 7 cards if there are more available
+    if (!cardSnapshot.empty) {
       let newCards = [];
 
-      setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+      setLastDoc(cardSnapshot.docs[cardSnapshot.docs.length - 1]);
 
-      for (let i = 0; i < snapshot.docs.length; i++) {
-        newCards.push(snapshot.docs[i].data());
+      for (let i = 0; i < cardSnapshot.docs.length; i++) {
+        // console.log(
+        //   "post creator id: " + cardSnapshot.docs[i].data().creatorId
+        // );
+        console.log(
+          "reported: " +
+            reportedArray.includes(cardSnapshot.docs[i].data().postId)
+        );
+        if (
+          blockedArray.includes(cardSnapshot.docs[i].data().creatorId) ===
+            true ||
+          reportedArray.includes(cardSnapshot.docs[i].data().postId) === true
+        ) {
+          console.log("excluded post since it's reported or user is blocked");
+        } else {
+          newCards.push(cardSnapshot.docs[i].data());
+        }
       }
 
       setCards(newCards);
@@ -91,12 +146,36 @@ export default function CardList() {
     if (lastDoc) {
       setIsMoreLoading(true);
 
+      const blockedSnapshot = await userRef
+        .doc(userID)
+        .collection("blocked")
+        .get();
+
+      const reportedSnapshot = await reportedRef.get();
+
+      if (!blockedSnapshot.empty) {
+        //console.log(blockedSnapshot.size);
+
+        for (let i = 0; i < blockedSnapshot.docs.length; i++) {
+          blockedArray.push(blockedSnapshot.docs[i].id);
+        }
+      }
+
+      if (!reportedSnapshot.empty) {
+        //console.log(blockedSnapshot.size);
+
+        for (let i = 0; i < reportedSnapshot.docs.length; i++) {
+          reportedArray.push(reportedSnapshot.docs[i].id);
+        }
+        //console.log("BLOCKED LIST: " + blockedArray);
+      }
+
       // Stop loading after a certain amount of time passes
       setTimeout(async () => {
         let snapshot = await cardsRef
           .orderBy("timestamp", "desc")
           .startAfter(lastDoc.data().timestamp)
-          .limit(3)
+          .limit(7)
           .get();
 
         if (!snapshot.empty) {
@@ -105,11 +184,19 @@ export default function CardList() {
           setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
 
           for (let i = 0; i < snapshot.docs.length; i++) {
-            newCards.push(snapshot.docs[i].data());
+            if (
+              blockedArray.includes(snapshot.docs[i].data().creatorId) ===
+                false ||
+              reportedArray.includes(cardSnapshot.docs[i].data().postId) ===
+                false
+            ) {
+              newCards.push(snapshot.docs[i].data());
+            }
+            //newCards.push(snapshot.docs[i].data());
           }
 
           setCards(newCards);
-          if (snapshot.docs.length < 3) setLastDoc(null);
+          if (snapshot.docs.length < 7) setLastDoc(null);
         } else {
           setLastDoc(null);
         }
@@ -119,52 +206,6 @@ export default function CardList() {
     }
 
     onEndReachedCalledDuringMomentum = true;
-  };
-
-  renderList = ({ id, username, category, title, content, timestamp }) => {
-    // Assign random pattern for each card
-    const randomIndex = Math.floor(Math.random() * bgArray.length);
-    const selectedBG = bgArray[randomIndex];
-    // Assign random color for each card
-    const randomColorIndex = Math.floor(Math.random() * colorArray.length);
-    const selectedColor = colorArray[randomColorIndex];
-    return (
-      <TouchableOpacity
-        activeOpacity={1}
-        // Send card info to CardSectionScreen which displays the card full screen
-        onPress={() =>
-          navigation.push("View Card", {
-            Card: { title, content, username, selectedBG, selectedColor },
-          })
-        }
-      >
-        <ImageBackground
-          source={selectedBG}
-          style={[styles.bgImage, { backgroundColor: selectedColor }]}
-        >
-          <View style={styles.cardStyle}>
-            <Text style={[styles.fontStyle, styles.cardTitle]}>{title}</Text>
-            <Text
-              numberOfLines={6}
-              style={[styles.fontStyle, styles.cardContent]}
-            >
-              {content}
-            </Text>
-            <Text style={styles.fontStyle}>@{username}</Text>
-          </View>
-          <View style={styles.replyBG}>
-            <TouchableOpacity activeOpacity={0.5}>
-              <MaterialCommunityIcons
-                name="lead-pencil"
-                size={35}
-                color={"#202020"}
-                style={styles.replyIcon}
-              />
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-      </TouchableOpacity>
-    );
   };
 
   // Load more cards on refresh trigger
@@ -191,12 +232,22 @@ export default function CardList() {
         showsVerticalScrollIndicator={false}
         data={cards}
         keyExtractor={(item) => item.timestamp.toString()}
-        renderItem={({ item }) => renderList(item)}
+        renderItem={({ item }) => (
+          <Card
+            postId={item.postId}
+            username={item.username}
+            creatorId={item.creatorId}
+            title={item.title}
+            content={item.content}
+            postPattern={item.cardPattern}
+            postColor={item.cardColor}
+          />
+        )}
         ListFooterComponent={renderFooter}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
         }
-        initialNumToRender={3}
+        initialNumToRender={7}
         onEndReachedThreshold={0.1}
         onMomentumScrollBegin={() => {
           onEndReachedCalledDuringMomentum = false;
@@ -209,7 +260,9 @@ export default function CardList() {
       />
     </View>
   );
-}
+};
+
+export default CardList;
 
 const styles = StyleSheet.create({
   cardContainer: {

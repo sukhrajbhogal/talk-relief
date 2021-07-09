@@ -1,8 +1,5 @@
-import React from "react";
-import {
-  NavigationContainer,
-  getFocusedRouteNameFromRoute,
-} from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -12,14 +9,15 @@ import AddPostScreen from "../screens/main/AddPostScreen";
 import InboxScreen from "../screens/main/InboxScreen";
 import ViewCardScreen from "../screens/main/ViewCardScreen";
 import ViewLetterScreen from "../screens/main/ViewLetterScreen";
+import ViewPostScreen from "../screens/main/ViewPostScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignUpScreen";
-import ProfileScreen from "../screens/auth/ProfileScreen";
 import StartUpScreen from "../screens/auth/StartUpScreen";
+import ProfileScreen from "../screens/auth/ProfileScreen";
+import SettingsScreen from "../screens/auth/SettingsScreen";
+import OnboardingScreen from "../screens/auth/OnboardingScreen";
 
 import horizontalAnimation from "../components/horizontalAnimation";
-
-import { useNavigation } from "@react-navigation/native";
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -80,7 +78,6 @@ export const AuthNavigation = () => {
 };
 
 export const HomeNavigation = () => {
-  //const navigation = useNavigation();
   return (
     <HomeStack.Navigator
       // initialRouteName=""
@@ -91,6 +88,8 @@ export const HomeNavigation = () => {
           backgroundColor: "#FFF1E4",
         },
         headerTintColor: "#202020",
+
+        // Logo
         headerTitleStyle: {
           fontWeight: "bold",
           fontSize: 20,
@@ -147,13 +146,38 @@ export const HomeNavigation = () => {
         })}
       />
       <HomeStack.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="View Post"
+        component={ViewPostScreen}
         options={({ route }) => ({
           title: getHeaderTitle(route),
           headerShown: false,
         })}
+      />
+      <HomeStack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="Settings"
+        component={SettingsScreen}
         options={horizontalAnimation}
+      />
+      {/* <HomeStack.Screen
+        name="Your Posts"
+        component={UsersPostsScreen}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          // headerShown: false,
+        })}
+        options={horizontalAnimation}
+      /> */}
+      <HomeStack.Screen
+        name="Onboarding"
+        component={OnboardingScreen}
+        options={{ headerShown: false }}
       />
     </HomeStack.Navigator>
   );

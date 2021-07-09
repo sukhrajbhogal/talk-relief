@@ -9,6 +9,9 @@ import posts from "./store/reducers/posts";
 import auth from "./store/reducers/auth";
 import { Provider } from "react-redux";
 
+import Toast from "react-native-toast-message";
+import { toastConfig } from "./components/toastConfig";
+
 const rootReducer = combineReducers({
   posts: posts,
   auth: auth,
@@ -23,8 +26,9 @@ const fetchFonts = () => {
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
-  // Make sure custom font is finished loading
+  // Makes sure custom font is finished loading
   const [fontLoaded, setFontLoaded] = useState(false);
+
   if (!fontLoaded) {
     return (
       <AppLoading
@@ -38,6 +42,9 @@ export default function App() {
   return (
     <Provider store={store}>
       <AppNavigation />
+
+      {/* Allows you to create a toast notification (success | error | info) */}
+      <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
     </Provider>
   );
 }

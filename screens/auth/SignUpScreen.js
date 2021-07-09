@@ -1,172 +1,462 @@
-import React, { useState, useCallback, useReducer } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useReducer,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { database } from "../../firebase";
+
 import {
   SafeAreaView,
+  StatusBar,
+  ScrollView,
   View,
   TextInput,
   Text,
-  Button,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
   ActivityIndicator,
+  Alert,
+  Linking,
+  KeyboardAvoidingView,
+  TextPropTypes,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import * as authActions from "../../store/actions/auth";
-import { useAnimatedScrollHandler } from "react-native-reanimated";
+import { FloatingLabelInput } from "react-native-floating-label-input";
+import "../../components/globalInputStyles";
+import RNPickerSelect from "react-native-picker-select";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-const SignUpScreen = () => {
+import hidePassword from "../../assets/eye.png";
+import showPassword from "../../assets/eye-off.png";
+
+const options = [
+  { value: "female", label: "Female" },
+  { value: "male", label: "Male" },
+  { value: "nonbinary", label: "Non-binary" },
+  { value: "transgender", label: "Transgender" },
+  { value: "intersex", label: "Intersex" },
+  { value: "none", label: "I prefer not to say" },
+];
+
+const SignUpScreenV2 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const [error, setError] = useState(null);
   const navigation = useNavigation();
+  // const [error, setError] = useState();
 
   const [userNameText, setUserNameText] = useState("");
+  const [usernameIsValid, setUsernameIsValid] = useState(false);
   const [emailText, setEmailText] = useState("");
+  const [emailIsValid, setEmailIsValid] = useState(false);
   const [passwordText, setPasswordText] = useState("");
+  const [passwordIsValid, setPasswordIsValid] = useState(false);
+  const [show, setShow] = useState(false);
+  const [birthday, setBirthday] = useState("");
+  const [birthdayIsValid, setBirthdayIsValid] = useState(false);
+  const [gender, setGender] = useState("");
+  const [genderIsValid, setGenderIsValid] = useState(false);
+
+  const userInput = useRef(null);
+  const emailInput = useRef(null);
+  const passwordInput = useRef(null);
+  const birthdayInput = useRef(null);
+  const genderInput = useRef(null);
+
+  const [isFocused, setIsFocused] = useState(false);
 
   const userNameChangeHandler = (text) => {
+    if (text.length === 0) {
+      setUsernameIsValid(false);
+    } else {
+      setUsernameIsValid(true);
+    }
     setUserNameText(text);
   };
+
   const emailChangeHandler = (text) => {
+    if (text.length === 0) {
+      setEmailIsValid(false);
+    } else {
+      setEmailIsValid(true);
+    }
     setEmailText(text);
   };
 
   const passwordChangeHandler = (text) => {
+    if (text.length < 6) {
+      setPasswordIsValid(false);
+    } else {
+      setPasswordIsValid(true);
+    }
     setPasswordText(text);
   };
 
+  const birthdayChangeHandler = (text) => {
+    if (text.length < 8) {
+      setBirthdayIsValid(false);
+    } else {
+      setBirthdayIsValid(true);
+    }
+    setBirthday(text);
+    console.log(birthday);
+  };
+
+  const genderChangeHandler = (text) => {
+    if (text === "null") {
+      setGenderIsValid(false);
+    } else {
+      setGenderIsValid(true);
+    }
+    setGender(text);
+    console.log(gender);
+  };
+
+  const getUserId = async () => {
+    try {
+      const value = await AsyncStorage.getItem("userData");
+      if (value != null) {
+        console.log(value);
+        const uid = JSON.parse(value).userId;
+        genUserProfile(uid);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const genUserProfile = async (uid) => {
+    console.log("generating user profile for: " + uid);
+    database
+      .collection("users")
+      .doc(uid)
+      .set({
+        username: uid,
+        birthday: birthday,
+        gender: gender,
+      })
+      .then(() => {
+        console.log("generating posts collection");
+        database.collection("users").doc(uid).collection("posts").add({});
+      })
+      .then(() => {
+        console.log("generating replies collection");
+        database.collection("users").doc(uid).collection("replies").add({});
+      })
+      .then(() => {
+        console.log("generating blocked collection");
+        database.collection("users").doc(uid).collection("blocked").add({});
+      })
+      .catch((err) => {
+        console.log("ERROR: " + err);
+      });
+  };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Sign Up Failed", error, [{ text: "Okay" }]);
+    }
+    setError(null);
+  }, [error]);
+
   const signUpHandler = async () => {
-    setIsLoading(true);
-    dispatch(authActions.signup(userNameText, emailText, passwordText));
-    setIsLoading(false);
+    if (
+      usernameIsValid === false ||
+      emailIsValid === false ||
+      passwordIsValid === false ||
+      genderIsValid === false
+    ) {
+      setError(
+        "The username, email, birthday is empty or the password is less than 6 characters!"
+      );
+    } else {
+      setIsLoading(true);
+      await dispatch(authActions.signup(userNameText, emailText, passwordText));
+      setIsLoading(false);
+      getUserId();
+    }
+  };
+
+  const genderPlaceholder = {
+    label: "What's your gender?",
+    value: "null",
   };
 
   return (
-    <SafeAreaView style={styles.Container}>
-      <View style={styles.Header}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => navigation.goBack()}
-        >
-          <MaterialCommunityIcons
-            name="window-close"
-            size={35}
-            color={"#202020"}
-            style={styles.closeIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Sign Up</Text>
+    <SafeAreaView style={styles.screen}>
+      <StatusBar barStyle="dark-content" animated={true} />
 
-        <Button title="Sign Up" onPress={signUpHandler}></Button>
-      </View>
-      <View style={styles.Message}>
-        <View style={styles.titleContainer}>
-          <Text>Username</Text>
-          <TextInput
-            style={styles.placeholder}
-            id="username"
-            name="username"
-            value={userNameText}
-            required
-            keyboardType="default"
-            autoCapitalize="none"
-            errorText="Please enter a valid username"
-            placeholder="username"
-            placeholderTextColor="#7B7670"
-            onChangeText={userNameChangeHandler}
-          />
-          {/* {!titleIsValid && <Text>Enter a Valid Title</Text>} */}
+      {/* Header */}
+      {/* <View style={styles.header}>
+        <Text>Already have an account?</Text>
+        <TouchableOpacity activeOpacity={0.5}>
+          <Text
+            style={styles.login}
+            onPress={() => navigation.navigate("Login")}
+          >
+            Log in
+          </Text>
+        </TouchableOpacity>
+      </View> */}
+
+      {/* Form */}
+      <ScrollView style={styles.container}>
+        <View>
+          <View style={styles.innerHeader}>
+            <Text style={styles.title}>Welcome to TalkRelief</Text>
+            <TouchableOpacity activeOpacity={0.5}>
+              <Text
+                style={styles.login}
+                onPress={() => navigation.navigate("Login")}
+              >
+                Log in
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.subtitle}>
+            Create an account to join our supportive community.
+          </Text>
         </View>
-        <View style={styles.titleContainer}>
-          <Text>Email</Text>
-          <TextInput
-            style={styles.placeholder}
-            id="email"
-            name="email"
-            value={emailText}
-            required
-            keyboardType="email-address"
-            autoCapitalize="none"
-            errorText="Please enter a valid email address"
-            placeholder="Abc@xyz.com"
-            placeholderTextColor="#7B7670"
-            onChangeText={emailChangeHandler}
-          />
-          {/* {!titleIsValid && <Text>Enter a Valid Title</Text>} */}
-        </View>
-        <View style={styles.contentContainer}>
-          <Text>Password</Text>
-          <TextInput
-            style={(styles.postContent, styles.placeholder)}
-            id="password"
-            name="password"
-            value={passwordText}
-            secureTextEntry={true}
-            required
-            numberOfLines={10}
-            errorText="Please enter a valid password"
-            autoCapitalize="none"
-            keyboardType="default"
-            placeholder="********"
-            placeholderTextColor="#7B7670"
-            onChangeText={passwordChangeHandler}
-          />
-        </View>
-        {isLoading ? <ActivityIndicator size="large" /> : <View />}
-      </View>
+        <FloatingLabelInput
+          id="username"
+          textContentType="username"
+          label="Username"
+          value={userNameText}
+          ref={userInput}
+          required
+          maxLength={20}
+          autoCapitalize="none"
+          keyboardType="default"
+          returnKeyType="next"
+          errorText="Please enter a valid username"
+          onChangeText={userNameChangeHandler}
+          onSubmitEditing={() => {
+            emailInput.current.focus();
+          }}
+        />
+
+        <FloatingLabelInput
+          id="email"
+          textContentType="emailAddress"
+          label="Email address"
+          value={emailText}
+          ref={emailInput}
+          required
+          maxLength={35}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          returnKeyType="next"
+          errorText="Please enter a valid email address"
+          onChangeText={emailChangeHandler}
+          onSubmitEditing={() => {
+            passwordInput.current.focus();
+          }}
+        />
+        <FloatingLabelInput
+          id="password"
+          textContentType="password"
+          label="Password (8+ characters)"
+          value={passwordText}
+          ref={passwordInput}
+          isPassword
+          togglePassword={show}
+          required
+          maxLength={30}
+          autoCapitalize="none"
+          keyboardType="default"
+          returnKeyType="next"
+          errorText="Please enter a valid password"
+          customShowPasswordImage={showPassword}
+          customHidePasswordImage={hidePassword}
+          onChangeText={passwordChangeHandler}
+          onSubmitEditing={() => {
+            birthdayInput.current.focus();
+          }}
+        />
+        <FloatingLabelInput
+          id="birthday"
+          label="Birthday (MM/DD/YYYY)"
+          mask="99/99/9999"
+          value={birthday}
+          ref={birthdayInput}
+          required
+          maxLength={20}
+          autoCapitalize="none"
+          keyboardType="numeric"
+          returnKeyType="done"
+          errorText="Please enter a valid username"
+          onChangeText={birthdayChangeHandler}
+          // onSubmitEditing={() => {
+          //   genderInput.current.onOpen();
+          // }}
+        />
+        <RNPickerSelect
+          onValueChange={genderChangeHandler}
+          placeholder={genderPlaceholder}
+          ref={genderInput}
+          required
+          items={[
+            { label: "Female", value: "female" },
+            { label: "Male", value: "male" },
+            { label: "Non-binary", value: "nonbinary" },
+            { label: "Transgender", value: "transgender" },
+            { label: "Intersex", value: "intersex" },
+            { label: "I prefer not to say", value: "none" },
+          ]}
+          Icon={() => {
+            return (
+              <MaterialCommunityIcons
+                name="chevron-down"
+                color={"#202020"}
+                size={40}
+                style={styles.chevron}
+              />
+            );
+          }}
+          style={{
+            ...pickerSelectStyles,
+          }}
+        />
+
+        {/* Display a loading animation when user account is being created */}
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor="rgba(0,0,0,0.7)"
+          style={styles.btnBG}
+          onPress={signUpHandler}
+        >
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.btnText}>Create Account</Text>
+          )}
+        </TouchableHighlight>
+
+        <Text style={styles.subtitle}>
+          By continuing, you confirm you are over 18 and accept our{" "}
+          <Text
+            style={styles.disclaimerLink}
+            onPress={() =>
+              Linking.openURL("https://talkrelief.app/terms-of-service")
+            }
+          >
+            Terms
+          </Text>{" "}
+          and{" "}
+          <Text
+            style={styles.disclaimerLink}
+            onPress={() =>
+              Linking.openURL("https://talkrelief.app/privacy-policy")
+            }
+          >
+            Privacy Policy
+          </Text>
+          .
+        </Text>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  Container: {
+  screen: {
+    flex: 1,
     backgroundColor: "#FFF1E4",
-    height: "100%",
   },
-  Header: {
-    display: "flex",
+  header: {
     flexDirection: "row",
-    padding: 10,
-    paddingTop: 15,
-    paddingBottom: 15,
+    paddingRight: 10,
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     borderBottomWidth: 0.75,
     borderBottomColor: "#E8D7CC",
+    backgroundColor: "#FFF1E4",
   },
-  headerTitle: {
-    fontSize: 18,
+  innerHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 5,
+    marginTop: 20,
+    justifyContent: "space-between",
+  },
+  container: {
+    paddingHorizontal: 15,
+  },
+  title: {
+    fontSize: 24,
     fontWeight: "700",
   },
-  Submit: {
-    fontSize: 14,
-    color: "#FF005C",
-    fontWeight: "bold",
+  subtitle: {
+    marginBottom: 15,
   },
-  Message: {
-    padding: 15,
+  chevron: {
+    paddingTop: 8,
+    paddingRight: 10,
+    alignItems: "center",
   },
-  titleContainer: {
-    borderBottomWidth: 0.75,
-    borderBottomColor: "#E8D7CC",
-    paddingTop: 5,
-    paddingBottom: 20,
+  btnBG: {
+    backgroundColor: "rgba(0,0,0,0.9)",
+    padding: 10,
+    paddingLeft: 60,
+    paddingRight: 60,
+    borderRadius: 30,
+    minWidth: 300,
+    marginBottom: 25,
+    borderWidth: 2,
   },
-  contentContainer: {
-    paddingTop: 15,
+  btnText: {
+    textAlign: "center",
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "700",
   },
-  placeholder: {
+  login: {
+    alignItems: "center",
+    color: "#C83E6F",
+    fontWeight: "700",
+    // marginHorizontal: 5,
+    // marginVertical: 10,
     fontSize: 20,
   },
-  postTitle: {
-    fontSize: 60,
-  },
-  postContent: {
-    height: "50%",
-    borderWidth: 1,
-    padding: 10,
-    margin: 5,
+  disclaimerLink: {
+    color: "#C83E6F",
+    textDecorationLine: "underline",
   },
 });
 
-export default SignUpScreen;
+const pickerSelectStyles = StyleSheet.create({
+  placeholder: { color: "#202020" },
+  inputIOS: {
+    fontSize: 18,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderRadius: 4,
+    color: "#202020",
+    paddingRight: 30, // to ensure the text is never behind the icon
+    borderWidth: 2,
+    borderColor: "rgba(0,0,0,0.1)",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    marginBottom: 15,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: "purple",
+    borderRadius: 8,
+    color: "#202020",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+});
+
+export default SignUpScreenV2;

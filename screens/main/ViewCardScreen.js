@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as firebase from "firebase";
+import { database } from "../../firebase";
+import Toast from "react-native-toast-message";
+import { useDispatch } from "react-redux";
 import {
   SafeAreaView,
   ScrollView,
@@ -13,26 +18,136 @@ import {
   Platform,
   Pressable,
   Keyboard,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import AutoExpandingTextInput from "../../components/AutoExpandingTextInput";
 import { TextInput } from "react-native";
+
+import bg1 from "../../assets/bg.png";
+import bg2 from "../../assets/bg2.png";
+import bg3 from "../../assets/bg3.png";
+import bg4 from "../../assets/bg4.png";
+import bg5 from "../../assets/bg5.png";
+import bg6 from "../../assets/bg6.png";
+import bg7 from "../../assets/bg7.png";
+import bg8 from "../../assets/bg8.png";
+import bg9 from "../../assets/bg9.png";
+import bg10 from "../../assets/bg10.png";
+
+const colorArray = [
+  "#C83E6F",
+  "#FF6B00",
+  "#0085FF",
+  "#128200",
+  "#008272",
+  "#6e7582",
+  "#7A78DF",
+  "#F08EEC",
+  "#194350",
+  "#1FAB4F",
+  "#1F46AB",
+  "#AB1F1F",
+  "#51C4D3",
+];
+
+const bgArray = [bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9, bg10];
 
 const { height } = Dimensions.get("window");
 export const fullHeight = (height * 1564) / 974;
 
 export default function ViewCardScreen() {
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
+  const [error, setError] = useState();
   const [input, setInput] = useState("");
+  const [inputIsValid, setInputIsValid] = useState(false);
   const [isActive, setActive] = useState(false);
+  const [userIdCollection, setUserIdCollection] = useState("");
+  const [replierUserName, setReplierUserName] = useState("");
 
-  const sendMessage = () => {
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("userData");
+        if (value != null) {
+          const username = JSON.parse(value).displayName;
+          const uid = JSON.parse(value).userId;
+          setReplierUserName(username);
+          setUserIdCollection(uid);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserData();
+  }, [dispatch]);
+
+  const inputChangeHandler = (text) => {
+    if (text.length === 0) {
+      setInputIsValid(false);
+    } else {
+      setInputIsValid(true);
+    }
+    setInput(text);
+  };
+
+
+  const sendReply = async () => {
+    setIsLoading(true);
+    if (inputIsValid === false) {
+      setError("The title or story is empty!");
+    } else {
+      await database
+        .collection("users")
+        .doc(route.params.Card.creatorId)
+        .collection("replies")
+        .add({
+          replyContent: input,
+          postTitle: route.params.Card.title,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          replierUsername: replierUserName,
+          replierId: userIdCollection,
+          creatorId: route.params.Card.creatorId,
+        })
+        .then((reply) => {
+          replyId = reply.id;
+          database
+            .collection("users")
+            .doc(route.params.Card.creatorId)
+            .collection("replies")
+            .doc(replyId)
+            .set(
+              {
+                replyId: replyId,
+              },
+              { merge: true }
+            );
+          navigation.navigate("Home");
+
+          // Creates a 3 second toast notification when post is submitted
+          Toast.show({
+            text1: "Your reply was sent! 😊 💌",
+            visibilityTime: 2000,
+            topOffset: 50,
+            autoHide: true,
+            fontSize: 20,
+          });
+        });
+      setIsLoading(false);
+    }
     Keyboard.dismiss();
     setInput("");
-    // Code saves message to the database
   };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
 
   const cancelMessage = () => {
     Keyboard.dismiss();
@@ -44,10 +159,10 @@ export default function ViewCardScreen() {
   return (
     // Show card full screen as background
     <ImageBackground
-      source={route.params.Card.selectedBG}
+      source={bgArray[route.params.Card.postPattern]}
       style={[
         styles.screen,
-        { backgroundColor: route.params.Card.selectedColor },
+        { backgroundColor: colorArray[route.params.Card.postColor] },
       ]}
     >
       <SafeAreaView style={styles.container}>
@@ -92,8 +207,16 @@ export default function ViewCardScreen() {
 
               {/* Send button */}
               <Pressable style={styles.submit}>
-                <TouchableOpacity onPress={sendMessage} activeOpacity={0.3}>
-                  <Text>Send</Text>
+                <TouchableOpacity onPress={sendReply} activeOpacity={0.3}>
+                  {isLoading ? (
+                    <ActivityIndicator
+                      size="small"
+                      color="black"
+                      style={styles.loading}
+                    />
+                  ) : (
+                    <Text style={styles.submitText}>Send</Text>
+                  )}
                 </TouchableOpacity>
               </Pressable>
             </View>
@@ -117,7 +240,7 @@ export default function ViewCardScreen() {
               }}
               onFocus={() => setActive(true)}
               onBlur={() => setActive(false)}
-              onChangeText={(text) => setInput(text)}
+              onChangeText={inputChangeHandler}
               placeholder="Write kind words"
               placeholderTextColor="rgba(255,255,255,0.5)"
             />
@@ -178,7 +301,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 30,
     height: 30,
-    top: 40,
+    top: 20,
     right: 20,
     borderRadius: 50,
     shadowOpacity: 0.1,
@@ -215,8 +338,12 @@ const styles = StyleSheet.create({
     marginRight: 5,
     backgroundColor: "#fff",
     borderRadius: 20,
-    padding: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
+    minWidth: 60,
+    minHeight: 35,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  submitText: {
+    fontWeight: "500",
   },
 });

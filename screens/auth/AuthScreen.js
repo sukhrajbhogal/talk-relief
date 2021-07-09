@@ -1,46 +1,109 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
+  ImageBackground,
   SafeAreaView,
+  View,
   StatusBar,
   StyleSheet,
   Text,
-  Button,
+  TouchableHighlight,
+  Pressable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const AuthScreen = (props) => {
+const AuthScreen = () => {
   const navigation = useNavigation();
+
   return (
-    <SafeAreaView style={styles.screen}>
-      <StatusBar barStyle="dark-content" animated={true} />
-      <Text style={styles.Title}>TalkRelief</Text>
-      <Text style={styles.Subtitle}>Lift others and get lifted in return</Text>
-      <Button title="Log In" onPress={() => navigation.navigate("Login")}>
-        Log In
-      </Button>
-      <Button title="Sign Up" onPress={() => navigation.navigate("Signup")}>
-        Sign Up
-      </Button>
-    </SafeAreaView>
+    <ImageBackground
+      source={require("../../assets/Example.png")}
+      style={styles.screen}
+    >
+      <StatusBar barStyle="light-content" animated={true} />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.body}>
+          <Text style={styles.title}>TalkRelief</Text>
+          <Text style={styles.subtitle}>
+            A place to express how you’re feeling and receive comforting words
+            from the community.
+          </Text>
+        </View>
+        <View style={styles.footer}>
+          <TouchableHighlight
+            activeOpacity={1}
+            underlayColor="rgba(0,0,0,0.7)"
+            style={styles.signupBG}
+            onPress={() => navigation.navigate("Signup")}
+          >
+            <Text style={styles.btnText}>Sign Up</Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            activeOpacity={1}
+            underlayColor="rgba(255,255,255,0.2)"
+            style={styles.loginBG}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.btnText}>Login</Text>
+          </TouchableHighlight>
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FFF1E4",
+    backgroundColor: "#C83E6F",
   },
-  Title: {
-    fontSize: 50,
+  container: {
+    flex: 1,
+    margin: 20,
+    justifyContent: "space-between",
+  },
+  body: {
+    top: "20%",
+  },
+  title: {
+    fontSize: 30,
     fontWeight: "700",
+    fontFamily: "Cocogoose",
+    color: "#fff",
   },
-  Subtitle: {
+  subtitle: {
     fontSize: 24,
+    fontWeight: "500",
+    color: "#fff",
+    marginTop: 15,
+    marginBottom: 15,
+    lineHeight: 35,
+  },
+  footer: {
+    alignItems: "center",
+  },
+  signupBG: {
+    backgroundColor: "rgba(0,0,0,0.9)",
+    padding: 10,
+    paddingLeft: 60,
+    paddingRight: 60,
+    borderRadius: 30,
+    minWidth: 300,
+    marginBottom: 10,
+    borderWidth: 2,
+  },
+  btnText: {
+    textAlign: "center",
+    color: "#fff",
+    fontSize: 20,
     fontWeight: "700",
-    padding: 20,
+  },
+  loginBG: {
+    borderWidth: 2,
+    borderColor: "#fff",
+    padding: 12,
+    borderRadius: 30,
+    minWidth: 300,
   },
 });
 
