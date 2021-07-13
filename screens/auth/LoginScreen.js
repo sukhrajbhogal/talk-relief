@@ -169,6 +169,13 @@ const LoginScreen = (props) => {
           customHidePasswordImage={hidePassword}
           onChangeText={passwordChangeHandler}
         />
+        <TouchableOpacity
+          style={styles.btnBG}
+          underlayColor="rgba(0,0,0,0.7)"
+          onPress={() => navigation.navigate("Forgot Password")}
+        >
+          <Text style={styles.btnText}>Forgot Password</Text>
+        </TouchableOpacity>
         <TouchableHighlight
           activeOpacity={1}
           underlayColor="rgba(0,0,0,0.7)"

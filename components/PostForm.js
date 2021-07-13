@@ -58,8 +58,6 @@ const PostForm = () => {
   const [contentIsValid, setContentIsValid] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [userId, setUserId] = useState("");
-  const [cardPattern, setCardPattern] = useState(0);
-  const [cardColor, setCardColor] = useState(0);
 
   let docId;
 
@@ -140,8 +138,8 @@ const PostForm = () => {
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
               username: displayName,
               creatorId: userId,
-              cardPattern: cardPattern,
-              cardColor: cardColor,
+              cardPattern: randomIndex,
+              cardColor: randomColorIndex,
             });
           console.log("SUCCESS");
           navigation.reset({
