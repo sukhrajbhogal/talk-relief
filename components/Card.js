@@ -136,7 +136,7 @@ const Card = ({
         <View style={styles.cardStyle}>
           <Text style={[styles.fontStyle, styles.cardTitle]}>{title}</Text>
           <Text
-            numberOfLines={20}
+            numberOfLines={6}
             style={[styles.fontStyle, styles.cardContent]}
           >
             {content}

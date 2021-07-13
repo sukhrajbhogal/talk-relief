@@ -45,7 +45,7 @@ const ForgotPasswordScreen = () => {
       auth.sendPasswordResetEmail(emailText).then(() => {
         console.log("email sent");
         navigation.navigate("Auth");
-      });
+      }).catch;
     }
   };
   return (

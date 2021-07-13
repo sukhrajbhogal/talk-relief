@@ -95,7 +95,6 @@ export default function ViewCardScreen() {
     setInput(text);
   };
 
-
   const sendReply = async () => {
     setIsLoading(true);
     if (inputIsValid === false) {
@@ -179,7 +178,7 @@ export default function ViewCardScreen() {
                 {route.params.Card.title}
               </Text>
               <Text
-                numberOfLines={6}
+                numberOfLines={100}
                 style={[styles.fontStyle, styles.cardContent]}
               >
                 {route.params.Card.content}
