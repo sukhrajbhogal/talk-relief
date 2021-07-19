@@ -5,6 +5,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "notification": {
+      "icon": "./assets/icon.png",
+      "iosDisplayInForeground": true
+    },
     "description": "Community emotional support.",
     "splash": {
       "image": "./assets/splash.png",
@@ -14,9 +18,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.talkrelief.talkrelief",
       "supportsTablet": false
@@ -24,7 +26,8 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#FFFFFF",
+        "useNextNotificationsApi": true
       }
     },
     "web": {

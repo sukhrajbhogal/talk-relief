@@ -17,6 +17,8 @@ import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
 import { auth, database } from "../firebase";
+import * as Notifications from "expo-notifications";
+import * as Permissions from "expo-permissions";
 
 import bg1 from "../assets/bg.png";
 import bg2 from "../assets/bg2.png";
@@ -62,6 +64,21 @@ const PostForm = () => {
   let docId;
 
   useEffect(() => {
+    Permissions.getAsync(Permissions.NOTIFICATIONS)
+      .then((statusObj) => {
+        if (statusObj.status !== "granted") {
+          Permissions.askAsync(Permissions.NOTIFICATIONS);
+        }
+        return statusObj;
+      })
+      .then((statusObj) => {
+        if (statusObj.status !== "granted") {
+          return;
+        }
+      });
+  });
+
+  useEffect(() => {
     const getUserData = async () => {
       try {
         const value = await AsyncStorage.getItem("userData");
@@ -101,6 +118,16 @@ const PostForm = () => {
     if (contentIsValid === false || titleIsValid === false) {
       setError("The title or story is empty!");
     } else {
+      let pushToken;
+      let statusObj = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      if (statusObj.status !== "granted") {
+        statusObj = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      }
+      if (statusObj.status !== "granted") {
+        pushToken = null;
+      } else {
+        pushToken = (await Notifications.getExpoPushTokenAsync()).data;
+      }
       const randomIndex = Math.floor(Math.random() * bgArray.length);
       const randomColorIndex = Math.floor(Math.random() * colorArray.length);
       await database
@@ -114,6 +141,7 @@ const PostForm = () => {
           cardPattern: randomIndex,
           cardColor: randomColorIndex,
           flagged: false,
+          pushToken: pushToken,
         })
         .then((post) => {
           console.log("Document written with ID: ", post.id);
