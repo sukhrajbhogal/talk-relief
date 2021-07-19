@@ -16,6 +16,7 @@ import StartUpScreen from "../screens/auth/StartUpScreen";
 import ProfileScreen from "../screens/auth/ProfileScreen";
 import SettingsScreen from "../screens/auth/SettingsScreen";
 import OnboardingScreen from "../screens/auth/OnboardingScreen";
+import ForgotPasswordScreen from "../screens/auth/ForgotPasswordScreen";
 
 import horizontalAnimation from "../components/horizontalAnimation";
 
@@ -52,6 +53,14 @@ export const AuthNavigation = () => {
       <AuthStack.Screen
         name="Login"
         component={LoginScreen}
+        options={({ route }) => ({
+          title: getHeaderTitle(route),
+          headerShown: false,
+        })}
+      />
+      <AuthStack.Screen
+        name="Forgot Password"
+        component={ForgotPasswordScreen}
         options={({ route }) => ({
           title: getHeaderTitle(route),
           headerShown: false,

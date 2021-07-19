@@ -64,7 +64,6 @@ const InboxScreen = (props) => {
 
       for (let i = 0; i < snapshot.size; i++) {
         inbox.push(snapshot.docs[i].data());
-        console.log(inbox);
       }
       setReplies(inbox);
     } else {

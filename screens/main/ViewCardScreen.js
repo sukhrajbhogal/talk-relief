@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as firebase from "firebase";
-import { database } from "../../firebase";
+import { database, sendReplyNotification } from "../../firebase";
 import Toast from "react-native-toast-message";
 import { useDispatch } from "react-redux";
+import { sendNotification } from "../../store/actions/posts";
 import {
   SafeAreaView,
   ScrollView,
@@ -68,6 +69,7 @@ export default function ViewCardScreen() {
   const [isActive, setActive] = useState(false);
   const [userIdCollection, setUserIdCollection] = useState("");
   const [replierUserName, setReplierUserName] = useState("");
+  console.log("TOKEN " + route.params.Card.pushToken);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -95,7 +97,6 @@ export default function ViewCardScreen() {
     setInput(text);
   };
 
-
   const sendReply = async () => {
     setIsLoading(true);
     if (inputIsValid === false) {
@@ -114,7 +115,7 @@ export default function ViewCardScreen() {
           creatorId: route.params.Card.creatorId,
         })
         .then((reply) => {
-          replyId = reply.id;
+          let replyId = reply.id;
           database
             .collection("users")
             .doc(route.params.Card.creatorId)
@@ -126,17 +127,22 @@ export default function ViewCardScreen() {
               },
               { merge: true }
             );
-          navigation.navigate("Home");
-
-          // Creates a 3 second toast notification when post is submitted
-          Toast.show({
-            text1: "Your reply was sent! 😊 💌",
-            visibilityTime: 2000,
-            topOffset: 50,
-            autoHide: true,
-            fontSize: 20,
-          });
         });
+      sendNotification(
+        route.params.Card.title,
+        route.params.Card.pushToken,
+        replierUserName
+      );
+      navigation.navigate("Home");
+
+      // Creates a 3 second toast notification when post is submitted
+      Toast.show({
+        text1: "Your reply was sent! 😊 💌",
+        visibilityTime: 2000,
+        topOffset: 50,
+        autoHide: true,
+        fontSize: 20,
+      });
       setIsLoading(false);
     }
     Keyboard.dismiss();
@@ -179,7 +185,7 @@ export default function ViewCardScreen() {
                 {route.params.Card.title}
               </Text>
               <Text
-                numberOfLines={6}
+                numberOfLines={100}
                 style={[styles.fontStyle, styles.cardContent]}
               >
                 {route.params.Card.content}

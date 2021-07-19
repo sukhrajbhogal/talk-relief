@@ -241,6 +241,7 @@ const CardList = () => {
             content={item.content}
             postPattern={item.cardPattern}
             postColor={item.cardColor}
+            pushToken={item.pushToken}
           />
         )}
         ListFooterComponent={renderFooter}

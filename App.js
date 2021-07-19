@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReduxThunk from "redux-thunk";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 
@@ -8,9 +8,16 @@ import AppNavigation from "./navigation/AppNavigation";
 import posts from "./store/reducers/posts";
 import auth from "./store/reducers/auth";
 import { Provider } from "react-redux";
+import * as Notifications from "expo-notifications";
 
 import Toast from "react-native-toast-message";
 import { toastConfig } from "./components/toastConfig";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return { shouldShowAlert: true };
+  },
+});
 
 const rootReducer = combineReducers({
   posts: posts,
@@ -28,6 +35,8 @@ const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 export default function App() {
   // Makes sure custom font is finished loading
   const [fontLoaded, setFontLoaded] = useState(false);
+
+  
 
   if (!fontLoaded) {
     return (

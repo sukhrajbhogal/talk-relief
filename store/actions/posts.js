@@ -9,6 +9,22 @@ export const deletePost = () => {
   return { type: DELETE_POST };
 };
 
+export const sendNotification = (title, expoToken, userName) => {
+  fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Accept-Encoding": "gzip, deflate",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      to: expoToken,
+      title: `${userName} replied to your post!`,
+      body: title,
+    }),
+  });
+};
+
 //WILL RETURN TO THIS
 
 // export const createPost = (title, content) => {

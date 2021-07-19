@@ -56,6 +56,7 @@ const Card = ({
   content,
   postPattern,
   postColor,
+  pushToken,
 }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -125,6 +126,7 @@ const Card = ({
             content,
             postPattern,
             postColor,
+            pushToken,
           },
         })
       }
