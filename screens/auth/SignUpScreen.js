@@ -1,13 +1,6 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useReducer,
-} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { database } from "../../firebase";
-
 import {
   SafeAreaView,
   StatusBar,
@@ -21,8 +14,6 @@ import {
   ActivityIndicator,
   Alert,
   Linking,
-  KeyboardAvoidingView,
-  TextPropTypes,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -31,9 +22,9 @@ import { FloatingLabelInput } from "react-native-floating-label-input";
 import "../../components/globalInputStyles";
 import RNPickerSelect from "react-native-picker-select";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
 import hidePassword from "../../assets/eye.png";
 import showPassword from "../../assets/eye-off.png";
+import messaging from "@react-native-firebase/messaging";
 
 const options = [
   { value: "female", label: "Female" },
@@ -49,6 +40,7 @@ const SignUpScreenV2 = () => {
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
   const navigation = useNavigation();
+
   // const [error, setError] = useState();
 
   const [userNameText, setUserNameText] = useState("");
@@ -118,20 +110,36 @@ const SignUpScreenV2 = () => {
     console.log(gender);
   };
 
+  let uid;
+  let userToken;
+
   const getUserId = async () => {
     try {
       const value = await AsyncStorage.getItem("userData");
       if (value != null) {
         console.log(value);
-        const uid = JSON.parse(value).userId;
-        genUserProfile(uid);
+        uid = JSON.parse(value).userId;
       }
     } catch (error) {
       console.log(error);
     }
   };
+  const requestPermission = async () => {
+    const authorizationStatus = await messaging().requestPermission();
 
-  const genUserProfile = async (uid) => {
+    if (authorizationStatus) {
+      console.log("Permission status:", authorizationStatus);
+      messaging()
+        .getToken()
+        .then((token) => {
+          userToken = token;
+        });
+    } else {
+      console.log("error: ", authorizationStatus);
+    }
+  };
+
+  const genUserProfile = async (uid, token) => {
     console.log("generating user profile for: " + uid);
     database
       .collection("users")
@@ -140,6 +148,7 @@ const SignUpScreenV2 = () => {
         username: uid,
         birthday: birthday,
         gender: gender,
+        token: firestore.FieldValue.arrayUnion(token),
       })
       .then(() => {
         console.log("generating posts collection");
@@ -179,7 +188,9 @@ const SignUpScreenV2 = () => {
       setIsLoading(true);
       await dispatch(authActions.signup(userNameText, emailText, passwordText));
       setIsLoading(false);
+      requestPermission();
       getUserId();
+      genUserProfile(uid, userToken);
     }
   };
 

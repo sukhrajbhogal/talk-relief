@@ -69,7 +69,6 @@ export default function ViewCardScreen() {
   const [isActive, setActive] = useState(false);
   const [userIdCollection, setUserIdCollection] = useState("");
   const [replierUserName, setReplierUserName] = useState("");
-  console.log("TOKEN " + route.params.Card.pushToken);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -128,11 +127,7 @@ export default function ViewCardScreen() {
               { merge: true }
             );
         });
-      sendNotification(
-        route.params.Card.title,
-        route.params.Card.pushToken,
-        replierUserName
-      );
+
       navigation.navigate("Home");
 
       // Creates a 3 second toast notification when post is submitted

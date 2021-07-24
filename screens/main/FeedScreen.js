@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+//import messaging from "@react-native-firebase/messaging";
 
 import CardList from "../../components/CardList";
 
@@ -18,7 +19,16 @@ const FeedScreen = (props) => {
   const [viewedOnboarding, setViewedOnboarding] = useState(false);
   const navigation = useNavigation();
 
-  
+  // const requestUserPermission = async () => {
+  //   const authStatus = await messaging.requestPermission();
+  //   const enabled =
+  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  //   if (enabled) {
+  //     console.log("Authorization status:", authStatus);
+  //   }
+  // };
+
   const Loading = () => {
     return <ActivityIndicator size={"large"} />;
   };
