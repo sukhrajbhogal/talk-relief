@@ -17,8 +17,6 @@ import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
 import { auth, database } from "../firebase";
-import * as Notifications from "expo-notifications";
-import * as Permissions from "expo-permissions";
 
 import bg1 from "../assets/bg.png";
 import bg2 from "../assets/bg2.png";
