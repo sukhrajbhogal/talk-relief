@@ -24,7 +24,7 @@ const fetchFonts = () => {
     Cocogoose: require("./assets/fonts/Cocogoose-Regular.ttf"),
   });
 };
-const userID = useSelector((state) => state.auth.userId);
+//const userID = useSelector((state) => state.auth.userId);
 
 const saveTokenToDatabase = async (token) => {
   database

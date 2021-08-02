@@ -18,9 +18,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.talkrelief.talkrelief",
       "supportsTablet": false
@@ -28,8 +26,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF",
-        "useNextNotificationsApi": true
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.talkrelief.talkrelief"
     },
