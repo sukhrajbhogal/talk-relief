@@ -20,7 +20,8 @@ import { useNavigation } from "@react-navigation/native";
 import * as authActions from "../../store/actions/auth";
 import { FloatingLabelInput } from "react-native-floating-label-input";
 import "../../components/globalInputStyles";
-import RNPickerSelect from "react-native-picker-select";
+//import RNPickerSelect from "react-native-picker-select";
+import {Picker} from "@react-native-picker/picker"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import hidePassword from "../../assets/eye.png";
 import showPassword from "../../assets/eye-off.png";
@@ -307,7 +308,7 @@ const SignUpScreenV2 = () => {
           //   genderInput.current.onOpen();
           // }}
         />
-        <RNPickerSelect
+        {/* <RNPickerSelect
           onValueChange={genderChangeHandler}
           placeholder={genderPlaceholder}
           ref={genderInput}
@@ -333,7 +334,25 @@ const SignUpScreenV2 = () => {
           style={{
             ...pickerSelectStyles,
           }}
-        />
+        /> */}
+
+        <Picker 
+          style={{
+           ...pickerSelectStyles,
+          }}
+          onValueChange={genderChangeHandler}
+          ref={genderInput}
+          placeholder={genderPlaceholder}
+
+          required
+        > 
+          <Picker.Item label="Female" value="female" />
+          <Picker.Item label="Male" value="male" />
+          <Picker.Item label="Non-Binary" value="nonbinary" />
+          <Picker.Item label="Transgender" value="transgender" />
+          <Picker.Item label="Intersex" value="intersex" />
+          <Picker.Item label="I prefer not to say" value="none" />
+        </Picker> 
 
         {/* Display a loading animation when user account is being created */}
         <TouchableHighlight
