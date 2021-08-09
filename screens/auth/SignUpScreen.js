@@ -20,12 +20,12 @@ import { useNavigation } from "@react-navigation/native";
 import * as authActions from "../../store/actions/auth";
 import { FloatingLabelInput } from "react-native-floating-label-input";
 import "../../components/globalInputStyles";
-//import RNPickerSelect from "react-native-picker-select";
-import {Picker} from "@react-native-picker/picker"
+import RNPickerSelect from "react-native-picker-select";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import hidePassword from "../../assets/eye.png";
 import showPassword from "../../assets/eye-off.png";
-import messaging from "@react-native-firebase/messaging";
+//import messaging from "@react-native-firebase/messaging";
+import * as Notifications from "expo-notifications";
 
 const options = [
   { value: "female", label: "Female" },
@@ -55,6 +55,7 @@ const SignUpScreenV2 = () => {
   const [birthdayIsValid, setBirthdayIsValid] = useState(false);
   const [gender, setGender] = useState("");
   const [genderIsValid, setGenderIsValid] = useState(false);
+  const [uid, setUid] = useState("");
 
   const userInput = useRef(null);
   const emailInput = useRef(null);
@@ -111,37 +112,36 @@ const SignUpScreenV2 = () => {
     console.log(gender);
   };
 
-  let uid;
-  let userToken;
-
   const getUserId = async () => {
     try {
       const value = await AsyncStorage.getItem("userData");
       if (value != null) {
         console.log(value);
-        uid = JSON.parse(value).userId;
+        const uid = JSON.parse(value).userId;
+        genUserProfile(uid);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  const requestPermission = async () => {
-    const authorizationStatus = await messaging().requestPermission();
 
-    if (authorizationStatus) {
-      console.log("Permission status:", authorizationStatus);
-      messaging()
-        .getToken()
-        .then((token) => {
-          userToken = token;
-        });
-    } else {
-      console.log("error: ", authorizationStatus);
-    }
-  };
-
-  const genUserProfile = async (uid, token) => {
+  const genUserProfile = async (uid) => {
     console.log("generating user profile for: " + uid);
+    let pushToken;
+    let statusObj = await Notifications.getPermissionsAsync();
+    if (
+      statusObj.ios?.status ===
+      Notifications.IosAuthorizationStatus.NOT_DETERMINED
+    ) {
+      statusObj = await Notifications.requestPermissionsAsync();
+    }
+    if (statusObj.ios?.status === Notifications.IosAuthorizationStatus.DENIED) {
+      pushToken = null;
+    } else {
+      pushToken = (await Notifications.getDevicePushTokenAsync()).data;
+      
+      console.log("USER TOKEN: " + pushToken);
+    }
     database
       .collection("users")
       .doc(uid)
@@ -149,7 +149,7 @@ const SignUpScreenV2 = () => {
         username: uid,
         birthday: birthday,
         gender: gender,
-        token: firestore.FieldValue.arrayUnion(token),
+        pushToken: pushToken,
       })
       .then(() => {
         console.log("generating posts collection");
@@ -189,9 +189,8 @@ const SignUpScreenV2 = () => {
       setIsLoading(true);
       await dispatch(authActions.signup(userNameText, emailText, passwordText));
       setIsLoading(false);
-      requestPermission();
       getUserId();
-      genUserProfile(uid, userToken);
+      //genUserProfile(uid);
     }
   };
 
@@ -308,7 +307,7 @@ const SignUpScreenV2 = () => {
           //   genderInput.current.onOpen();
           // }}
         />
-        {/* <RNPickerSelect
+        <RNPickerSelect
           onValueChange={genderChangeHandler}
           placeholder={genderPlaceholder}
           ref={genderInput}
@@ -334,25 +333,7 @@ const SignUpScreenV2 = () => {
           style={{
             ...pickerSelectStyles,
           }}
-        /> */}
-
-        <Picker 
-          style={{
-           ...pickerSelectStyles,
-          }}
-          onValueChange={genderChangeHandler}
-          ref={genderInput}
-          placeholder={genderPlaceholder}
-
-          required
-        > 
-          <Picker.Item label="Female" value="female" />
-          <Picker.Item label="Male" value="male" />
-          <Picker.Item label="Non-Binary" value="nonbinary" />
-          <Picker.Item label="Transgender" value="transgender" />
-          <Picker.Item label="Intersex" value="intersex" />
-          <Picker.Item label="I prefer not to say" value="none" />
-        </Picker> 
+        />
 
         {/* Display a loading animation when user account is being created */}
         <TouchableHighlight

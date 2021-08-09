@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReduxThunk from "redux-thunk";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { database } from "./firebase";
+import * as Notifications from "expo-notifications";
 
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
@@ -12,7 +13,7 @@ import { Provider, useSelector } from "react-redux";
 
 import Toast from "react-native-toast-message";
 import { toastConfig } from "./components/toastConfig";
-import messaging from "@react-native-firebase/messaging";
+//import messaging from "@react-native-firebase/messaging";
 
 const rootReducer = combineReducers({
   posts: posts,
@@ -24,28 +25,23 @@ const fetchFonts = () => {
     Cocogoose: require("./assets/fonts/Cocogoose-Regular.ttf"),
   });
 };
-const userID = useSelector((state) => state.auth.userId);
+//const userID = useSelector((state) => state.auth.userId);
 
-const saveTokenToDatabase = async (token) => {
-  database
-    .collection("users")
-    .doc(userID)
-    .set({
-      token: firestore.FieldValue.arrayUnion(token),
-    });
-};
+// const saveTokenToDatabase = async (token) => {
+//   database
+//     .collection("users")
+//     .doc(userID)
+//     .set({
+//       token: firestore.FieldValue.arrayUnion(token),
+//     });
+// };
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
   // Makes sure custom font is finished loading
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  useEffect(() => {
-    return messaging().onTokenRefresh((token) => {
-      saveTokenToDatabase(token);
-    });
-  }, []);
-
+  
   if (!fontLoaded) {
     return (
       <AppLoading

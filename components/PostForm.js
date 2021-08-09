@@ -61,20 +61,20 @@ const PostForm = () => {
 
   let docId;
 
-  useEffect(() => {
-    Permissions.getAsync(Permissions.NOTIFICATIONS)
-      .then((statusObj) => {
-        if (statusObj.status !== "granted") {
-          Permissions.askAsync(Permissions.NOTIFICATIONS);
-        }
-        return statusObj;
-      })
-      .then((statusObj) => {
-        if (statusObj.status !== "granted") {
-          return;
-        }
-      });
-  });
+  // useEffect(() => {
+  //   Permissions.getAsync(Permissions.NOTIFICATIONS)
+  //     .then((statusObj) => {
+  //       if (statusObj.status !== "granted") {
+  //         Permissions.askAsync(Permissions.NOTIFICATIONS);
+  //       }
+  //       return statusObj;
+  //     })
+  //     .then((statusObj) => {
+  //       if (statusObj.status !== "granted") {
+  //         return;
+  //       }
+  //     });
+  // });
 
   useEffect(() => {
     const getUserData = async () => {
@@ -111,21 +111,32 @@ const PostForm = () => {
     setPostContent(text);
   };
 
+  const requestPermission = async () => {
+    const statusObj = await Notifications.getPermissionsAsync();
+    console.log("statusObj: " + statusObj.ios?.status);
+    if (
+      statusObj.ios?.status ===
+      Notifications.IosAuthorizationStatus.NOT_DETERMINED
+    ) {
+      console.log("Requesting Permission");
+      statusObj = await Notifications.requestPermissionsAsync();
+    }
+    if (statusObj.ios?.status === Notifications.IosAuthorizationStatus.DENIED) {
+      console.log("Permission Denied");
+      tokenChangeHandler(null);
+    } else if (
+      statusObj.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED
+    ) {
+      console.log("Retrieving Token");
+      console.log("USER TOKEN: " + token);
+    }
+  };
+
   const createPost = async () => {
     setIsLoading(true);
     if (contentIsValid === false || titleIsValid === false) {
       setError("The title or story is empty!");
     } else {
-      let pushToken;
-      let statusObj = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-      if (statusObj.status !== "granted") {
-        statusObj = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      }
-      if (statusObj.status !== "granted") {
-        pushToken = null;
-      } else {
-        pushToken = (await Notifications.getExpoPushTokenAsync()).data;
-      }
       const randomIndex = Math.floor(Math.random() * bgArray.length);
       const randomColorIndex = Math.floor(Math.random() * colorArray.length);
       await database
@@ -139,7 +150,6 @@ const PostForm = () => {
           cardPattern: randomIndex,
           cardColor: randomColorIndex,
           flagged: false,
-          pushToken: pushToken,
         })
         .then((post) => {
           console.log("Document written with ID: ", post.id);

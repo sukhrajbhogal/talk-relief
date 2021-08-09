@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as firebase from "firebase";
-
 export const LOGOUT = "LOGOUT";
 export const AUTHENTICATE = "AUTHENTICATE";
 export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
@@ -54,7 +53,7 @@ export const signup = (username, email, password) => {
     }
 
     const resData = await response.json();
-    console.log(resData);
+    console.log(resData.localId);
     dispatch(authenticate(resData.localId, resData.idToken));
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000

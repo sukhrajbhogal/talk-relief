@@ -25,7 +25,7 @@ import {
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { TextInput } from "react-native";
-
+import { sendNotif } from "../../store/actions/apns";
 import bg1 from "../../assets/bg.png";
 import bg2 from "../../assets/bg2.png";
 import bg3 from "../../assets/bg3.png";
@@ -127,7 +127,15 @@ export default function ViewCardScreen() {
               { merge: true }
             );
         });
+      await database
+        .collection("users")
+        .doc(route.params.Card.creatorId)
+        .get()
+        .then((snap) => {
+          console.log("PUSH TOKEN: ", snap.data().pushtoken);
+        });
 
+      //sendNotif();
       navigation.navigate("Home");
 
       // Creates a 3 second toast notification when post is submitted
