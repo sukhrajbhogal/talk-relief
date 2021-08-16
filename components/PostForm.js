@@ -17,6 +17,7 @@ import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
 import { auth, database } from "../firebase";
+import messaging from "@react-native-firebase/messaging";
 
 import bg1 from "../assets/bg.png";
 import bg2 from "../assets/bg2.png";
@@ -61,20 +62,7 @@ const PostForm = () => {
 
   let docId;
 
-  // useEffect(() => {
-  //   Permissions.getAsync(Permissions.NOTIFICATIONS)
-  //     .then((statusObj) => {
-  //       if (statusObj.status !== "granted") {
-  //         Permissions.askAsync(Permissions.NOTIFICATIONS);
-  //       }
-  //       return statusObj;
-  //     })
-  //     .then((statusObj) => {
-  //       if (statusObj.status !== "granted") {
-  //         return;
-  //       }
-  //     });
-  // });
+  
 
   useEffect(() => {
     const getUserData = async () => {
@@ -111,32 +99,14 @@ const PostForm = () => {
     setPostContent(text);
   };
 
-  const requestPermission = async () => {
-    const statusObj = await Notifications.getPermissionsAsync();
-    console.log("statusObj: " + statusObj.ios?.status);
-    if (
-      statusObj.ios?.status ===
-      Notifications.IosAuthorizationStatus.NOT_DETERMINED
-    ) {
-      console.log("Requesting Permission");
-      statusObj = await Notifications.requestPermissionsAsync();
-    }
-    if (statusObj.ios?.status === Notifications.IosAuthorizationStatus.DENIED) {
-      console.log("Permission Denied");
-      tokenChangeHandler(null);
-    } else if (
-      statusObj.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED
-    ) {
-      console.log("Retrieving Token");
-      console.log("USER TOKEN: " + token);
-    }
-  };
+  
 
   const createPost = async () => {
     setIsLoading(true);
     if (contentIsValid === false || titleIsValid === false) {
       setError("The title or story is empty!");
     } else {
+
       const randomIndex = Math.floor(Math.random() * bgArray.length);
       const randomColorIndex = Math.floor(Math.random() * colorArray.length);
       await database

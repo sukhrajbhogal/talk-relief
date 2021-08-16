@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { database } from "../../firebase";
 
 import {
   SafeAreaView,
@@ -10,7 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-//import messaging from "@react-native-firebase/messaging";
+import messaging from "@react-native-firebase/messaging";
 
 import CardList from "../../components/CardList";
 
@@ -19,15 +20,55 @@ const FeedScreen = (props) => {
   const [viewedOnboarding, setViewedOnboarding] = useState(false);
   const navigation = useNavigation();
 
-  // const requestUserPermission = async () => {
-  //   const authStatus = await messaging.requestPermission();
-  //   const enabled =
-  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-  //   if (enabled) {
-  //     console.log("Authorization status:", authStatus);
-  //   }
-  // };
+  const userID = useSelector((state) => state.auth.userId);
+
+  // Makes sure custom font is finished loading
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+  const saveTokenToDatabase = async (token) => {
+    console.log("state user id", userID)
+    database
+      .collection("users")
+      .doc(userID)
+      .update({
+        token: token,
+      });
+  };
+  useEffect(() => {
+    messaging().requestPermission();
+    messaging()
+      .getToken()
+      .then(token => {
+        console.log("token, ", token)
+        return saveTokenToDatabase(token);
+      });
+    
+
+    return messaging().onTokenRefresh(token => {
+      saveTokenToDatabase(token);
+    });
+  }, []);
+
+  useEffect(() => {
+    
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          setInitialRoute("Inbox"); // e.g. "Settings"
+        }
+      });
+    messaging().onMessage(async remoteMessage => {
+      console.log("message received", remoteMessage)
+    });
+
+  }, []);
+
+
 
   const Loading = () => {
     return <ActivityIndicator size={"large"} />;

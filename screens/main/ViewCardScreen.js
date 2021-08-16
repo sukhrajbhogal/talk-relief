@@ -127,14 +127,7 @@ export default function ViewCardScreen() {
               { merge: true }
             );
         });
-      await database
-        .collection("users")
-        .doc(route.params.Card.creatorId)
-        .get()
-        .then((snap) => {
-          console.log("PUSH TOKEN: ", snap.data().pushtoken);
-        });
-
+      
       //sendNotif();
       navigation.navigate("Home");
 

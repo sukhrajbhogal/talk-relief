@@ -9,6 +9,8 @@
       "icon": "./assets/icon.png",
       "iosDisplayInForeground": true
     },
+    "plugins": [
+    ],
     "description": "Community emotional support.",
     "splash": {
       "image": "./assets/splash.png",
@@ -23,13 +25,13 @@
     ],
     "ios": {
       "bundleIdentifier": "com.talkrelief.talkrelief",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF",
-        "useNextNotificationsApi": true
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.talkrelief.talkrelief"
     },

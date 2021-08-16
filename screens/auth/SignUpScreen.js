@@ -24,8 +24,7 @@ import RNPickerSelect from "react-native-picker-select";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import hidePassword from "../../assets/eye.png";
 import showPassword from "../../assets/eye-off.png";
-//import messaging from "@react-native-firebase/messaging";
-import * as Notifications from "expo-notifications";
+import messaging from "@react-native-firebase/messaging";
 
 const options = [
   { value: "female", label: "Female" },
@@ -55,7 +54,6 @@ const SignUpScreenV2 = () => {
   const [birthdayIsValid, setBirthdayIsValid] = useState(false);
   const [gender, setGender] = useState("");
   const [genderIsValid, setGenderIsValid] = useState(false);
-  const [uid, setUid] = useState("");
 
   const userInput = useRef(null);
   const emailInput = useRef(null);
@@ -112,44 +110,42 @@ const SignUpScreenV2 = () => {
     console.log(gender);
   };
 
+  
+
   const getUserId = async () => {
     try {
       const value = await AsyncStorage.getItem("userData");
       if (value != null) {
         console.log(value);
-        const uid = JSON.parse(value).userId;
-        genUserProfile(uid);
+        uid = JSON.parse(value).userId;
+        genUserProfile(uid)
       }
     } catch (error) {
       console.log(error);
     }
   };
+ 
 
   const genUserProfile = async (uid) => {
     console.log("generating user profile for: " + uid);
-    let pushToken;
-    let statusObj = await Notifications.getPermissionsAsync();
-    if (
-      statusObj.ios?.status ===
-      Notifications.IosAuthorizationStatus.NOT_DETERMINED
-    ) {
-      statusObj = await Notifications.requestPermissionsAsync();
-    }
-    if (statusObj.ios?.status === Notifications.IosAuthorizationStatus.DENIED) {
-      pushToken = null;
+    const authorizationStatus = await messaging().requestPermission();
+    if (authorizationStatus) {
+      console.log("Permission status:", authorizationStatus);
+      messaging()
+        .getToken()
+        .then((token) => {
+          userToken = token;
+        });
     } else {
-      pushToken = (await Notifications.getDevicePushTokenAsync()).data;
-      
-      console.log("USER TOKEN: " + pushToken);
+      console.log("error: ", authorizationStatus);
     }
     database
       .collection("users")
       .doc(uid)
       .set({
         username: uid,
-        birthday: birthday,
+        birthday: birthday, 
         gender: gender,
-        pushToken: pushToken,
       })
       .then(() => {
         console.log("generating posts collection");
@@ -190,7 +186,6 @@ const SignUpScreenV2 = () => {
       await dispatch(authActions.signup(userNameText, emailText, passwordText));
       setIsLoading(false);
       getUserId();
-      //genUserProfile(uid);
     }
   };
 
@@ -334,6 +329,7 @@ const SignUpScreenV2 = () => {
             ...pickerSelectStyles,
           }}
         />
+
 
         {/* Display a loading animation when user account is being created */}
         <TouchableHighlight
